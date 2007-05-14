@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<entry key="red.id">6</entry>
+<entry key="mysql.servidor">localhost</entry>
+<entry key="servidor.puerto">8080</entry>
+<entry key="red.nombre">Demo Segovia</entry>
+<entry key="mysql.password">quijote</entry>
+<entry key="red.descripcion">Demo preparado para el Dr. Manuel Segovia.</entry>
+<entry key="visor.servidor">http://localhost:8080</entry>
+<entry key="mysql.bDatos">tinysoabd</entry>
+<entry key="mysql.usuario">root</entry>
+</properties>
