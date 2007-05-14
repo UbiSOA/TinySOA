@@ -22,7 +22,7 @@
 
 package net.tinyos.tinysoa.comun;
 
-/*******************************************************************************
+/******************* ************************************************************
  * Clase actuador cuyas instancias son ofrecidas por los servicios.
  * 
  * @author		Edgardo Avilés López
