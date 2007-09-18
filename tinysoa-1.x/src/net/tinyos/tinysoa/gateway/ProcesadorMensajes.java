@@ -28,7 +28,7 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.table.*;
 
-import net.tinyos.tinysoa.comun.*;
+import net.tinyos.tinysoa.common.*;
 import net.tinyos.tinysoa.util.*;
 
 /*******************************************************************************

@@ -20,7 +20,7 @@
  * 
  ******************************************************************************/
 
-package net.tinyos.tinysoa.comun;
+package net.tinyos.tinysoa.common;
 
 /*******************************************************************************
  * Clase nodo cuyas instancias son ofrecidas por los servicios.

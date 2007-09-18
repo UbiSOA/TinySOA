@@ -27,7 +27,7 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 
-import net.tinyos.tinysoa.comun.*;
+import net.tinyos.tinysoa.common.*;
 import net.tinyos.tinysoa.servidor.*;
 import net.tinyos.tinysoa.util.*;
 

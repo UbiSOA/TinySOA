@@ -24,7 +24,7 @@ package net.tinyos.tinysoa.servidor;
 
 import java.util.*;
 
-import net.tinyos.tinysoa.comun.*;
+import net.tinyos.tinysoa.common.*;
 
 /*******************************************************************************
  * Interfaz que define el servicio de información.

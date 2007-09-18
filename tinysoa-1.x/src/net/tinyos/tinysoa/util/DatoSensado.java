@@ -24,7 +24,7 @@ package net.tinyos.tinysoa.util;
 
 import java.util.*;
 
-import net.tinyos.tinysoa.comun.Constantes;
+import net.tinyos.tinysoa.common.Constantes;
 
 /*******************************************************************************
  * Clase para almacenar los datos de una lectura en una tabla.

@@ -20,7 +20,7 @@
  * 
  ******************************************************************************/
 
-package net.tinyos.tinysoa.comun;
+package net.tinyos.tinysoa.common;
 
 /*******************************************************************************
  * Constantes globales. Incluye números de identificación de <i>sensor

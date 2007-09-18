@@ -27,7 +27,7 @@ import java.util.*;
 import javax.swing.*;
 import java.text.BreakIterator;
 
-import net.tinyos.tinysoa.comun.*;
+import net.tinyos.tinysoa.common.*;
 
 /*******************************************************************************
  * Clase <i>renderer</i> de la lista de redes a seleccionar.
