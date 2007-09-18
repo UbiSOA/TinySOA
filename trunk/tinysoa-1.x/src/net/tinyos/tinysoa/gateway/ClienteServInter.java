@@ -24,7 +24,7 @@ package net.tinyos.tinysoa.gateway;
 
 import net.tinyos.drip.*;
 import net.tinyos.message.*;
-import net.tinyos.tinysoa.comun.*;
+import net.tinyos.tinysoa.common.*;
 
 /*******************************************************************************
  * Clase que implementa la funcionalidad del módulo Cliente de Servicios

@@ -24,7 +24,7 @@ package net.tinyos.tinysoa.util;
 
 import java.text.*;
 
-import net.tinyos.tinysoa.comun.*;
+import net.tinyos.tinysoa.common.*;
 
 /*******************************************************************************
  * Clase convertidor de parámetros de lectura, y de números e identificadores de

@@ -20,91 +20,91 @@
  * 
  ******************************************************************************/
 
-package net.tinyos.tinysoa.comun;
+package net.tinyos.tinysoa.common;
 
 /*******************************************************************************
- * Clase lectura cuyas instancias son ofrecidas por los servicios.
+ * Clase red cuyas instancias son ofrecidas por los servicios.
  * 
  * @author		Edgardo Avilés López
  * @version	0.1, 07/24/2006
  ******************************************************************************/
-public class Lectura {
+public class Red {
 	
-	private int nid;
-	private String tiempo;
-	private String parametro;
-	private String valor;
+	private int id;
+	private String nombre;
+	private String descripcion;
+	private String wsdl;
 	
 	/***************************************************************************
-	 * Define el ID del nodo responsable de la lectura.
+	 * Define el ID de la red.
 	 * 
-	 * @param nid	ID del nodo
+	 * @param id	ID de la red
 	 **************************************************************************/
-	public void setNid(int nid) {
-		this.nid = nid;
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 	/***************************************************************************
-	 * Regresa el ID del nodo responsable de la lectura.
+	 * Regresa el ID de la red.
 	 * 
-	 * @return	ID del nodo
+	 * @return	ID de la red
 	 **************************************************************************/
-	public int getNid() {
-		return nid;
+	public int getId() {
+		return id;
 	}
 	
 	/***************************************************************************
-	 * Define el tiempo cuando fue realizada la lectura.
+	 * Define el nombre de la red.
 	 * 
-	 * @param tiempo	Tiempo de la lectura
+	 * @param nombre	Nombre de la red
 	 **************************************************************************/
-	public void setTiempo(String tiempo) {
-		this.tiempo = tiempo;
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
 	
 	/***************************************************************************
-	 * Regresa el tiempo cuando fue realizada la lectura.
+	 * Regresa el nombre de la red.
 	 * 
-	 * @return	Tiempo de la lectura
+	 * @return	Nombre de la red
 	 **************************************************************************/
-	public String getTiempo() {
-		return tiempo;
+	public String getNombre() {
+		return nombre;
 	}
 	
 	/***************************************************************************
-	 * Define el parámetro de la lectura.
+	 * Define la descripción de la red.
 	 * 
-	 * @param parametro	Parámetro de la lectura
+	 * @param descripcion	Descripción de la red
 	 **************************************************************************/
-	public void setParametro(String parametro) {
-		this.parametro = parametro;
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
 	}
 	
 	/***************************************************************************
-	 * Regresa el parámetro de la lectura.
+	 * Devuelve la descripción de la red.
 	 * 
-	 * @return	Parámetro de la lectura
+	 * @return	Descripción de la red
 	 **************************************************************************/
-	public String getParametro() {
-		return parametro;
+	public String getDescripcion() {
+		return descripcion;
 	}
 	
 	/***************************************************************************
-	 * Define el valor de la lectura.
+	 * Define el URL de la ubicación del archivo WSDL del servicio.
 	 * 
-	 * @param valor	Valor de la lectura
+	 * @param wsdl	URL con la ubicación del archivo WSDL
 	 **************************************************************************/
-	public void setValor(String valor) {
-		this.valor = valor;
+	public void setWsdl(String wsdl) {
+		this.wsdl = wsdl;
 	}
 	
 	/***************************************************************************
-	 * Regresa el valor de la lectura.
+	 * Regresa el URL de la ubicación del archivo WSDL del servicio.
 	 * 
-	 * @return	Valor de la lectura
+	 * @return	URL con la ubicación del archivo WSDL
 	 **************************************************************************/
-	public String getValor() {
-		return valor;
+	public String getWsdl() {
+		return wsdl;
 	}
 	
 	/***************************************************************************
@@ -113,7 +113,7 @@ public class Lectura {
 	 * @return	Una cadena con los valores del objeto
 	 **************************************************************************/
 	public String toString() {
-		return nid + ": " + tiempo + " (" + parametro + "=" + valor + ")";
+		return id + ": " + nombre + " (" + descripcion + ")";
 	}
 	
 }

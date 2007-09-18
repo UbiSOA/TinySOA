@@ -32,7 +32,7 @@ import java.util.*;
 import javax.imageio.*;
 import javax.swing.*;
 
-import net.tinyos.tinysoa.comun.*;
+import net.tinyos.tinysoa.common.*;
 
 /*******************************************************************************
  * Clase utilería para generar gráficas de información de sensado. 

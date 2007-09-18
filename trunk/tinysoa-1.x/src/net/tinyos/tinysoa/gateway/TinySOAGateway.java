@@ -23,7 +23,7 @@
 package net.tinyos.tinysoa.gateway;
 
 import net.tinyos.message.*;
-import net.tinyos.tinysoa.comun.*;
+import net.tinyos.tinysoa.common.*;
 import net.tinyos.tinysoa.util.*;
 import javax.swing.border.*;
 import javax.swing.table.*;

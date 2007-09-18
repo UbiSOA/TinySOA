@@ -15,7 +15,7 @@
  * 
  ****************************************************************************************************/
 
-package net.tinyos.tinysoa.comun;
+package net.tinyos.tinysoa.common;
 
 /*******************************************************************************
  * Clase actuador cuyas instancias son ofrecidas por los servicios.

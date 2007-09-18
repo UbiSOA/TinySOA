@@ -34,7 +34,7 @@ import javax.swing.event.*;
 import javax.swing.table.*;
 import javax.swing.tree.*;
 
-import net.tinyos.tinysoa.comun.*;
+import net.tinyos.tinysoa.common.*;
 import net.tinyos.tinysoa.servidor.*;
 import net.tinyos.tinysoa.util.*;
 

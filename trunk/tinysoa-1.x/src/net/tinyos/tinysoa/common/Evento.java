@@ -15,7 +15,7 @@
  * 
  ****************************************************************************************************/
 
-package net.tinyos.tinysoa.comun;
+package net.tinyos.tinysoa.common;
 
 /*******************************************************************************
  * Clase evento cuyas instancias son ofrecidas por los servicios.
