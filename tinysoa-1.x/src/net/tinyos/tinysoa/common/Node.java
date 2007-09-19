@@ -28,7 +28,7 @@ package net.tinyos.tinysoa.common;
  * @author		Edgardo Avilés López
  * @version	0.1, 07/24/2006
  ******************************************************************************/
-public class Nodo {
+public class Node {
 	
 	private int id;
 	

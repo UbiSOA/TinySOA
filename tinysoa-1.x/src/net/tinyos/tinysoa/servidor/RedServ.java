@@ -73,9 +73,9 @@ public interface RedServ {
 	 * Regresa una lista de los nodos disponibles en la red.
 	 * 
 	 * @return Una lista de nodos
-	 * @see		Nodo
+	 * @see		Node
 	 **************************************************************************/
-	public Vector<Nodo> obtenerListadoNodos();
+	public Vector<Node> obtenerListadoNodos();
 	
 	/***************************************************************************
 	 * Regresa una lista de los actuadores disponibles en la red.
