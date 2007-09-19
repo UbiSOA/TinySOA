@@ -264,7 +264,7 @@ public class DialogoMantenimiento extends JDialog {
 		Object[] valores = new Object[nodos.length + 1];
 		valores[0] = "Todos";
 		for (int i = 0; i < nodos.length; i++)
-			valores[i + 1] = "Nodo " + ((Nodo)nodos[i]).getId();
+			valores[i + 1] = "Nodo " + ((Node)nodos[i]).getId();
 		cb02.setModel(new DefaultComboBoxModel(valores));		
 	}
 	
@@ -324,7 +324,7 @@ public class DialogoMantenimiento extends JDialog {
 		
 		if (cb01.getItemCount() == 0) {
 			progreso.setVisible(true);
-			Vector<Nodo> nodos = servicioRed.obtenerListadoNodos();
+			Vector<Node> nodos = servicioRed.obtenerListadoNodos();
 			defNodos(nodos.toArray());
 			progreso.setVisible(false);
 		}
@@ -359,7 +359,7 @@ public class DialogoMantenimiento extends JDialog {
 		
 		if (cb01.getItemCount() == 0) {
 			progreso.setVisible(true);
-			Vector<Nodo> nodos = servicioRed.obtenerListadoNodos();
+			Vector<Node> nodos = servicioRed.obtenerListadoNodos();
 			defNodos(nodos.toArray());
 			progreso.setVisible(false);
 		}

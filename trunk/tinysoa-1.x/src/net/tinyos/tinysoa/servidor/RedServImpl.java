@@ -188,13 +188,13 @@ public class RedServImpl implements RedServ
 	 * Regresa una lista de los nodos disponibles en la red.
 	 * 
 	 * @return Una lista de nodos
-	 * @see		Nodo
+	 * @see		Node
 	 **************************************************************************/
 	@WebMethod(operationName="obtenerListadoNodos",
 			action="urn:obtenerListadoNodos")
 	@WebResult(name="listadoNodosResultado")
-	public Vector<Nodo> obtenerListadoNodos() {
-		Vector<Nodo> nodos = new Vector<Nodo>();
+	public Vector<Node> obtenerListadoNodos() {
+		Vector<Node> nodos = new Vector<Node>();
 		
 		Statement st = null;
 		ResultSet rs = null;
@@ -205,7 +205,7 @@ public class RedServImpl implements RedServ
 					" GROUP BY nid ORDER BY nid");
 			
 			while (rs.next()) {
-				Nodo n = new Nodo();
+				Node n = new Node();
 				n.setId(rs.getInt("nid"));
 				nodos.add(n);
 			}
@@ -300,16 +300,16 @@ public class RedServImpl implements RedServ
 		ResultSet rs = null;
 		
 		try {
-			Vector<Nodo> nodos = obtenerListadoNodos();
+			Vector<Node> nodos = obtenerListadoNodos();
 			for (int i = 0; i < nodos.size(); i++) {
 			
 				st = bd.createStatement();
 				if (parametro.compareTo("") == 0)
 					rs = st.executeQuery("SELECT * FROM historico WHERE rid=" + rid +
-							" AND nid='" + ((Nodo)nodos.get(i)).getId() + "' " +
+							" AND nid='" + ((Node)nodos.get(i)).getId() + "' " +
 							"ORDER BY tiempo DESC LIMIT 0," + obtenerParametros().size());
 				else rs = st.executeQuery("SELECT * FROM historico WHERE rid=" + rid +
-						" AND nid='" + ((Nodo)nodos.get(i)).getId() + "' AND parametro='" +
+						" AND nid='" + ((Node)nodos.get(i)).getId() + "' AND parametro='" +
 						parametro + "' " +
 						"ORDER BY tiempo DESC LIMIT 0,1");
 			

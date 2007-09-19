@@ -978,7 +978,7 @@ public class EventosInterfaz
 	 * Procesa los nodos de la red.
 	 **************************************************************************/
 	private void procesarNodos() {
-		Vector<Nodo> nodos = servicioRed.obtenerListadoNodos();
+		Vector<Node> nodos = servicioRed.obtenerListadoNodos();
 		crearArbolNodos(nodos.toArray());
 		crearTabla(nodos.toArray());
 		crearTopologiaNodos(nodos.toArray());
@@ -1015,7 +1015,7 @@ public class EventosInterfaz
 		((DefaultTreeModel)arbol.getModel()).setRoot(top);	
 		RedNodoArbol c = null;
 		for (int i = 0; i < nodos.length; i++) {
-			c = new RedNodoArbol("Nodo " + ((Nodo)nodos[i]).getId(),
+			c = new RedNodoArbol("Nodo " + ((Node)nodos[i]).getId(),
 					iconoEstadoNormal);
 			top.add(c);
 		}
@@ -1053,7 +1053,7 @@ public class EventosInterfaz
 					new TablaCeldaRenderer(SwingConstants.CENTER, false));
 				
 		for (int i = 0; i < nodos.length; i++)
-			modeloDatos.addRow(new Object[]{((Nodo)nodos[i]).getId()});
+			modeloDatos.addRow(new Object[]{((Node)nodos[i]).getId()});
 		
 		tablaDatos.getColumnModel().getColumn(0).setPreferredWidth(42);
 		tablaDatos.getColumnModel().getColumn(0).setMinWidth(42);
@@ -1072,8 +1072,8 @@ public class EventosInterfaz
 	private void crearTopologiaNodos(Object[] nodos) {
 		int max = 0, ancho, alto, x, y;
 		for (int i = 0; i < nodos.length; i++)
-			if (((Nodo)nodos[i]).getId() > max)
-				max = ((Nodo)nodos[i]).getId();
+			if (((Node)nodos[i]).getId() > max)
+				max = ((Node)nodos[i]).getId();
 		
 		posTopNodos = new Point[max + 1];
 		
@@ -1082,7 +1082,7 @@ public class EventosInterfaz
 			alto = graficadorTopologia.getHeight();
 			x = (int)Math.round(Math.random() * ancho);
 			y = (int)Math.round(Math.random() * alto);			
-			posTopNodos[((Nodo)nodos[i]).getId()] = new Point(x, y);
+			posTopNodos[((Node)nodos[i]).getId()] = new Point(x, y);
 		}
 		
 		graficadorTopologia.defPosNodos(posTopNodos);
