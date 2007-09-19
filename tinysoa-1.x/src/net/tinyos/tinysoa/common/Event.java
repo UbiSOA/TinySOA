@@ -13,150 +13,150 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  * 
- ****************************************************************************************************/
+ ******************************************************************************/
 
 package net.tinyos.tinysoa.common;
 
 /*******************************************************************************
- * Clase evento cuyas instancias son ofrecidas por los servicios.
+ * Event class which instances are provided by the services.
  * 
  * @author		Edgardo Avilés López
  * @version	0.1, 07/24/2006
  ******************************************************************************/
-public class Evento {
+public class Event {
 	
 	private int id;
 	private int nid;
-	private String agregado;
-	private String nombre;
-	private String criterio;
-	private String tiempo;
-	private boolean listo;
+	private String added;
+	private String name;
+	private String criteria;
+	private String time;
+	private boolean ready;
 	
 	/***************************************************************************
-	 * Define el ID del evento.
+	 * Defines the event ID.
 	 * 
-	 * @param id ID del evento
+	 * @param id Event ID
 	 **************************************************************************/
 	public void setId(int id) {
 		this.id = id;
 	}
 	
 	/***************************************************************************
-	 * Regresa el ID del evento.
+	 * Return the event ID.
 	 * 
-	 * @return	ID del evento
+	 * @return	Event ID
 	 **************************************************************************/
 	public int getId() {
 		return id;
 	}
 	
 	/***************************************************************************
-	 * Define el tiempo en el que fue agregado el evento.
+	 * Defines the time in which the event was added.
 	 * 
-	 * @param agregado	Tiempo en el que fue agregado el evento
+	 * @param added	Time of event addition
 	 **************************************************************************/
-	public void setAgregado(String agregado) {
-		this.agregado = agregado;
+	public void setAdded(String added) {
+		this.added = added;
 	}
 	
 	/***************************************************************************
-	 * Devuelve el tiempo en el que fue agregado el evento.
+	 * Returns the time in which the event was added.
 	 * 
-	 * @return Tiempo en el que fue agregado el evento
+	 * @return Time of event addition
 	 **************************************************************************/
-	public String getAgregado() {
-		return agregado;
+	public String getAdded() {
+		return added;
 	}
 	
 	/***************************************************************************
-	 * Define el ID del nodo causante del evento.
+	 * Defines the node ID reponsable for the event generation.
 	 * 
-	 * @param nid	ID del nodo
+	 * @param nid	Node ID
 	 **************************************************************************/
 	public void setNid(int nid) {
 		this.nid = nid;
 	}
 	
 	/***************************************************************************
-	 * Regresa el ID del nodo causante del evento.
+	 * Returns the node ID reponsable for the event generation.
 	 * 
-	 * @return	ID del nodo
+	 * @return	Node ID
 	 **************************************************************************/
 	public int getNid() {
 		return nid;
 	}
 	
 	/***************************************************************************
-	 * Define el nombre del evento.
+	 * Defines the event name.
 	 * 
-	 * @param nombre	Nombre del evento
+	 * @param name	Event name
 	 **************************************************************************/
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	/***************************************************************************
-	 * Regresa el nombre del evento.
+	 * Returns the event name.
 	 * 
-	 * @return	Nombre del evento
+	 * @return	Event name
 	 **************************************************************************/
-	public String getNombre() {
-		return nombre;
+	public String getName() {
+		return name;
 	}
 	
 	/***************************************************************************
-	 * Define el criterio del evento.
+	 * Defines the event criteria.
 	 * 
-	 * @param criterio	Criterio del evento
+	 * @param criterio	Event criteria
 	 **************************************************************************/
-	public void setCriterio(String criterio) {
-		this.criterio = criterio;
+	public void setCriteria(String criteria) {
+		this.criteria = criteria;
 	}
 
 	/***************************************************************************
-	 * Regresa el criterio del evento.
+	 * Returns the event criteria.
 	 * 
-	 * @return	Criterio del evento
+	 * @return	Event criteria
 	 **************************************************************************/
-	public String getCriterio() {
-		return criterio;
+	public String getCriteria() {
+		return criteria;
 	}
 	
 	/***************************************************************************
-	 * Define el tiempo cuando fue encontrado el evento.
+	 * Defines the time in which the event was detected.
 	 * 
-	 * @param tiempo	Tiempo de captura del evento
+	 * @param tiempo	Event detection time
 	 **************************************************************************/
-	public void setTiempo(String tiempo) {
-		this.tiempo = tiempo;
+	public void setTime(String time) {
+		this.time = time;
 	}
 	
 	/***************************************************************************
-	 * Regresa el tiempo cuando fue encontrado el evento.
+	 * Returns the time in which the event was detected.
 	 * 
-	 * @return	Tiempo de captura del evento
+	 * @return	Event detection time
 	 **************************************************************************/
-	public String getTiempo() {
-		return tiempo;
+	public String getTime() {
+		return time;
 	}
 	
 	/***************************************************************************
-	 * Define si el evento se ha cumplido o no.
+	 * Defines if the event has been fulfilled or not.
 	 * 
-	 * @param listo	Verdadero si el evento se ha cumplido
+	 * @param listo	True if event is fulfilled
 	 **************************************************************************/
-	public void setListo(boolean listo) {
-		this.listo = listo;
+	public void setReady(boolean ready) {
+		this.ready = ready;
 	}
 	
 	/***************************************************************************
-	 * Regresa si el evento se ha cumplido o no.
+	 * Returns if the event has been fulfilled or not.
 	 * 
-	 * @return	Verdadero si el evento se ha cumplido
+	 * @return	True if event is fulfilled
 	 **************************************************************************/
-	public boolean getListo() {
-		return listo;
+	public boolean getReady() {
+		return ready;
 	}
 
 }

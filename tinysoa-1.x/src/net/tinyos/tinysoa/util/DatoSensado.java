@@ -24,7 +24,7 @@ package net.tinyos.tinysoa.util;
 
 import java.util.*;
 
-import net.tinyos.tinysoa.common.Constantes;
+import net.tinyos.tinysoa.common.Constants;
 
 /*******************************************************************************
  * Clase para almacenar los datos de una lectura en una tabla.
@@ -56,9 +56,9 @@ public class DatoSensado {
 		this.tiempo = tiempo;
 		this.convertir = convertir;
 		
-		if (tipo == Constantes.SENSOR_TEMP)
+		if (tipo == Constants.SENSOR_TEMP)
 			valor = Convertidor.adcToTempD(dato);
-		else if (tipo == Constantes.SENSOR_VOLT)
+		else if (tipo == Constants.SENSOR_VOLT)
 			valor = Convertidor.adcToVoltD(dato);
 		else valor = dato;
 	}
@@ -123,9 +123,9 @@ public class DatoSensado {
 		if (t.compareTo("v0") == 0) t = "Nulo";
 		tip += r("Tipo:", t);
 		
-		if (tipo == Constantes.SENSOR_TEMP)
+		if (tipo == Constants.SENSOR_TEMP)
 			tip += r("Valor:", Convertidor.adcToTemp(dato));
-		if (tipo == Constantes.SENSOR_VOLT)
+		if (tipo == Constants.SENSOR_VOLT)
 			tip += r("Valor:", Convertidor.adcToVolt(dato));
 		
 		tip += r("Dec:", dato + "");
@@ -153,9 +153,9 @@ public class DatoSensado {
 	 **************************************************************************/
 	public String toString() {
 		if (convertir) {
-			if (tipo == Constantes.SENSOR_TEMP)
+			if (tipo == Constants.SENSOR_TEMP)
 				return Convertidor.adcToTemp(dato);
-			else if (tipo == Constantes.SENSOR_VOLT)
+			else if (tipo == Constants.SENSOR_VOLT)
 				return Convertidor.adcToVolt(dato);
 			else return dato + "";
 		}

@@ -1,38 +1,32 @@
 /*
- * "Copyright (c) 2005-2006 The Regents of the Centro de Investigación y de
- * Educación Superior de la ciudad de Ensenada, Baja California (CICESE).
- *
- * Permission to use, copy, modify, and distribute this software and its
- * documentation for any purpose, without fee, and without written agreement is
- * hereby granted, provided that the above copyright notice, the following
- * two paragraphs and the author appear in all copies of this software.
+ *  Copyright 2007 Edgardo Avilés López
  * 
- * IN NO EVENT SHALL CICESE BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
- * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OF THIS
- * SOFTWARE AND ITS DOCUMENTATION, EVEN IF CICESE HAS BEEN ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  * 
- * CICESE SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE.  THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND CICESE
- * HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS,
- * OR MODIFICATIONS."
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *    
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  * 
  ******************************************************************************/
-
+ 
 package net.tinyos.tinysoa.common;
 
 /*******************************************************************************
- * Constantes globales. Incluye números de identificación de <i>sensor
- * boards</i>, tasas de flujos de datos, tipos de sensores, de actuadores y
- * de mensajes.
+ * Global constants. Includes sensor board identification numbers, data rates,
+ * sensor types, actuator types, and message types.
  * 
  * @author		Edgardo Avilés López
  * @version	0.2, 07/24/2006
  ******************************************************************************/
-public final class Constantes {
+public final class Constants {
 	
-	// IDs de los sensor boards
+	// Sensor boards identification numbers
 	public static int MDA500 = 0x01;
 	public static int MDA510 = 0x02;
 	public static int MEP500 = 0x03;
@@ -48,7 +42,7 @@ public final class Constantes {
 	public static int MSP410 = 0xA0;
 	public static int TMSKY1 = 0xE1;
 	
-	// Tasa de flujos de datos
+	// Data rates
 	public static int DATA_RATE_INICIAL	= 2000;
 	public static int DATA_RATE_ACTIVO	= 1000;
 	public static int DATA_RATE_ESTABLE	= 5000;

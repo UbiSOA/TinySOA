@@ -13,55 +13,55 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  * 
- ****************************************************************************************************/
+ ******************************************************************************/
 
 package net.tinyos.tinysoa.common;
 
 /*******************************************************************************
- * Clase actuador cuyas instancias son ofrecidas por los servicios.
+ * Actuator class from which instances are provided by the services.
  * 
  * @author		Edgardo Avilés López
  * @version	0.1, 07/24/2006
  ******************************************************************************/
-public class Actuador {
+public class Actuator {
 	
-	private String nombre;
-	private String descripcion;
+	private String name;
+	private String description;
 	
 	/***************************************************************************
-	 * Define el nombre del actuador.
+	 * Defines the actuator's name.
 	 * 
-	 * @param nombre	Nombre del actuador
+	 * @param name	Actuator's name
 	 **************************************************************************/
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	/***************************************************************************
-	 * Regresa el nombre del actuador.
+	 * Returns the actuator's name.
 	 * 
-	 * @return	Nombre del actuador
+	 * @return	Actuator's name
 	 **************************************************************************/
-	public String getNombre() {
-		return nombre;
+	public String getName() {
+		return name;
 	}
 	
 	/***************************************************************************
-	 * Define la descripción del actuador.
+	 * Defines the actuator's description.
 	 * 
-	 * @param descripcion	Descripción del actuador
+	 * @param description	Actuator's description
 	 **************************************************************************/
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	
 	/***************************************************************************
-	 * Regresa la descripción del actuador.
+	 * Returns the actuator's description.
 	 * 
-	 * @return	Descripción del actuador
+	 * @return	Actuator's description
 	 **************************************************************************/
-	public String getDescripcion() {
-		return descripcion;
+	public String getDescription() {
+		return description;
 	}
 	
 }

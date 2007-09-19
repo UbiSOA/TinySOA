@@ -89,8 +89,8 @@ public class Graficador extends JPanel {
 		while (e.hasMoreElements()) {
 			Enumeration e2 = ((Vector)e.nextElement()).elements();
 			while (e2.hasMoreElements()) {
-				Lectura d = (Lectura)(e2.nextElement());
-				double valor = Double.parseDouble(d.getValor());
+				Reading d = (Reading)(e2.nextElement());
+				double valor = Double.parseDouble(d.getValue());
 				if (valor > max) max = valor;
 				if (valor < min) min = valor;
 			}
@@ -386,15 +386,15 @@ public class Graficador extends JPanel {
 			
 			Enumeration e2 = lecturas.elements();
 			while (e2.hasMoreElements()) {
-				Lectura dato = (Lectura)e2.nextElement();
+				Reading dato = (Reading)e2.nextElement();
 				
 				double x, y;
 				try {
 					x = interpolar(0, g2d.getClip().getBounds().width,
 							anterior.getTime(), actual.getTime(),
-							((Date)formato.parse(dato.getTiempo())).getTime());
+							((Date)formato.parse(dato.getTime())).getTime());
 					y = interpolar(g2d.getClip().getBounds().height, 0, min,
-							max, Double.parseDouble(dato.getValor()));
+							max, Double.parseDouble(dato.getValue()));
 				} catch (Exception ex) { ex.printStackTrace(); return; }
 
 				if (!iniciado) {
@@ -411,14 +411,14 @@ public class Graficador extends JPanel {
 			
 			e2 = lecturas.elements();
 			while (e2.hasMoreElements()) {
-				Lectura dato = (Lectura)e2.nextElement();
+				Reading dato = (Reading)e2.nextElement();
 				double x, y;
 				try {
 					x = interpolar(0, g2d.getClip().getBounds().width,
 							anterior.getTime(), actual.getTime(),
-							((Date)formato.parse(dato.getTiempo())).getTime());
+							((Date)formato.parse(dato.getTime())).getTime());
 					y = interpolar(g2d.getClip().getBounds().height, 0, min,
-							max, Double.parseDouble(dato.getValor()));
+							max, Double.parseDouble(dato.getValue()));
 				} catch (Exception ex) { ex.printStackTrace(); return; }
 				dibujarPunto(g2d, x, y);
 				if (x < 0) break;
@@ -589,7 +589,7 @@ public class Graficador extends JPanel {
 		while (e.hasMoreElements()) {
 			Vector nodo = (Vector)e.nextElement();
 			if (nodo.size() > 0) {
-				int nid = ((Lectura)nodo.get(0)).getNid();
+				int nid = ((Reading)nodo.get(0)).getNid();
 				g2d.setColor(colores[nid % colores.length]);
 				dibujarPunto(g2d, x + 6, y);
 				x += 9 + 5;

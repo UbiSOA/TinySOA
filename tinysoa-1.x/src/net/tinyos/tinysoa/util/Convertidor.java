@@ -133,15 +133,15 @@ public final class Convertidor {
 	 * 
 	 * @param i	Tipo de actuador
 	 * @return		Una cadena con el nombre abreviado del actuador
-	 * @see			Constantes
+	 * @see			Constants
 	 **************************************************************************/
 	public static String intToActuador(int i) {
 		String s = "";
-		if (i == Constantes.ACTUADOR_BOCINA)		s = "Boc";
-		if (i == Constantes.ACTUADOR_LED_AMARILLO)	s = "LedAm";
-		if (i == Constantes.ACTUADOR_LED_AZUL)		s = "LedAz";
-		if (i == Constantes.ACTUADOR_LED_ROJO)		s = "LedRo";
-		if (i == Constantes.ACTUADOR_LED_VERDE)		s = "LedVe";
+		if (i == Constants.ACTUADOR_BOCINA)		s = "Boc";
+		if (i == Constants.ACTUADOR_LED_AMARILLO)	s = "LedAm";
+		if (i == Constants.ACTUADOR_LED_AZUL)		s = "LedAz";
+		if (i == Constants.ACTUADOR_LED_ROJO)		s = "LedRo";
+		if (i == Constants.ACTUADOR_LED_VERDE)		s = "LedVe";
 		return s;
 	}
 
@@ -152,7 +152,7 @@ public final class Convertidor {
 	 * @param i			Tipo de mensaje
 	 * @param convertir	Verdadero si hay que convertir el número
 	 * @return				Una cadena con el tipo de mensaje
-	 * @see					Constantes
+	 * @see					Constants
 	 **************************************************************************/
 	public static String intToTipo(int i, boolean convertir) {
 		String[] TIPOS = {"Lect.", "Reg.", "Act. Act.", "Des. Act.", "Duerme",
@@ -167,7 +167,7 @@ public final class Convertidor {
 	 * 
 	 * @param i	Tipo de <i>sensor board</i>
 	 * @return		Cadena con el tipo de <i>sensor board</i>
-	 * @see			Constantes
+	 * @see			Constants
 	 **************************************************************************/
 	public static String intToSens(int i) {
 		return intToSens(i, true);
@@ -181,7 +181,7 @@ public final class Convertidor {
 	 * @param i			Tipo de <i>sensor board</i>
 	 * @param convertir	Verdadero si hay que convertir el número
 	 * @return				Una cadena con el tipo de <i>sensor board</i>
-	 * @see					Constantes
+	 * @see					Constants
 	 **************************************************************************/
 	public static String intToSens(int i, boolean convertir) {
 		String s = "-";
@@ -211,7 +211,7 @@ public final class Convertidor {
 	 * @param i			Tipo de parámetro
 	 * @param convertir	Verdadero si hay que convertir el número
 	 * @return				Una cadena con el parámetro de sensado
-	 * @see					Constantes
+	 * @see					Constants
 	 **************************************************************************/
 	public static String intToSensParam(int i, boolean convertir) {
 		String s = sensorEtiqueta(i, 0);
@@ -227,7 +227,7 @@ public final class Convertidor {
 	 * 
 	 * @param sensor	Tipo de parámetro (sensor)
 	 * @return			Una cadena con el parámetro de sensado
-	 * @see				Constantes
+	 * @see				Constants
 	 **************************************************************************/
 	public static String sensorEtiqueta(int sensor) {
 		String t = sensorEtiqueta(sensor, 0);
@@ -244,18 +244,18 @@ public final class Convertidor {
 	 * @param sensor	Tipo de parámetro (sensor)
 	 * @param pos		Posición en el <i>slot</i>
 	 * @return			Una cadena con el parámetro de sensado
-	 * @see				Constantes
+	 * @see				Constants
 	 **************************************************************************/
 	public static String sensorEtiqueta(int sensor, int pos) {
-		if (sensor == Constantes.SENSOR_NULO) return "v" + pos;
-		else if (sensor == Constantes.SENSOR_TEMP)	return "Temp";
-		else if (sensor == Constantes.SENSOR_LUZ) return "Luz";
-		else if (sensor == Constantes.SENSOR_MAGX) return "MagX";
-		else if (sensor == Constantes.SENSOR_MAGY) return "MagY";
-		else if (sensor == Constantes.SENSOR_ACEX) return "AceX";
-		else if (sensor == Constantes.SENSOR_ACEY) return "AceY";
-		else if (sensor == Constantes.SENSOR_MIC) return "Mic";
-		else if (sensor == Constantes.SENSOR_VOLT) return "Volt";
+		if (sensor == Constants.SENSOR_NULO) return "v" + pos;
+		else if (sensor == Constants.SENSOR_TEMP)	return "Temp";
+		else if (sensor == Constants.SENSOR_LUZ) return "Luz";
+		else if (sensor == Constants.SENSOR_MAGX) return "MagX";
+		else if (sensor == Constants.SENSOR_MAGY) return "MagY";
+		else if (sensor == Constants.SENSOR_ACEX) return "AceX";
+		else if (sensor == Constants.SENSOR_ACEY) return "AceY";
+		else if (sensor == Constants.SENSOR_MIC) return "Mic";
+		else if (sensor == Constants.SENSOR_VOLT) return "Volt";
 		else return sensor + "";
 	}
 	
@@ -266,17 +266,17 @@ public final class Convertidor {
 	 * 
 	 * @param sensor	Nombre del parámetro de sensado
 	 * @return			El número de tipo de sensor
-	 * @see				Constantes
+	 * @see				Constants
 	 **************************************************************************/
 	public static int sensorEtiquetaToId(String sensor) {
-		if (sensor.compareTo("Temp") == 0) return Constantes.SENSOR_TEMP;
-		else if (sensor.compareTo("Luz") == 0) return Constantes.SENSOR_LUZ;
-		else if (sensor.compareTo("MagX") == 0) return Constantes.SENSOR_MAGX;
-		else if (sensor.compareTo("MagY") == 0) return Constantes.SENSOR_MAGY;
-		else if (sensor.compareTo("AceX") == 0) return Constantes.SENSOR_ACEX;
-		else if (sensor.compareTo("AceY") == 0) return Constantes.SENSOR_ACEY;
-		else if (sensor.compareTo("Mic") == 0) return Constantes.SENSOR_MIC;
-		else if (sensor.compareTo("Volt") == 0) return Constantes.SENSOR_VOLT;
+		if (sensor.compareTo("Temp") == 0) return Constants.SENSOR_TEMP;
+		else if (sensor.compareTo("Luz") == 0) return Constants.SENSOR_LUZ;
+		else if (sensor.compareTo("MagX") == 0) return Constants.SENSOR_MAGX;
+		else if (sensor.compareTo("MagY") == 0) return Constants.SENSOR_MAGY;
+		else if (sensor.compareTo("AceX") == 0) return Constants.SENSOR_ACEX;
+		else if (sensor.compareTo("AceY") == 0) return Constants.SENSOR_ACEY;
+		else if (sensor.compareTo("Mic") == 0) return Constants.SENSOR_MIC;
+		else if (sensor.compareTo("Volt") == 0) return Constants.SENSOR_VOLT;
 		return -1;
 	}
 	

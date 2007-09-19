@@ -177,7 +177,7 @@ public class TinySOAGateway {
 		
 		imprimirEstado("<html>Esperando <strong>registros</strong>...</html>");
 		cliente.enviarComando(
-				0, Constantes.TIPO_SOLICITUD_REGISTRO, 0);
+				0, Constants.TIPO_SOLICITUD_REGISTRO, 0);
 		
 	}
 	

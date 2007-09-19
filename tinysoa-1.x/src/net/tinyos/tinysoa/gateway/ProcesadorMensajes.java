@@ -143,7 +143,7 @@ public class ProcesadorMensajes {
 		
 		tipos = new Properties();
 		for (i = 1; i <= 8; i++)
-			tipos.setProperty("v" + i, Constantes.SENSOR_NULO + "");
+			tipos.setProperty("v" + i, Constants.SENSOR_NULO + "");
 	}
 	
 	/***************************************************************************
@@ -170,14 +170,14 @@ public class ProcesadorMensajes {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {			
 					int tipo = m.get_tipo();
-					if (tipo == Constantes.TIPO_LECTURA) {
+					if (tipo == Constants.TIPO_LECTURA) {
 						if (tipos.getProperty(Convertidor.intToSens(
 								m.get_sensor())) != null)
 							modeloTabla.insertRow(0,
 									procesarLectura(m, convertir));
 						else return;
 					}
-					else if (tipo == Constantes.TIPO_REGISTRO)
+					else if (tipo == Constants.TIPO_REGISTRO)
 						modeloTabla.insertRow(
 								0, procesarRegistro(m, convertir));
 					else System.out.println(
@@ -201,13 +201,13 @@ public class ProcesadorMensajes {
 		} else {
 			
 			int tipo = m.get_tipo();
-			if (tipo == Constantes.TIPO_LECTURA) {
+			if (tipo == Constants.TIPO_LECTURA) {
 				if (tipos.getProperty(
 						Convertidor.intToSens(m.get_sensor())) != null)
 					procesarLectura(m, convertir);
 				else return;
 			}
-			else if (tipo == Constantes.TIPO_REGISTRO)
+			else if (tipo == Constants.TIPO_REGISTRO)
 				procesarRegistro(m, convertir);
 			else System.out.println("Error: Tipo no esperado: " + tipo + ".");
 			
@@ -343,7 +343,7 @@ public class ProcesadorMensajes {
 		if (!listo) return;
 		
 		int idRed = Integer.parseInt(propiedades.getProperty("red.id"));
-		if (parametro != Constantes.SENSOR_NULO) {
+		if (parametro != Constants.SENSOR_NULO) {
 			String par = Convertidor.sensorEtiqueta(parametro);
 			
 			Statement st = null;
@@ -381,15 +381,15 @@ public class ProcesadorMensajes {
 	 **************************************************************************/
 	private void registrarLectura(int tipo, int valor) {
 		if (!listo) return;
-		if (tipo == Constantes.SENSOR_NULO) return;
+		if (tipo == Constants.SENSOR_NULO) return;
 		
 		Statement st = null;
 		
 		String par = Convertidor.intToSensParam(tipo, true);
 		
 		double val = valor;
-		if (tipo == Constantes.SENSOR_TEMP)	val = Convertidor.adcToTempD(valor);
-		if (tipo == Constantes.SENSOR_VOLT) val = Convertidor.adcToVoltD(valor);
+		if (tipo == Constants.SENSOR_TEMP)	val = Convertidor.adcToTempD(valor);
+		if (tipo == Constants.SENSOR_VOLT) val = Convertidor.adcToVoltD(valor);
 		
 		try {
 			st = bd.createStatement();
@@ -451,11 +451,11 @@ public class ProcesadorMensajes {
 	private void registrarActuadores(int sensorBoard) {
 		if (!listo) return;
 		
-		if (sensorBoard == Constantes.MTS310) {
-			registrarActuador(Constantes.ACTUADOR_BOCINA);
-			registrarActuador(Constantes.ACTUADOR_LED_AMARILLO);
-			registrarActuador(Constantes.ACTUADOR_LED_ROJO);
-			registrarActuador(Constantes.ACTUADOR_LED_VERDE);
+		if (sensorBoard == Constants.MTS310) {
+			registrarActuador(Constants.ACTUADOR_BOCINA);
+			registrarActuador(Constants.ACTUADOR_LED_AMARILLO);
+			registrarActuador(Constants.ACTUADOR_LED_ROJO);
+			registrarActuador(Constants.ACTUADOR_LED_VERDE);
 		}
 	}
 	
@@ -518,7 +518,7 @@ public class ProcesadorMensajes {
 			public void run() {
 				if (!cliente.obtEnviarOcupado())
 					cliente.enviarComando(
-							0, Constantes.TIPO_SUSCRIBIR, sensorBoard);
+							0, Constants.TIPO_SUSCRIBIR, sensorBoard);
 			}
 		}.start();
 		

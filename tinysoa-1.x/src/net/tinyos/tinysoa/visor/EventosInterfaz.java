@@ -35,6 +35,7 @@ import javax.swing.table.*;
 import javax.swing.tree.*;
 
 import net.tinyos.tinysoa.common.*;
+import net.tinyos.tinysoa.common.Event;
 import net.tinyos.tinysoa.servidor.*;
 import net.tinyos.tinysoa.util.*;
 
@@ -567,7 +568,7 @@ public class EventosInterfaz
 				public void run() {
 					DateFormat formato4 = new SimpleDateFormat(
 							"yyyy-MM-dd HH:mm:ss");
-					Vector<Lectura> lecturas = servicioRed.
+					Vector<Reading> lecturas = servicioRed.
 							obtenerLecturasAlTiempo(formato4.format(tiempo),
 									((RedNodoArbol)arbol.getModel().getRoot()).
 									getChildCount() * 
@@ -582,29 +583,29 @@ public class EventosInterfaz
 					
 					String tiempoMayor = "";
 					
-					Lectura l;
+					Reading l;
 					for (int i = 0; i < lecturas.size(); i++) {
-						l = (Lectura)lecturas.get(i);
+						l = (Reading)lecturas.get(i);
 						int renglon = buscarRenglon(l.getNid());
-						int columna = modeloDatos.findColumn(l.getParametro());
+						int columna = modeloDatos.findColumn(l.getParameter());
 						if (renglon >= 0) {
 							if (vacio[renglon][columna].compareTo("") == 0) {
 								modeloDatos.setValueAt(
-										formatearLectura(l.getValor(),
-										l.getParametro()), renglon, columna);
+										formatearLectura(l.getValue(),
+										l.getParameter()), renglon, columna);
 								vacio[renglon][columna] = formatearLectura(
-										l.getValor(), l.getParametro());
+										l.getValue(), l.getParameter());
 							}
 							if (vacio[renglon][1].compareTo("") == 0) {
 								modeloDatos.setValueAt(
-										l.getTiempo().substring(0,
-										l.getTiempo().length() - 2),
+										l.getTime().substring(0,
+										l.getTime().length() - 2),
 										renglon, 1);
-								vacio[renglon][1] =l.getTiempo().substring(0,
-										l.getTiempo().length() - 2);
+								vacio[renglon][1] =l.getTime().substring(0,
+										l.getTime().length() - 2);
 							}
-							if (l.getTiempo().compareTo(tiempoMayor) > 0)
-								tiempoMayor = l.getTiempo();
+							if (l.getTime().compareTo(tiempoMayor) > 0)
+								tiempoMayor = l.getTime();
 						}
 					}
 					
@@ -668,13 +669,13 @@ public class EventosInterfaz
 					
 					DateFormat formato4 = new SimpleDateFormat(
 							"yyyy-MM-dd HH:mm:ss");
-					Vector<Lectura> lecturas = servicioRed.obtenerLecturas(
+					Vector<Reading> lecturas = servicioRed.obtenerLecturas(
 							formato4.format(new Date(tiempo.getTime() -
 									graficador.obtDif() - 1000)),
 							formato4.format(tiempo), parametro, 0);
 	
 					Vector<Vector> datos = new Vector<Vector>();
-					Vector<Lectura> datosNodo = new Vector<Lectura>();
+					Vector<Reading> datosNodo = new Vector<Reading>();
 					
 					int nid = -1;
 					if (lecturas.size() > 0)
@@ -699,14 +700,14 @@ public class EventosInterfaz
 					
 					e = lecturas.elements();
 					while (e.hasMoreElements()) {
-						Lectura l = (Lectura)e.nextElement();
+						Reading l = (Reading)e.nextElement();
 						if (nodoSel[l.getNid()])
-						if (l.getParametro().compareTo(parametro) == 0) {
+						if (l.getParameter().compareTo(parametro) == 0) {
 							if (l.getNid() != nid) {
 								datos.add(datosNodo);
 								
 								//System.out.println(datosNodo);
-								datosNodo = new Vector<Lectura>();
+								datosNodo = new Vector<Reading>();
 								nid = l.getNid();
 							}
 							datosNodo.add(l);
@@ -732,7 +733,7 @@ public class EventosInterfaz
 				public void run() {
 					DateFormat formato4 = new SimpleDateFormat(
 							"yyyy-MM-dd HH:mm:ss");
-					Vector<Lectura> lecturas = servicioRed.
+					Vector<Reading> lecturas = servicioRed.
 							obtenerLecturasAlTiempo(formato4.format(tiempo),
 									((RedNodoArbol)arbol.getModel().getRoot()).
 									getChildCount() * 
@@ -781,14 +782,14 @@ public class EventosInterfaz
 					
 					
 					while (e.hasMoreElements()) {
-						Lectura l = (Lectura)e.nextElement();
-						if (par.compareTo(l.getParametro()) == 0)
+						Reading l = (Reading)e.nextElement();
+						if (par.compareTo(l.getParameter()) == 0)
 							if (!graficadorTopologia.existeNodo(l.getNid()))
 								if (nodoSel[l.getNid()]) {
 									NodoGraficaTopologia ngt =
 										new NodoGraficaTopologia(l.getNid(),
 												Double.parseDouble(
-														l.getValor()),
+														l.getValue()),
 												posTopNodos[l.getNid()].x,
 												posTopNodos[l.getNid()].y);
 									graficadorTopologia.agregarNodo(ngt);
@@ -808,7 +809,7 @@ public class EventosInterfaz
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				public void run() {
-					Vector<Evento> eventos = servicioRed.
+					Vector<Event> eventos = servicioRed.
 							obtenerListadoEventos(0);
 					
 					String id, nombre, criterio, listo, nid, tiempo;
@@ -816,20 +817,20 @@ public class EventosInterfaz
 					tablaEventos.clearTable();
 					Enumeration e = eventos.elements();
 					while (e.hasMoreElements()) {
-						Evento evento = (Evento)e.nextElement();
+						Event evento = (Event)e.nextElement();
 						
 						id = evento.getId() + "";
-						nombre = evento.getNombre();
-						criterio = evento.getCriterio();
-						if (evento.getListo()) listo = "Sí";
+						nombre = evento.getName();
+						criterio = evento.getCriteria();
+						if (evento.getReady()) listo = "Sí";
 						else listo = "No";
 						if (evento.getNid() == 0) nid = "-";
 						else nid = evento.getNid() + "";
-						if (evento.getTiempo() == null)
+						if (evento.getTime() == null)
 							tiempo = "En espera";
-						else if (evento.getTiempo().compareTo("") == 0)
+						else if (evento.getTime().compareTo("") == 0)
 							tiempo = "En espera";
-						else tiempo = evento.getTiempo();
+						else tiempo = evento.getTime();
 						
 						modeloEventos.addRow(new Object[]{id, nombre,
 								new CeldaTablaTooltip(criterio),
@@ -864,35 +865,35 @@ public class EventosInterfaz
 						
 						accion = "";
 						if (tarea.getTipo() ==
-							Constantes.TIPO_ACTIVA_ACTUADOR)
+							Constants.TIPO_ACTIVA_ACTUADOR)
 							accion = "Enc. Act.";
 						if (tarea.getTipo() ==
-							Constantes.TIPO_DESACTIVA_ACTUADOR)
+							Constants.TIPO_DESACTIVA_ACTUADOR)
 							accion = "Apa. Act.";
 						if (tarea.getTipo() ==
-							Constantes.TIPO_CAMBIA_DATA_RATE)
+							Constants.TIPO_CAMBIA_DATA_RATE)
 							accion = "Cam. Tasa";
 						if (tarea.getTipo() ==
-							Constantes.TIPO_DUERME)
+							Constants.TIPO_DUERME)
 							accion = "Entrar Esp.";
 						if (tarea.getTipo() ==
-							Constantes.TIPO_DESPIERTA)
+							Constants.TIPO_DESPIERTA)
 							accion = "Salir Esp.";
 						
 						valor = "-";
 						if (tarea.getValor() > 0)
 							valor = tarea.getValor() + " segs";
 						if (tarea.getValor() ==
-							Constantes.ACTUADOR_BOCINA)
+							Constants.ACTUADOR_BOCINA)
 							valor = "Bocina";
 						if (tarea.getValor() ==
-							Constantes.ACTUADOR_LED_AMARILLO)
+							Constants.ACTUADOR_LED_AMARILLO)
 							valor = "Led Ama.";
 						if (tarea.getValor() ==
-							Constantes.ACTUADOR_LED_ROJO)
+							Constants.ACTUADOR_LED_ROJO)
 							valor = "Led Rojo";
 						if (tarea.getValor() ==
-							Constantes.ACTUADOR_LED_VERDE)
+							Constants.ACTUADOR_LED_VERDE)
 							valor = "Led Ver.";
 						
 						nid = "-";
@@ -1508,11 +1509,11 @@ public class EventosInterfaz
 						tablaEventos.getValueAt(i, 0).toString());
 				
 				actualizacionOcupada = true;
-				Evento e = servicioRed.obtenerEventoPorId(id);
+				Event e = servicioRed.obtenerEventoPorId(id);
 				actualizacionOcupada = false;
 				
 				dialogoEvento.setTitle("Modificar Evento");
-				dialogoEvento.defValores(id, e.getNombre(), e.getCriterio());
+				dialogoEvento.defValores(id, e.getName(), e.getCriteria());
 				dialogoEvento.mostrar();
 				actualizar();
 			}
