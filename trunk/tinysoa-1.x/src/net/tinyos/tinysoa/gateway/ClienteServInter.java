@@ -47,7 +47,7 @@ public class ClienteServInter implements MessageListener {
 	 * @param procesador	Procesador de mensajes a usar.
 	 **************************************************************************/
 	public ClienteServInter(MoteIF mote, ProcesadorMensajes procesador) {
-		drip = new Drip(Constantes.AM_TINYSOACMDMSG, mote);
+		drip = new Drip(Constants.AM_TINYSOACMDMSG, mote);
 		this.procesador = procesador;
 		listo = true;
 	}

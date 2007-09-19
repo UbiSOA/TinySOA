@@ -227,12 +227,12 @@ public class RedServImpl implements RedServ
 	 * Regresa una lista de los actuadores disponibles en la red.
 	 * 
 	 * @return	Una lista de actuadores
-	 * @see		Actuador
+	 * @see		Actuator
 	 **************************************************************************/
 	@WebMethod(operationName="obtenerActuadores",
 			action="urn:obtenerActuadores")
 	@WebResult(name="actuadoresResultado")
-	public Vector<Actuador> obtenerActuadores() {
+	public Vector<Actuator> obtenerActuadores() {
 		// TODO Implementar servicio "obtenerActuadores"
 		return null;
 	}
@@ -286,15 +286,15 @@ public class RedServImpl implements RedServ
 	 * @param parametro	El parámetro de sensado deseado, deje vacío para todos
 	 * @param limite	El número límite de lecturas a regresar
 	 * @return			Un listado de lecturas
-	 * @see				Lectura
+	 * @see				Reading
 	 **************************************************************************/
 	@WebMethod(operationName="obtenerUltimasLecturas",
 			action="urn:obtenerUltimasLecturas")
 	@WebResult(name="ultimasLecturasResultado")
-	public Vector<Lectura> obtenerUltimasLecturas(
+	public Vector<Reading> obtenerUltimasLecturas(
 			@WebParam(name="parametro") String parametro,
 			@WebParam(name="limite") int limite) {
-		Vector<Lectura> lecturas = new Vector<Lectura>();
+		Vector<Reading> lecturas = new Vector<Reading>();
 		
 		Statement st = null;
 		ResultSet rs = null;
@@ -314,11 +314,11 @@ public class RedServImpl implements RedServ
 						"ORDER BY tiempo DESC LIMIT 0,1");
 			
 				while (rs.next()) {
-					Lectura p = new Lectura();
+					Reading p = new Reading();
 					p.setNid(rs.getInt("nid"));
-					p.setParametro(rs.getString("parametro"));
-					p.setTiempo(rs.getString("tiempo"));
-					p.setValor(rs.getString("valor"));
+					p.setParameter(rs.getString("parametro"));
+					p.setTime(rs.getString("tiempo"));
+					p.setValue(rs.getString("valor"));
 					lecturas.add(p);
 				}
 			}
@@ -347,15 +347,15 @@ public class RedServImpl implements RedServ
 	 * @param tiempo	El tiempo hasta el cual regresar lecturas
 	 * @param limite	El número límite de lecturas a regresar
 	 * @return			Un listado de lecturas
-	 * @see				Lectura
+	 * @see				Reading
 	 **************************************************************************/
 	@WebMethod(operationName="obtenerLecturasAlTiempo",
 			action="urn:obtenerLecturasAlTiempo")
 	@WebResult(name="lecturasAlTiempoResultado")
-	public Vector<Lectura> obtenerLecturasAlTiempo(
+	public Vector<Reading> obtenerLecturasAlTiempo(
 			@WebParam(name="tiempo") String tiempo,
 			@WebParam(name="limite") int limite) {
-		Vector<Lectura> lecturas = new Vector<Lectura>();
+		Vector<Reading> lecturas = new Vector<Reading>();
 		
 		Statement st = null;
 		ResultSet rs = null;
@@ -367,11 +367,11 @@ public class RedServImpl implements RedServ
 					"LIMIT 0," + limite);
 			
 			while (rs.next()) {
-				Lectura p = new Lectura();
+				Reading p = new Reading();
 				p.setNid(rs.getInt("nid"));
-				p.setParametro(rs.getString("parametro"));
-				p.setTiempo(rs.getString("tiempo"));
-				p.setValor(rs.getString("valor"));
+				p.setParameter(rs.getString("parametro"));
+				p.setTime(rs.getString("tiempo"));
+				p.setValue(rs.getString("valor"));
 				lecturas.add(p);
 			}
 			
@@ -402,16 +402,16 @@ public class RedServImpl implements RedServ
 	 * @param parametro	Parámetro del cuál obtener lecturas
 	 * @param limite		El número límite de lecturas a regresar
 	 * @return				Un listado de lecturas
-	 * @see					Lectura
+	 * @see					Reading
 	 **************************************************************************/
 	@WebMethod(operationName="obtenerLecturas", action="urn:obtenerLecturas")
 	@WebResult(name="lecturasResultado")
-	public Vector<Lectura> obtenerLecturas(
+	public Vector<Reading> obtenerLecturas(
 			@WebParam(name="desde") String desde,
 			@WebParam(name="hasta") String hasta,
 			@WebParam(name="parametro") String parametro,
 			@WebParam(name="limite") int limite) {
-		Vector<Lectura> lecturas = new Vector<Lectura>();
+		Vector<Reading> lecturas = new Vector<Reading>();
 		
 		Statement st = null;
 		ResultSet rs = null;
@@ -429,11 +429,11 @@ public class RedServImpl implements RedServ
 			rs = st.executeQuery(query);
 			
 			while (rs.next()) {
-				Lectura p = new Lectura();
+				Reading p = new Reading();
 				p.setNid(rs.getInt("nid"));
-				p.setParametro(rs.getString("parametro"));
-				p.setTiempo(rs.getString("tiempo"));
-				p.setValor(rs.getString("valor"));
+				p.setParameter(rs.getString("parametro"));
+				p.setTime(rs.getString("tiempo"));
+				p.setValue(rs.getString("valor"));
 				lecturas.add(p);
 			}
 			
@@ -458,14 +458,14 @@ public class RedServImpl implements RedServ
 	 * 
 	 * @param limite	El número límite de eventos a regresar
 	 * @return			Un listado de eventos
-	 * @see				Evento
+	 * @see				Event
 	 **************************************************************************/
 	@WebMethod(operationName="obtenerListadoEventos",
 			action="urn:obtenerListadoEventos")
 	@WebResult(name="listadoEventosResultado")
-	public Vector<Evento> obtenerListadoEventos(
+	public Vector<Event> obtenerListadoEventos(
 			@WebParam(name="limite") int limite) {
-		Vector<Evento> eventos = new Vector<Evento>();
+		Vector<Event> eventos = new Vector<Event>();
 		
 		Statement st = null;
 		ResultSet rs = null;
@@ -480,14 +480,14 @@ public class RedServImpl implements RedServ
 			rs = st.executeQuery(query);
 			
 			while (rs.next()) {
-				Evento e = new Evento();
+				Event e = new Event();
 				e.setId(rs.getInt("id"));
-				e.setAgregado(rs.getString("agregado"));
-				e.setNombre(rs.getString("nombre"));
-				e.setCriterio(rs.getString("criterio"));
-				e.setListo(rs.getBoolean("listo"));
+				e.setAdded(rs.getString("agregado"));
+				e.setName(rs.getString("nombre"));
+				e.setCriteria(rs.getString("criterio"));
+				e.setReady(rs.getBoolean("listo"));
 				e.setNid(rs.getInt("nid"));
-				e.setTiempo(rs.getString("tiempo"));
+				e.setTime(rs.getString("tiempo"));
 				eventos.add(e);
 			}
 			
@@ -510,13 +510,13 @@ public class RedServImpl implements RedServ
 	 * 
 	 * @param id	ID del evento
 	 * @return		La información del evento indicado
-	 * @see			Evento
+	 * @see			Event
 	 **************************************************************************/
 	@WebMethod(operationName="obtenerEventoPorId",
 			action="urn:obtenerEventoPorId")
 	@WebResult(name="eventoPorIdResultado")
-	public Evento obtenerEventoPorId(@WebParam(name="id") int id) {
-		Evento evento = new Evento();
+	public Event obtenerEventoPorId(@WebParam(name="id") int id) {
+		Event evento = new Event();
 		
 		Statement st = null;
 		ResultSet rs = null;
@@ -531,12 +531,12 @@ public class RedServImpl implements RedServ
 			
 			while (rs.next()) {
 				evento.setId(rs.getInt("id"));
-				evento.setAgregado(rs.getString("agregado"));
-				evento.setNombre(rs.getString("nombre"));
-				evento.setCriterio(rs.getString("criterio"));
-				evento.setListo(rs.getBoolean("listo"));
+				evento.setAdded(rs.getString("agregado"));
+				evento.setName(rs.getString("nombre"));
+				evento.setCriteria(rs.getString("criterio"));
+				evento.setReady(rs.getBoolean("listo"));
 				evento.setNid(rs.getInt("nid"));
-				evento.setTiempo(rs.getString("tiempo"));
+				evento.setTime(rs.getString("tiempo"));
 			}
 			
 		} catch (SQLException ex) {

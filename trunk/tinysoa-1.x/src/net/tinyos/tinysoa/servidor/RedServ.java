@@ -81,9 +81,9 @@ public interface RedServ {
 	 * Regresa una lista de los actuadores disponibles en la red.
 	 * 
 	 * @return	Una lista de actuadores
-	 * @see		Actuador
+	 * @see		Actuator
 	 **************************************************************************/
-	public Vector<Actuador> obtenerActuadores();
+	public Vector<Actuator> obtenerActuadores();
 	
 	/***************************************************************************
 	 * Regresa una lista de los parámetros de sensado disponibles.
@@ -100,9 +100,9 @@ public interface RedServ {
 	 * @param parametro	El parámetro de sensado deseado, deje vacío para todos
 	 * @param limite	El número límite de lecturas a regresar
 	 * @return			Un listado de lecturas
-	 * @see				Lectura
+	 * @see				Reading
 	 **************************************************************************/
-	public Vector<Lectura> obtenerUltimasLecturas(String parametro, int limite);
+	public Vector<Reading> obtenerUltimasLecturas(String parametro, int limite);
 	
 	/***************************************************************************
 	 * Regresa un listado de las lecturas disponibles hasta el tiempo indicado,
@@ -112,9 +112,9 @@ public interface RedServ {
 	 * @param tiempo	El tiempo hasta el cual regresar lecturas
 	 * @param limite	El número límite de lecturas a regresar
 	 * @return			Un listado de lecturas
-	 * @see				Lectura
+	 * @see				Reading
 	 **************************************************************************/
-	public Vector<Lectura> obtenerLecturasAlTiempo(String tiempo, int limite);
+	public Vector<Reading> obtenerLecturasAlTiempo(String tiempo, int limite);
 	
 	/***************************************************************************
 	 * Regresa un listado de las lecturas disponibles en el rango de tiempo
@@ -129,9 +129,9 @@ public interface RedServ {
 	 * @param parametro	Parámetro del cuál obtener lecturas
 	 * @param limite		El número límite de lecturas a regresar
 	 * @return				Un listado de lecturas
-	 * @see					Lectura
+	 * @see					Reading
 	 **************************************************************************/
-	public Vector<Lectura> obtenerLecturas(String desde, String hasta,
+	public Vector<Reading> obtenerLecturas(String desde, String hasta,
 			String parametro, int limite);
 	
 	/***************************************************************************
@@ -141,18 +141,18 @@ public interface RedServ {
 	 * 
 	 * @param limite	El número límite de eventos a regresar
 	 * @return			Un listado de eventos
-	 * @see				Evento
+	 * @see				Event
 	 **************************************************************************/
-	public Vector<Evento> obtenerListadoEventos(int limite);
+	public Vector<Event> obtenerListadoEventos(int limite);
 	
 	/***************************************************************************
 	 * Regresa la información de un evento.
 	 * 
 	 * @param id	ID del evento
 	 * @return		La información del evento indicado
-	 * @see			Evento
+	 * @see			Event
 	 **************************************************************************/
-	public Evento obtenerEventoPorId(int id);
+	public Event obtenerEventoPorId(int id);
 	
 	/***************************************************************************
 	 * Agrega un evento a la lista de eventos. Si existe un error en la

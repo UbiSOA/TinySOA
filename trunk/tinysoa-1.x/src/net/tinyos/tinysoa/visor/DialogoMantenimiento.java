@@ -32,6 +32,7 @@ import java.util.*;
 import javax.swing.*;
 
 import net.tinyos.tinysoa.common.*;
+import net.tinyos.tinysoa.common.Event;
 import net.tinyos.tinysoa.servidor.*;
 
 /*******************************************************************************
@@ -271,7 +272,7 @@ public class DialogoMantenimiento extends JDialog {
 		this.eventos = eventos;
 		Object[] valores = new Object[eventos.length];
 		for (int i = 0; i < eventos.length; i++)
-			valores[i] = ((Evento)eventos[i]).getNombre();
+			valores[i] = ((Event)eventos[i]).getName();
 		cb03.setModel(new DefaultComboBoxModel(valores));		
 	}
 	
@@ -330,7 +331,7 @@ public class DialogoMantenimiento extends JDialog {
 		
 		if (cb03.getItemCount() == 0) {
 			progreso.setVisible(true);
-			Vector<Evento> eventos = servicioRed.obtenerListadoEventos(0);
+			Vector<Event> eventos = servicioRed.obtenerListadoEventos(0);
 			defEventos(eventos.toArray());
 			progreso.setVisible(false);
 		}
@@ -365,41 +366,41 @@ public class DialogoMantenimiento extends JDialog {
 		
 		if (cb03.getItemCount() == 0) {
 			progreso.setVisible(true);
-			Vector<Evento> eventos = servicioRed.obtenerListadoEventos(0);
+			Vector<Event> eventos = servicioRed.obtenerListadoEventos(0);
 			defEventos(eventos.toArray());
 			progreso.setVisible(false);
 		}
 		
-		if ((tarea.getTipo() == Constantes.TIPO_ACTIVA_ACTUADOR) ||
-				(tarea.getTipo() == Constantes.TIPO_DESACTIVA_ACTUADOR)) {
+		if ((tarea.getTipo() == Constants.TIPO_ACTIVA_ACTUADOR) ||
+				(tarea.getTipo() == Constants.TIPO_DESACTIVA_ACTUADOR)) {
 			tp01.setSelectedIndex(0);
-			if (tarea.getValor() == Constantes.ACTUADOR_BOCINA)
+			if (tarea.getValor() == Constants.ACTUADOR_BOCINA)
 				cb01.setSelectedIndex(0);
-			if (tarea.getValor() == Constantes.ACTUADOR_LED_AMARILLO)
+			if (tarea.getValor() == Constants.ACTUADOR_LED_AMARILLO)
 				cb01.setSelectedIndex(1);
-			if (tarea.getValor() == Constantes.ACTUADOR_LED_ROJO)
+			if (tarea.getValor() == Constants.ACTUADOR_LED_ROJO)
 				cb01.setSelectedIndex(3);
-			if (tarea.getValor() == Constantes.ACTUADOR_LED_VERDE)
+			if (tarea.getValor() == Constants.ACTUADOR_LED_VERDE)
 				cb01.setSelectedIndex(4);
 			s01.setValue(10);
-			if (tarea.getTipo() == Constantes.TIPO_ACTIVA_ACTUADOR)
+			if (tarea.getTipo() == Constants.TIPO_ACTIVA_ACTUADOR)
 				rb01.setSelected(true);
 			else rb02.setSelected(true);
 		}
 		
-		if (tarea.getTipo() == Constantes.TIPO_CAMBIA_DATA_RATE) {
+		if (tarea.getTipo() == Constants.TIPO_CAMBIA_DATA_RATE) {
 			tp01.setSelectedIndex(1);
 			cb01.setSelectedIndex(0);
 			s01.setValue(tarea.getValor());
 			rb03.setSelected(true);
 		}
 		
-		if ((tarea.getTipo() == Constantes.TIPO_DUERME) ||
-				(tarea.getTipo() == Constantes.TIPO_DESPIERTA)) {
+		if ((tarea.getTipo() == Constants.TIPO_DUERME) ||
+				(tarea.getTipo() == Constants.TIPO_DESPIERTA)) {
 			tp01.setSelectedIndex(2);
 			cb01.setSelectedIndex(0);
 			s01.setValue(10);
-			if (tarea.getTipo() == Constantes.TIPO_DUERME)
+			if (tarea.getTipo() == Constants.TIPO_DUERME)
 				rb03.setSelected(true);
 			else rb04.setSelected(true);
 		}
@@ -431,8 +432,8 @@ public class DialogoMantenimiento extends JDialog {
 			rb07.setSelected(true);
 			String nes = "";
 			for (int i = 0; i < eventos.length; i++)
-				if (((Evento)eventos[i]).getId() == tarea.getEvento())
-					nes = ((Evento)eventos[i]).getNombre();
+				if (((Event)eventos[i]).getId() == tarea.getEvento())
+					nes = ((Event)eventos[i]).getName();
 			for (int i = 0; i < cb03.getModel().getSize(); i++)
 				if (cb03.getModel().getElementAt(i).
 						toString().compareTo(nes) == 0)
@@ -488,29 +489,29 @@ public class DialogoMantenimiento extends JDialog {
 					
 					if (tp01.getSelectedIndex() == 0) {
 						if (rb01.isSelected())
-							tipo = Constantes.TIPO_ACTIVA_ACTUADOR;
+							tipo = Constants.TIPO_ACTIVA_ACTUADOR;
 						if (rb02.isSelected())
-							tipo = Constantes.TIPO_DESACTIVA_ACTUADOR;
+							tipo = Constants.TIPO_DESACTIVA_ACTUADOR;
 						if (cb01.getSelectedIndex() == 0)
-							valor = Constantes.ACTUADOR_BOCINA;
+							valor = Constants.ACTUADOR_BOCINA;
 						if (cb01.getSelectedIndex() == 1)
-							valor = Constantes.ACTUADOR_LED_AMARILLO;
+							valor = Constants.ACTUADOR_LED_AMARILLO;
 						if (cb01.getSelectedIndex() == 2)
-							valor = Constantes.ACTUADOR_LED_AZUL;
+							valor = Constants.ACTUADOR_LED_AZUL;
 						if (cb01.getSelectedIndex() == 3)
-							valor = Constantes.ACTUADOR_LED_ROJO;
+							valor = Constants.ACTUADOR_LED_ROJO;
 						if (cb01.getSelectedIndex() == 4)
-							valor = Constantes.ACTUADOR_LED_VERDE;
+							valor = Constants.ACTUADOR_LED_VERDE;
 					}
 					if (tp01.getSelectedIndex() == 1) {
-						tipo = Constantes.TIPO_CAMBIA_DATA_RATE;
+						tipo = Constants.TIPO_CAMBIA_DATA_RATE;
 						valor = Integer.parseInt(s01.getValue().toString());
 					}
 					if (tp01.getSelectedIndex() == 2) {
 						if (rb03.isSelected())
-							tipo = Constantes.TIPO_DUERME;
+							tipo = Constants.TIPO_DUERME;
 						if (rb04.isSelected())
-							tipo = Constantes.TIPO_DESPIERTA;
+							tipo = Constants.TIPO_DESPIERTA;
 					}
 					
 					if (cb02.getSelectedItem().toString().substring(0, 4).
@@ -528,9 +529,9 @@ public class DialogoMantenimiento extends JDialog {
 						if (cb03.getSelectedItem() != null) {
 							String nEv = cb03.getSelectedItem().toString();
 							for (int i = 0; i < eventos.length; i++)
-								if (((Evento)eventos[i]).getNombre().
+								if (((Event)eventos[i]).getName().
 										compareTo(nEv) == 0)
-									evento = ((Evento)eventos[i]).getId();
+									evento = ((Event)eventos[i]).getId();
 						}
 					
 					boolean res = false;
