@@ -43,40 +43,40 @@ public final class Constants {
 	public static int TMSKY1 = 0xE1;
 	
 	// Data rates
-	public static int DATA_RATE_INICIAL	= 2000;
-	public static int DATA_RATE_ACTIVO	= 1000;
-	public static int DATA_RATE_ESTABLE	= 5000;
+	public static int DATA_RATE_INITIAL	= 2000;
+	public static int DATA_RATE_ACTIVE	= 1000;
+	public static int DATA_RATE_STABLE	= 5000;
 	
-	// Tipos de mensajes
-	public static int TIPO_LECTURA			= 0;
-	public static int TIPO_REGISTRO			= 1;
-	public static int TIPO_ACTIVA_ACTUADOR	= 2;
-	public static int TIPO_DESACTIVA_ACTUADOR	= 3;
-	public static int TIPO_DUERME				= 4;
-	public static int TIPO_DESPIERTA			= 5;
-	public static int TIPO_CAMBIA_DATA_RATE	= 6;
-	public static int TIPO_SOLICITUD_REGISTRO	= 7;
-	public static int TIPO_SUSCRIBIR			= 8;
+	// Message types
+	public static int TYPE_READING				= 0;
+	public static int TYPE_REGISTER				= 1;
+	public static int TYPE_ACTUATOR_START		= 2;
+	public static int TYPE_ACTUATOR_STOP		= 3;
+	public static int TYPE_SLEEP				= 4;
+	public static int TYPE_WAKEUP				= 5;
+	public static int TYPE_CHANGE_DATA_RATE		= 6;
+	public static int TYPE_REGISTER_REQUEST		= 7;
+	public static int TYPE_SUBSCRIBE			= 8;
 	
-	// Tipos de sensores
-	public static int SENSOR_NULO	= 0xB000;
+	// Sensor types
+	public static int SENSOR_NULL	= 0xB000;
 	public static int SENSOR_TEMP	= 0xB001;
-	public static int SENSOR_LUZ	= 0xB002;
+	public static int SENSOR_LIGHT	= 0xB002;
 	public static int SENSOR_MAGX	= 0xB003;
-	public static int SENSOR_MAGY = 0xB004;
+	public static int SENSOR_MAGY 	= 0xB004;
 	public static int SENSOR_ACEX	= 0xB005;
 	public static int SENSOR_ACEY	= 0xB006;
 	public static int SENSOR_MIC	= 0xB007;
 	public static int SENSOR_VOLT	= 0xB008;
 	
-	// Tipos de actuadores
-	public static int ACTUADOR_BOCINA			= 0xA001;
-	public static int ACTUADOR_LED_ROJO		= 0xA002;
-	public static int ACTUADOR_LED_AMARILLO	= 0xA003;
-	public static int ACTUADOR_LED_AZUL		= 0xA003;
-	public static int ACTUADOR_LED_VERDE		= 0xA004;
+	// Actuators types
+	public static int ACTUATOR_BUZZER		= 0xA001;
+	public static int ACTUATOR_LED_RED		= 0xA002;
+	public static int ACTUATOR_LED_YELLOW	= 0xA003;
+	public static int ACTUATOR_LED_BLUE		= 0xA003;
+	public static int ACTUATOR_LED_GREEN	= 0xA004;
 	
-	// Tipos de mensajes
+	// TinyOS message types
 	public static int AM_TINYSOAMSG		= 24;
 	public static int AM_TINYSOACMDMSG	= 25;
 	
