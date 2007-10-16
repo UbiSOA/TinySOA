@@ -18,39 +18,50 @@
 package net.tinyos.tinysoa.common;
 
 /*******************************************************************************
- * Node class which instances are provided by the services.
+ * Parameter class which instances are provided by the services.
  * 
  * @author		Edgardo Avilés López
  * @version	0.1, 07/24/2006
  ******************************************************************************/
-public class Node {
+public class Parameter {
 	
-	private int id;
+	private String name;
+	private String description;
 	
 	/***************************************************************************
-	 * Defines the node ID.
+	 * Defines the parameter name.
 	 * 
-	 * @param id	Node ID
+	 * @param name	Parameter name
 	 **************************************************************************/
-	public void setId(int id) {
-		this.id = id;
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	/***************************************************************************
-	 * Returns the node ID.
+	 * Returns the parameter name.
 	 * 
-	 * @return	Node ID
+	 * @return	Parameter name
 	 **************************************************************************/
-	public int getId() {
-		return id;
+	public String getName() {
+		return name;
 	}
 	
 	/***************************************************************************
-	 * Returns a string with the instance information.
+	 * Defines the parameter description.
 	 * 
-	 * @return	A string with the object values
+	 * @param description	Parameter description
 	 **************************************************************************/
-	public String toString() {
-		return id + "";
+	public void setDescription(String description) {
+		this.description = description;
 	}
+	
+	/***************************************************************************
+	 * Returns the parameter description.
+	 * 
+	 * @return	Parameter description
+	 **************************************************************************/
+	public String getDescription() {
+		return description;
+	}
+	
 }

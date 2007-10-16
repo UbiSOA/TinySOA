@@ -1,22 +1,17 @@
 /*
- * "Copyright (c) 2005-2006 The Regents of the Centro de Investigación y de
- * Educación Superior de la ciudad de Ensenada, Baja California (CICESE).
- *
- * Permission to use, copy, modify, and distribute this software and its
- * documentation for any purpose, without fee, and without written agreement is
- * hereby granted, provided that the above copyright notice, the following
- * two paragraphs and the author appear in all copies of this software.
+ *  Copyright 2007 Edgardo Avilés López
  * 
- * IN NO EVENT SHALL CICESE BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
- * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OF THIS
- * SOFTWARE AND ITS DOCUMENTATION, EVEN IF CICESE HAS BEEN ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  * 
- * CICESE SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE.  THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND CICESE
- * HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS,
- * OR MODIFICATIONS."
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *    
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  * 
  ******************************************************************************/
 
@@ -39,7 +34,7 @@ public class TinySOAMsg extends net.tinyos.message.Message {
     /** The Active Message type associated with this message. */
     public static final int AM_TYPE = 24;
     
-    public static final int MI_OFFSET = 8 * 7;
+    public static final int MY_OFFSET = 8 * 7;
 
     /** Create a new TinySOAMsg of size 21. */
     public TinySOAMsg() {
@@ -141,7 +136,7 @@ public class TinySOAMsg extends net.tinyos.message.Message {
         s += "  [id=0x"+Long.toHexString(get_id())+"]\n";
       } catch (ArrayIndexOutOfBoundsException aioobe) { /* Skip field */ }
       try {
-        s += "  [padre=0x"+Long.toHexString(get_padre())+"]\n";
+        s += "  [parent=0x"+Long.toHexString(get_parent())+"]\n";
       } catch (ArrayIndexOutOfBoundsException aioobe) { /* Skip field */ }
       try {
         s += "  [nsec=0x"+Long.toHexString(get_nsec())+"]\n";
@@ -150,7 +145,7 @@ public class TinySOAMsg extends net.tinyos.message.Message {
         s += "  [sensor=0x"+Long.toHexString(get_sensor())+"]\n";
       } catch (ArrayIndexOutOfBoundsException aioobe) { /* Skip field */ }
       try {
-        s += "  [tipo=0x"+Long.toHexString(get_tipo())+"]\n";
+        s += "  [type=0x"+Long.toHexString(get_type())+"]\n";
       } catch (ArrayIndexOutOfBoundsException aioobe) { /* Skip field */ }
       return s;
     }
@@ -189,7 +184,7 @@ public class TinySOAMsg extends net.tinyos.message.Message {
      * Return the offset (in bits) of the field 'l1'
      */
     public static int offsetBits_l1() {
-        return 0 + MI_OFFSET;
+        return 0 + MY_OFFSET;
     }
 
     /**
@@ -252,7 +247,7 @@ public class TinySOAMsg extends net.tinyos.message.Message {
      * Return the offset (in bits) of the field 'l2'
      */
     public static int offsetBits_l2() {
-        return 16 + MI_OFFSET;
+        return 16 + MY_OFFSET;
     }
 
     /**
@@ -315,7 +310,7 @@ public class TinySOAMsg extends net.tinyos.message.Message {
      * Return the offset (in bits) of the field 'l3'
      */
     public static int offsetBits_l3() {
-        return 32 + MI_OFFSET;
+        return 32 + MY_OFFSET;
     }
 
     /**
@@ -378,7 +373,7 @@ public class TinySOAMsg extends net.tinyos.message.Message {
      * Return the offset (in bits) of the field 'l4'
      */
     public static int offsetBits_l4() {
-        return 48 + MI_OFFSET;
+        return 48 + MY_OFFSET;
     }
 
     /**
@@ -441,7 +436,7 @@ public class TinySOAMsg extends net.tinyos.message.Message {
      * Return the offset (in bits) of the field 'l5'
      */
     public static int offsetBits_l5() {
-        return 64 + MI_OFFSET;
+        return 64 + MY_OFFSET;
     }
 
     /**
@@ -504,7 +499,7 @@ public class TinySOAMsg extends net.tinyos.message.Message {
      * Return the offset (in bits) of the field 'l6'
      */
     public static int offsetBits_l6() {
-        return 80 + MI_OFFSET;
+        return 80 + MY_OFFSET;
     }
 
     /**
@@ -567,7 +562,7 @@ public class TinySOAMsg extends net.tinyos.message.Message {
      * Return the offset (in bits) of the field 'l7'
      */
     public static int offsetBits_l7() {
-        return 96 + MI_OFFSET;
+        return 96 + MY_OFFSET;
     }
 
     /**
@@ -630,7 +625,7 @@ public class TinySOAMsg extends net.tinyos.message.Message {
      * Return the offset (in bits) of the field 'l8'
      */
     public static int offsetBits_l8() {
-        return 112 + MI_OFFSET;
+        return 112 + MY_OFFSET;
     }
 
     /**
@@ -693,7 +688,7 @@ public class TinySOAMsg extends net.tinyos.message.Message {
      * Return the offset (in bits) of the field 'id'
      */
     public static int offsetBits_id() {
-        return 128 + MI_OFFSET;
+        return 128 + MY_OFFSET;
     }
 
     /**
@@ -725,65 +720,65 @@ public class TinySOAMsg extends net.tinyos.message.Message {
     }
 
     /////////////////////////////////////////////////////////
-    // Accessor methods for field: padre
+    // Accessor methods for field: parent
     //   Field type: short, unsigned
     //   Offset (bits): 136
     //   Size (bits): 8
     /////////////////////////////////////////////////////////
 
     /**
-     * Return whether the field 'padre' is signed (false).
+     * Return whether the field 'parent' is signed (false).
      */
-    public static boolean isSigned_padre() {
+    public static boolean isSigned_parent() {
         return false;
     }
 
     /**
-     * Return whether the field 'padre' is an array (false).
+     * Return whether the field 'parent' is an array (false).
      */
-    public static boolean isArray_padre() {
+    public static boolean isArray_parent() {
         return false;
     }
 
     /**
-     * Return the offset (in bytes) of the field 'padre'
+     * Return the offset (in bytes) of the field 'parent'
      */
-    public static int offset_padre() {
+    public static int offset_parent() {
         return (136 / 8);
     }
 
     /**
-     * Return the offset (in bits) of the field 'padre'
+     * Return the offset (in bits) of the field 'parent'
      */
-    public static int offsetBits_padre() {
-        return 136 + MI_OFFSET;
+    public static int offsetBits_parent() {
+        return 136 + MY_OFFSET;
     }
 
     /**
-     * Return the value (as a short) of the field 'padre'
+     * Return the value (as a short) of the field 'parent'
      */
-    public short get_padre() {
-        return (short)getUIntElement(offsetBits_padre(), 8);
+    public short get_parent() {
+        return (short)getUIntElement(offsetBits_parent(), 8);
     }
 
     /**
-     * Set the value of the field 'padre'
+     * Set the value of the field 'parent'
      */
-    public void set_padre(short value) {
-        setUIntElement(offsetBits_padre(), 8, value);
+    public void set_parent(short value) {
+        setUIntElement(offsetBits_parent(), 8, value);
     }
 
     /**
-     * Return the size, in bytes, of the field 'padre'
+     * Return the size, in bytes, of the field 'parent'
      */
-    public static int size_padre() {
+    public static int size_parent() {
         return (8 / 8);
     }
 
     /**
-     * Return the size, in bits, of the field 'padre'
+     * Return the size, in bits, of the field 'parent'
      */
-    public static int sizeBits_padre() {
+    public static int sizeBits_parent() {
         return 8;
     }
 
@@ -819,7 +814,7 @@ public class TinySOAMsg extends net.tinyos.message.Message {
      * Return the offset (in bits) of the field 'nsec'
      */
     public static int offsetBits_nsec() {
-        return 144 + MI_OFFSET;
+        return 144 + MY_OFFSET;
     }
 
     /**
@@ -882,7 +877,7 @@ public class TinySOAMsg extends net.tinyos.message.Message {
      * Return the offset (in bits) of the field 'sensor'
      */
     public static int offsetBits_sensor() {
-        return 152 + MI_OFFSET;
+        return 152 + MY_OFFSET;
     }
 
     /**
@@ -914,65 +909,65 @@ public class TinySOAMsg extends net.tinyos.message.Message {
     }
 
     /////////////////////////////////////////////////////////
-    // Accessor methods for field: tipo
+    // Accessor methods for field: type
     //   Field type: short, unsigned
     //   Offset (bits): 160
     //   Size (bits): 8
     /////////////////////////////////////////////////////////
 
     /**
-     * Return whether the field 'tipo' is signed (false).
+     * Return whether the field 'type' is signed (false).
      */
-    public static boolean isSigned_tipo() {
+    public static boolean isSigned_type() {
         return false;
     }
 
     /**
-     * Return whether the field 'tipo' is an array (false).
+     * Return whether the field 'type' is an array (false).
      */
-    public static boolean isArray_tipo() {
+    public static boolean isArray_type() {
         return false;
     }
 
     /**
-     * Return the offset (in bytes) of the field 'tipo'
+     * Return the offset (in bytes) of the field 'type'
      */
-    public static int offset_tipo() {
+    public static int offset_type() {
         return (160 / 8);
     }
 
     /**
-     * Return the offset (in bits) of the field 'tipo'
+     * Return the offset (in bits) of the field 'type'
      */
-    public static int offsetBits_tipo() {
-        return 160 + MI_OFFSET;
+    public static int offsetBits_type() {
+        return 160 + MY_OFFSET;
     }
 
     /**
-     * Return the value (as a short) of the field 'tipo'
+     * Return the value (as a short) of the field 'type'
      */
-    public short get_tipo() {
-        return (short)getUIntElement(offsetBits_tipo(), 8);
+    public short get_type() {
+        return (short)getUIntElement(offsetBits_type(), 8);
     }
 
     /**
-     * Set the value of the field 'tipo'
+     * Set the value of the field 'type'
      */
-    public void set_tipo(short value) {
-        setUIntElement(offsetBits_tipo(), 8, value);
+    public void set_type(short value) {
+        setUIntElement(offsetBits_type(), 8, value);
     }
 
     /**
-     * Return the size, in bytes, of the field 'tipo'
+     * Return the size, in bytes, of the field 'type'
      */
-    public static int size_tipo() {
+    public static int size_type() {
         return (8 / 8);
     }
 
     /**
-     * Return the size, in bits, of the field 'tipo'
+     * Return the size, in bits, of the field 'type'
      */
-    public static int sizeBits_tipo() {
+    public static int sizeBits_type() {
         return 8;
     }
 

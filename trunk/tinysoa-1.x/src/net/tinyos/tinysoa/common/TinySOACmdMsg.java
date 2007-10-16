@@ -1,22 +1,17 @@
 /*
- * "Copyright (c) 2005-2006 The Regents of the Centro de Investigación y de
- * Educación Superior de la ciudad de Ensenada, Baja California (CICESE).
- *
- * Permission to use, copy, modify, and distribute this software and its
- * documentation for any purpose, without fee, and without written agreement is
- * hereby granted, provided that the above copyright notice, the following
- * two paragraphs and the author appear in all copies of this software.
+ *  Copyright 2007 Edgardo Avilés López
  * 
- * IN NO EVENT SHALL CICESE BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
- * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OF THIS
- * SOFTWARE AND ITS DOCUMENTATION, EVEN IF CICESE HAS BEEN ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  * 
- * CICESE SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE.  THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND CICESE
- * HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS,
- * OR MODIFICATIONS."
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *    
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  * 
  ******************************************************************************/
 
@@ -112,10 +107,10 @@ public class TinySOACmdMsg extends net.tinyos.message.Message {
     public String toString() {
       String s = "Message <TinySOACmdMsg> \n";
       try {
-        s += "  [datos=0x"+Long.toHexString(get_datos())+"]\n";
+        s += "  [data=0x"+Long.toHexString(get_data())+"]\n";
       } catch (ArrayIndexOutOfBoundsException aioobe) { /* Skip field */ }
       try {
-        s += "  [tipo=0x"+Long.toHexString(get_tipo())+"]\n";
+        s += "  [type=0x"+Long.toHexString(get_type())+"]\n";
       } catch (ArrayIndexOutOfBoundsException aioobe) { /* Skip field */ }
       try {
         s += "  [id=0x"+Long.toHexString(get_id())+"]\n";
@@ -126,128 +121,128 @@ public class TinySOACmdMsg extends net.tinyos.message.Message {
     // Message-type-specific access methods appear below.
 
     /////////////////////////////////////////////////////////
-    // Accessor methods for field: datos
+    // Accessor methods for field: data
     //   Field type: int, unsigned
     //   Offset (bits): 0
     //   Size (bits): 16
     /////////////////////////////////////////////////////////
 
     /**
-     * Return whether the field 'datos' is signed (false).
+     * Return whether the field 'data' is signed (false).
      */
-    public static boolean isSigned_datos() {
+    public static boolean isSigned_data() {
         return false;
     }
 
     /**
-     * Return whether the field 'datos' is an array (false).
+     * Return whether the field 'data' is an array (false).
      */
-    public static boolean isArray_datos() {
+    public static boolean isArray_data() {
         return false;
     }
 
     /**
-     * Return the offset (in bytes) of the field 'datos'
+     * Return the offset (in bytes) of the field 'data'
      */
-    public static int offset_datos() {
+    public static int offset_data() {
         return (0 / 8);
     }
 
     /**
-     * Return the offset (in bits) of the field 'datos'
+     * Return the offset (in bits) of the field 'data'
      */
-    public static int offsetBits_datos() {
+    public static int offsetBits_data() {
         return 0;
     }
 
     /**
-     * Return the value (as a int) of the field 'datos'
+     * Return the value (as a int) of the field 'data'
      */
-    public int get_datos() {
-        return (int)getUIntElement(offsetBits_datos(), 16);
+    public int get_data() {
+        return (int)getUIntElement(offsetBits_data(), 16);
     }
 
     /**
-     * Set the value of the field 'datos'
+     * Set the value of the field 'data'
      */
-    public void set_datos(int value) {
-        setUIntElement(offsetBits_datos(), 16, value);
+    public void set_data(int value) {
+        setUIntElement(offsetBits_data(), 16, value);
     }
 
     /**
-     * Return the size, in bytes, of the field 'datos'
+     * Return the size, in bytes, of the field 'data'
      */
-    public static int size_datos() {
+    public static int size_data() {
         return (16 / 8);
     }
 
     /**
-     * Return the size, in bits, of the field 'datos'
+     * Return the size, in bits, of the field 'data'
      */
-    public static int sizeBits_datos() {
+    public static int sizeBits_data() {
         return 16;
     }
 
     /////////////////////////////////////////////////////////
-    // Accessor methods for field: tipo
+    // Accessor methods for field: type
     //   Field type: short, unsigned
     //   Offset (bits): 16
     //   Size (bits): 8
     /////////////////////////////////////////////////////////
 
     /**
-     * Return whether the field 'tipo' is signed (false).
+     * Return whether the field 'type' is signed (false).
      */
-    public static boolean isSigned_tipo() {
+    public static boolean isSigned_type() {
         return false;
     }
 
     /**
-     * Return whether the field 'tipo' is an array (false).
+     * Return whether the field 'type' is an array (false).
      */
-    public static boolean isArray_tipo() {
+    public static boolean isArray_type() {
         return false;
     }
 
     /**
-     * Return the offset (in bytes) of the field 'tipo'
+     * Return the offset (in bytes) of the field 'type'
      */
-    public static int offset_tipo() {
+    public static int offset_type() {
         return (16 / 8);
     }
 
     /**
-     * Return the offset (in bits) of the field 'tipo'
+     * Return the offset (in bits) of the field 'type'
      */
-    public static int offsetBits_tipo() {
+    public static int offsetBits_type() {
         return 16;
     }
 
     /**
-     * Return the value (as a short) of the field 'tipo'
+     * Return the value (as a short) of the field 'type'
      */
-    public short get_tipo() {
-        return (short)getUIntElement(offsetBits_tipo(), 8);
+    public short get_type() {
+        return (short)getUIntElement(offsetBits_type(), 8);
     }
 
     /**
-     * Set the value of the field 'tipo'
+     * Set the value of the field 'type'
      */
-    public void set_tipo(short value) {
-        setUIntElement(offsetBits_tipo(), 8, value);
+    public void set_type(short value) {
+        setUIntElement(offsetBits_type(), 8, value);
     }
 
     /**
-     * Return the size, in bytes, of the field 'tipo'
+     * Return the size, in bytes, of the field 'type'
      */
-    public static int size_tipo() {
+    public static int size_type() {
         return (8 / 8);
     }
 
     /**
-     * Return the size, in bits, of the field 'tipo'
+     * Return the size, in bits, of the field 'type'
      */
-    public static int sizeBits_tipo() {
+    public static int sizeBits_type() {
         return 8;
     }
 
