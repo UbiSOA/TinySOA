@@ -1,22 +1,17 @@
 /*
- * "Copyright (c) 2005-2006 The Regents of the Centro de Investigación y de
- * Educación Superior de la ciudad de Ensenada, Baja California (CICESE).
- *
- * Permission to use, copy, modify, and distribute this software and its
- * documentation for any purpose, without fee, and without written agreement is
- * hereby granted, provided that the above copyright notice, the following
- * two paragraphs and the author appear in all copies of this software.
+ *  Copyright 2007 Edgardo Avilés López
  * 
- * IN NO EVENT SHALL CICESE BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
- * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OF THIS
- * SOFTWARE AND ITS DOCUMENTATION, EVEN IF CICESE HAS BEEN ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  * 
- * CICESE SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE.  THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND CICESE
- * HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS,
- * OR MODIFICATIONS."
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *    
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  * 
  ******************************************************************************/
 
@@ -34,33 +29,33 @@ import java.util.*;
 import java.sql.*;
 
 /*******************************************************************************
- * Clase que implementa la funcionalidad del componente TinySOA Gateway.
+ * Class that implements the functionality of the TinySOA Gateway component.
  * 
  * @author		Edgardo Avilés López
  * @version	0.2, 07/24/2006
  ******************************************************************************/
 public class TinySOAGateway {
 	
-	private static String TITULO_VENTANA = "TinySOA Gateway v0.2";
-	private static String ARCHIVO_CONFIGURACION = "configuracion.xml";
+	private static String WINDOW_TITLE = "TinySOA Gateway v0.2";
+	private static String CONFIG_FILE = "config.xml";
 
-	/** JFrame de la ventana principal. */
-	public static JFrame ventana;
+	/** JFrame of the main window. */
+	public static JFrame window;
 	
-	/** Conector con SerialForwarder. */
+	/** SerialForwarder connector. */
 	public static MoteIF mote;
 	
-	/** Configuración de la aplicación */
-	public static Properties configuracion;
+	/** Application configuration */
+	public static Properties configuration;
 	
-	/** Cliente de servicios internos. */
-	public static ClienteServInter cliente;
+	/** Internal services client. */
+	public static InternalServicesClient client;
 	
-	/** Procesador de mensajes. */
-	public static ProcesadorMensajes procesador;
+	/** Messages processor. */
+	public static MessageProcessor processor;
 	
-	/** Conector con MySQL */
-	public static Connection bd;
+	/** Database connector. */
+	public static Connection db;
 	
 	private static BorderLayout bl01;
 	private static Border bo01;
@@ -76,95 +71,92 @@ public class TinySOAGateway {
 	static ImageIcon i01, i02, i03;
 
 	/***************************************************************************
-	 * Realiza la conexión con SerialForwarder.
+	 * Starts SerialForwarder connection.
 	 **************************************************************************/
-	public static void conectar() {		
-		String servidor, usuario, password, bDatos;
-		servidor = usuario = password = bDatos = "";
+	public static void connect() {		
+		String server, user, password, database;
+		server = user = password = database = "";
 		
 		try {
-			servidor	= configuracion.getProperty("mysql.servidor");
-			usuario		= configuracion.getProperty("mysql.usuario");
-			password	= configuracion.getProperty("mysql.password");
-			bDatos		= configuracion.getProperty("mysql.bDatos");
+			server		= configuration.getProperty("mysql.server");
+			user		= configuration.getProperty("mysql.user");
+			password	= configuration.getProperty("mysql.password");
+			database	= configuration.getProperty("mysql.database");
 
-			if (servidor == null) {
+			if (server == null) {
 				
-				servidor	= "localhost";
-				usuario		= "root";
+				server		= "localhost";
+				user		= "root";
 				password	= "";
-				bDatos		= "tinysoabd";
+				database	= "tinysoadb";
 				
-				configuracion.setProperty("mysql.servidor", servidor);
-				configuracion.setProperty("mysql.usuario", usuario);
-				configuracion.setProperty("mysql.password", password);
-				configuracion.setProperty("mysql.bDatos", bDatos);
-				configuracion.storeToXML(
-						new FileOutputStream(ARCHIVO_CONFIGURACION), null);
+				configuration.setProperty("mysql.server", server);
+				configuration.setProperty("mysql.user", user);
+				configuration.setProperty("mysql.password", password);
+				configuration.setProperty("mysql.database", database);
+				configuration.storeToXML(
+						new FileOutputStream(CONFIG_FILE), null);
 			}
 		} catch (Exception ex) {}
 		
-		imprimirEstado(	"<html><strong>Conectando</strong> a " +
-						"SerialForwarder...</html>");
+		setStatus(	"<html><strong>Connecting</strong> to " +
+						"SerialForwarder&hellip;</html>");
 
 		mote = new MoteIF();
-		procesador = new ProcesadorMensajes(configuracion, t01, tm01, l01);
-		cliente = new ClienteServInter(mote, procesador);
-		mote.registerListener(new TinySOAMsg(), cliente);
-		procesador.defCliente(cliente);
+		processor = new MessageProcessor(configuration, t01, tm01, l01);
+		client = new InternalServicesClient(mote, processor);
+		mote.registerListener(new TinySOAMsg(), client);
+		processor.setClient(client);
 		
-		imprimirEstado(	"<html><strong>Conectado exitosamente</strong> a " +
-						"SerialForwarder.</html>");
+		setStatus("<html><strong>Connected successfully</strong> to " +
+				"SerialForwarder.</html>");
 		
-		imprimirEstado(	"<html><strong>Conectando</strong> a " +
-		"la base de datos...</html>");
+		setStatus("<html><strong>Connecting</strong> to database&hellip;</html>");
 
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			bd = DriverManager.getConnection(
-					"jdbc:mysql://" + servidor + "/" + bDatos + "?" +
-					"user=" + usuario + "&password=" + password);
+			db = DriverManager.getConnection(
+					"jdbc:mysql://" + server + "/" + database + "?" +
+					"user=" + user + "&password=" + password);
 		} catch (Exception ex) {
 			//ex.printStackTrace();
-			System.err.println("Imposible conectar a la base de datos.");
+			System.err.println("Impossible to connect to database.");
 			System.err.println(
-					"Verifique que la información en el archivo " +
-					"configuracion.xml es correcta y que la base de datos " +
-					"responde adecuadamente.");
+					"Please check if the config.xml file information is correct " +
+					"and that the database is working correctly.");
 			System.exit(1);
 		}
 		
-		procesador.defBD(bd);
+		processor.setDB(db);
 		
-		imprimirEstado(	"<html><strong>Conectado exitosamente</strong> a " +
-		"la base de datos...</html>");
+		setStatus("<html><strong>Connected successfully</strong> to database.</html>");
 		
-		if (configuracion.getProperty("red.id") == null) {
-			procesador.defListo(false);
-			DialogoPropiedades dp = new DialogoPropiedades(
-					procesador, ventana, configuracion,
-					ARCHIVO_CONFIGURACION, bd);
-			dp.centrarDialogo();
+		if (configuration.getProperty("network.id") == null) {
+			processor.setReady(false);
+			PropertiesDialog dp = new PropertiesDialog(
+					processor, window, configuration,
+					CONFIG_FILE, db);
+			dp.center();
 			dp.setVisible(true);
 		} else {
 			Statement st = null;
 			ResultSet rs = null;
 			try {
-				st = bd.createStatement();
+				st = db.createStatement();
 				rs = st.executeQuery(
-						"SELECT * FROM redes WHERE id='" + 
-						configuracion.getProperty("red.id") + "'");
-				if (rs.next()) procesador.defListo(true);
+						"SELECT * FROM networks WHERE id='" + 
+						configuration.getProperty("network.id") + "'");
+				if (rs.next()) processor.setReady(true);
 				else {
-					procesador.defListo(false);
-					DialogoPropiedades dp = new DialogoPropiedades(
-							procesador, ventana, configuracion,
-							ARCHIVO_CONFIGURACION, bd);
-					dp.centrarDialogo();
+					processor.setReady(false);
+					PropertiesDialog dp = new PropertiesDialog(
+							processor, window, configuration,
+							CONFIG_FILE, db);
+					dp.center();
 					dp.setVisible(true);
 				}
 			} catch (SQLException ex) {
-				Errores.errorBD(ex);
+				Errors.errorBD(ex);
 			} finally {
 				if ((rs != null) && (st != null)) {
 					try {
@@ -175,31 +167,31 @@ public class TinySOAGateway {
 			}
 		}
 		
-		imprimirEstado("<html>Esperando <strong>registros</strong>...</html>");
-		cliente.enviarComando(
-				0, Constants.TIPO_SOLICITUD_REGISTRO, 0);
+		setStatus("<html>Waiting <strong>registers</strong>&hellip;</html>");
+		client.sendCommand(
+				0, Constants.TYPE_REGISTER_REQUEST, 0);
 		
 	}
 	
 	/***************************************************************************
-	 * Crea la intefaz de usuario.
+	 * Method to create the user interface.
 	 **************************************************************************/
-	public static void crearVentana() {
+	public static void createWindow() {
 		try {
-			UIManager.setLookAndFeel(	"com.sun.java.swing.plaf.windows." +
-										"WindowsLookAndFeel");
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows." +
+					"WindowsLookAndFeel");
 		} catch (Exception e) {}
 		
-		ventana = new JFrame(TITULO_VENTANA);
-		ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window = new JFrame(WINDOW_TITLE);
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		// Inicia construcción de interfaz de usuario --------------------------
+		// Starts user interface construction --------------------------
 
 		bl01 = new BorderLayout();
 		p01	= new JPanel();
 
-		ventana.getContentPane().setLayout(bl01);
-		ventana.getContentPane().add(p01, BorderLayout.CENTER);
+		window.getContentPane().setLayout(bl01);
+		window.getContentPane().add(p01, BorderLayout.CENTER);
 		
 		bo01 = BorderFactory.createEmptyBorder(8, 8, 8, 8);
 		bl02 = new BorderLayout();
@@ -242,56 +234,57 @@ public class TinySOAGateway {
 		tp01.add(sp01, i01);
 		tp01.add(new JPanel(), i02);
 
-		// Finaliza construcción de interfaz de usuario ------------------------
+		// Ends user interface construction ------------------------
 		
-		ventana.setSize(new Dimension(800, 700));
+		window.setSize(new Dimension(800, 700));
 		
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		ventana.setLocation((dim.width - ventana.getSize().width) / 2,
-				(dim.height - ventana.getSize().height) / 2);
+		window.setLocation((dim.width - window.getSize().width) / 2,
+				(dim.height - window.getSize().height) / 2);
 		
-		ventana.setVisible(true);
+		window.setVisible(true);
 				
-		conectar();
+		connect();
 	}
 
 	/***************************************************************************
-	 * Imprime el estado en la interfaz y en la consola.
+	 * Sets current status in the user interface and in the console.
 	 **************************************************************************/
-	private static void imprimirEstado(String s) {
-		imprimirEstado(s, false);
+	private static void setStatus(String s) {
+		setStatus(s, false);
 	}
 	
 	/***************************************************************************
-	 * Imprime el estado en la interfaz y en la consola opcionalmente.
+	 * Sets current status in the user interface and optionaly in the console.
 	 **************************************************************************/
-	private static void imprimirEstado(String s, boolean soloGUI) {
+	private static void setStatus(String s, boolean justGUI) {
 		l01.setText(s);
-		if (!soloGUI) System.out.println(s.replaceAll("\\<.*?\\>",""));
+		if (!justGUI) System.out.println(s.replaceAll("\\<.*?\\>",""));
 	}
+	
 	/***************************************************************************
-	 * Clase principal.
+	 * Main class.
 	 * 
-	 * @param	args	Argumentos de entrada.
+	 * @param	args	Input arguments
 	 **************************************************************************/
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				i01 = new ImageIcon(getClass().getResource(
-						"/net/tinyos/tinysoa/img/tab.capturas.gif"));
+						"/net/tinyos/tinysoa/img/tab.readings.gif"));
 				i02 = new ImageIcon(getClass().getResource(
-						"/net/tinyos/tinysoa/img/tab.mensajes.gif"));
+						"/net/tinyos/tinysoa/img/tab.messages.gif"));
 				i03 = new ImageIcon(getClass().getResource(
-						"/net/tinyos/tinysoa/img/ico.propiedades.gif"));
+						"/net/tinyos/tinysoa/img/ico.properties.gif"));
 				
-				configuracion	= new Properties();
+				configuration	= new Properties();
 		
 				try {
-					configuracion.loadFromXML(
-							new FileInputStream(ARCHIVO_CONFIGURACION));
+					configuration.loadFromXML(
+							new FileInputStream(CONFIG_FILE));
 				} catch (IOException e) {}
 				
-				crearVentana();
+				createWindow();
 			}
 		});
 	}
