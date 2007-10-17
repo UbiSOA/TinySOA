@@ -1,22 +1,17 @@
 /*
- * "Copyright (c) 2005-2006 The Regents of the Centro de Investigación y de
- * Educación Superior de la ciudad de Ensenada, Baja California (CICESE).
- *
- * Permission to use, copy, modify, and distribute this software and its
- * documentation for any purpose, without fee, and without written agreement is
- * hereby granted, provided that the above copyright notice, the following
- * two paragraphs and the author appear in all copies of this software.
+ *  Copyright 2007 Edgardo Avilés López
  * 
- * IN NO EVENT SHALL CICESE BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
- * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OF THIS
- * SOFTWARE AND ITS DOCUMENTATION, EVEN IF CICESE HAS BEEN ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  * 
- * CICESE SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE.  THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND CICESE
- * HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS,
- * OR MODIFICATIONS."
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *    
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  * 
  ******************************************************************************/
 
@@ -29,15 +24,15 @@ import java.io.*;
 import java.sql.*;
 import java.util.*;
 
-import net.tinyos.tinysoa.util.Errores;
+import net.tinyos.tinysoa.util.Errors;
 
 /*******************************************************************************
- * Diálogo con la configuración inicial de la red. 
+ * Initial network configuration dialog class. 
  * 
  * @author		Edgardo Avilés López
  * @version	0.2, 07/24/2006
  ******************************************************************************/
-public class DialogoPropiedades extends JDialog {
+public class PropertiesDialog extends JDialog {
 	private static final long serialVersionUID = -378032218137841324L;
 	
 	private JLabel l02, l03;
@@ -50,28 +45,28 @@ public class DialogoPropiedades extends JDialog {
 	private Connection c;
 	private Properties p;
 	private JPanel p01, p02;
-	private ProcesadorMensajes procesador;
-	private String propiedadesArchivo;
+	private MessageProcessor processor;
+	private String propertiesFile;
 	
 	/***************************************************************************
-	 * Constructor de la clase.
+	 * Main class constructor.
 	 * 
-	 * @param procesador	Procesador de mensajes a activar.
-	 * @param f			Ventana en la cual se va a desplegar el diálogo.
-	 * @param p			Archivo de propiedades a editar.
-	 * @param arch			Nombre del archivo de propiedades.
-	 * @param c			Conexión a la base de datos.
+	 * @param processor	Message processor tu use
+	 * @param f			Frame in which the dialog will be show
+	 * @param p			Properties object to update
+	 * @param file		Propierties file name
+	 * @param c			Database connector
 	 **************************************************************************/
 	@SuppressWarnings("unchecked")
-	public DialogoPropiedades(
-			ProcesadorMensajes procesador, JFrame f, Properties p,
-			String arch, Connection c) {
+	public PropertiesDialog(
+			MessageProcessor processor, JFrame f, Properties p,
+			String file, Connection c) {
 		
-		super(f, "Configuración Inicial", false);
+		super(f, "Initial Configuration", false);
 		this.p = p;
 		this.c = c;
-		this.procesador = procesador;
-		this.propiedadesArchivo = arch;
+		this.processor = processor;
+		this.propertiesFile = file;
 
 		f01 = new Font("Tahoma", Font.PLAIN, 11);
 
@@ -82,7 +77,7 @@ public class DialogoPropiedades extends JDialog {
 		getContentPane().add(p01, BorderLayout.CENTER);
 		p01.setLayout(new GridBagLayout());
 		
-		l02 = new JLabel("Nombre:");
+		l02 = new JLabel("Name:");
 		l02.setFont(f01);
 
 		p01.add(l02, new GridBagConstraints(1, 1, 1, 1, 1.0, 1.0,
@@ -94,14 +89,14 @@ public class DialogoPropiedades extends JDialog {
 		try {
 			Statement st = c.createStatement();
 			ResultSet rs = st.executeQuery(
-					"SELECT * FROM redes ORDER BY nombre ASC");
-			while (rs.next()) v.add(rs.getString("nombre"));
-		} catch (SQLException e) { Errores.errorBD(e); }
+					"SELECT * FROM networks ORDER BY name ASC");
+			while (rs.next()) v.add(rs.getString("name"));
+		} catch (SQLException e) { Errors.errorBD(e); }
 		
 		cb01 = new JComboBox(v.toArray());
 		cb01.setEditable(true);
 		cb01.setFont(f01);
-		cb01.addActionListener(new DialogoEventos(this));
+		cb01.addActionListener(new EventsDialog(this));
 		cb01.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createEtchedBorder(),
 				BorderFactory.createEmptyBorder(0,4,0,0)));
@@ -110,7 +105,7 @@ public class DialogoPropiedades extends JDialog {
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				new Insets(2, 8, 0, 8), 0, 0));
 		
-		l03 = new JLabel("Descripción:");
+		l03 = new JLabel("Description:");
 		l03.setFont(f01);
 		
 		p01.add(l03, new GridBagConstraints(1, 3, 1, 1, 0.0, 1.0,
@@ -131,12 +126,12 @@ public class DialogoPropiedades extends JDialog {
 				GridBagConstraints.WEST, GridBagConstraints.BOTH,
 				new Insets(2, 8, 4, 8), 0, 0));
 		
-		b01 = new JButton("Aceptar");
+		b01 = new JButton("Accept");
 		b01.setFont(f01);
-		b01.addActionListener(new DialogoEventos(this));
-		b02 = new JButton("Salir");
+		b01.addActionListener(new EventsDialog(this));
+		b02 = new JButton("Exit");
 		b02.setFont(f01);
-		b02.addActionListener(new DialogoEventos(this));
+		b02.addActionListener(new EventsDialog(this));
 
 		p02 = new JPanel();
 		p02.setOpaque(false);
@@ -152,10 +147,10 @@ public class DialogoPropiedades extends JDialog {
 		try {
 			Statement st = c.createStatement();
 			ResultSet rs = st.executeQuery(
-					"SELECT * FROM redes ORDER BY nombre ASC LIMIT 0,1");
+					"SELECT * FROM networks ORDER BY name ASC LIMIT 0,1");
 			if (rs.next())
-				ta01.setText(rs.getString("descripcion"));
-		} catch (SQLException e) { Errores.errorBD(e); }
+				ta01.setText(rs.getString("description"));
+		} catch (SQLException e) { Errors.errorBD(e); }
 		
 		setModal(true);
 		setResizable(false);
@@ -163,86 +158,85 @@ public class DialogoPropiedades extends JDialog {
 	}
 	
 	/***************************************************************************
-	 * Posiciona la ventana en el centro de la pantalla.
+	 * Moves the window to the screen center.
 	 **************************************************************************/
-	public void centrarDialogo() {
+	public void center() {
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		setLocation((dim.width - getSize().width) / 2,
 				(dim.height - getSize().height) / 2);
 	}
 	
 	/***************************************************************************
-	 * Clase que implementa los eventos del diálogo.
+	 * Class that implements the dialog events.
 	 * 
 	 * @author		Edgardo Avilés López
 	 * @version	0.1
 	 **************************************************************************/
-	private class DialogoEventos implements ActionListener {
-
-		boolean mismo = false;
-		Object viejo;
+	private class EventsDialog implements ActionListener {
+		boolean same = false;
+		Object old;
 		JDialog f;
 		
 		/***********************************************************************
-		 * Constructor de la clase.
+		 * Class constructor.
 		 * 
-		 * @param f	Diálogo padre.
+		 * @param f Parent dialog
 		 **********************************************************************/
-		public DialogoEventos(JDialog f) {
+		public EventsDialog(JDialog f) {
 			this.f = f;			
 		}
 		
 		/***********************************************************************
-		 * Controla el evento de selección de un elemento de lista.
+		 * Controls the event for a list element selection.
 		 * 
-		 * @param evt	Evento de actionPerformed().
+		 * @param evt Event information
 		 **********************************************************************/
-		private void seleccionLista(ActionEvent evt) {
-			Object nuevo = ((JComboBox)evt.getSource()).getSelectedItem();
+		private void listSelection(ActionEvent evt) {
+			Object new_obj = ((JComboBox)evt.getSource()).getSelectedItem();
 			
-			if (nuevo != null) {
-				mismo = nuevo.equals(viejo);
-				viejo = nuevo;
+			if (new_obj != null) {
+				same = new_obj.equals(old);
+				old = new_obj;
 				if (("comboBoxChanged".equals(
-						evt.getActionCommand())) && (!mismo)) {
+						evt.getActionCommand())) && (!same)) {
 					try {
 						Statement st = c.createStatement();
 						ResultSet rs = st.executeQuery(
-								"SELECT * FROM redes WHERE nombre='" + 
-								nuevo + "'");
+								"SELECT * FROM networks WHERE name='" + 
+								new_obj + "'");
 						if (rs.next()) ta01.setText(
-								rs.getString("descripcion"));
-					} catch (SQLException e) { Errores.errorBD(e); }
+								rs.getString("description"));
+					} catch (SQLException e) { Errors.errorBD(e); }
 				}
 			}
 		}
 		
 		/***********************************************************************
-		 * Sale del sistema.
+		 * Exits the system.
 		 **********************************************************************/
-		private void salir() {
+		private void exit() {
 			System.exit(0);
 		}
 		
 		/***********************************************************************
-		 * Controla el evento de creación/selección de red de sensores.
+		 * Controls the event of acceptation/selection of sensor network.
 		 **********************************************************************/
-		private void aceptar() {
-			String nom = cb01.getSelectedItem().toString();
-			String des = ta01.getText();
+		private void accept() {
+			String name = cb01.getSelectedItem().toString();
+			String descr = ta01.getText();
 
-			if (nom.trim().compareTo("") == 0) {
+			if (name.trim().compareTo("") == 0) {
 				JOptionPane.showMessageDialog(
-						f, "Debe indicar un nombre para la red de sensores.",
-						"Problema", JOptionPane.ERROR_MESSAGE);
+						f, "You must specify a name for the sensor network.",
+						"Problem", JOptionPane.ERROR_MESSAGE);
 				cb01.requestFocus();
 				return;
 			}
 			
-			if (des.trim().compareTo("") == 0) {
+			if (descr.trim().compareTo("") == 0) {
 				JOptionPane.showMessageDialog(
-						f, "Debe indiciar una descripción para la red de " +
-						"sensores.", "Problema", JOptionPane.ERROR_MESSAGE);
+						f, "Your must specify a description for the sensor network.",
+						"Problem", JOptionPane.ERROR_MESSAGE);
 				ta01.requestFocus();
 				return;
 			}
@@ -252,40 +246,40 @@ public class DialogoPropiedades extends JDialog {
 			try {
 				Statement st = c.createStatement();
 				ResultSet rs = st.executeQuery(
-						"SELECT * FROM redes WHERE nombre='" + nom + "'");
+						"SELECT * FROM networks WHERE name='" + name + "'");
 				if (rs.next()) id = rs.getInt("id");
 				
 				if (id == 0) {
 					st.executeUpdate(
-							"INSERT INTO redes VALUES('" + id + "', '" + 
-							nom + "', '" + des + "')");
+							"INSERT INTO networks  VALUES('" + id + "', '" + 
+							name + "', '" + descr + "')");
 					rs = st.executeQuery(
-							"SELECT * FROM redes WHERE nombre='" + nom + "'");
+							"SELECT * FROM networks WHERE nombre='" + name + "'");
 					if (rs.next()) id = rs.getInt("id");
 				}
-			} catch (SQLException e) { Errores.errorBD(e); }
+			} catch (SQLException e) { Errors.errorBD(e); }
 			
 			try {
-				p.setProperty("red.id", id + "");
-				p.setProperty("red.nombre", nom);
-				p.setProperty("red.descripcion", des);
-				p.storeToXML(new FileOutputStream(propiedadesArchivo), null);
+				p.setProperty("network.id", id + "");
+				p.setProperty("network.name", name);
+				p.setProperty("network.description", descr);
+				p.storeToXML(new FileOutputStream(propertiesFile), null);
 			} catch (Exception e) {}
 			
 			setVisible(false);
-			procesador.defListo(true);
+			processor.setReady(true);
 		}
 		
 		/***********************************************************************
-		 * Función controladora de eventos.
+		 * Method to control the events.
 		 * 
-		 * @param	Evento productor de la acción
+		 * @param	Event information
 		 **********************************************************************/
 		public void actionPerformed(ActionEvent evt) {
 			String cmd = evt.getActionCommand();
-			if (cmd.compareTo("comboBoxChanged") == 0) seleccionLista(evt);
-			if (cmd.compareTo("Salir") == 0) salir();
-			if (cmd.compareTo("Aceptar") == 0) aceptar();
+			if (cmd.compareTo("comboBoxChanged") == 0) listSelection(evt);
+			if (cmd.compareTo("Exit") == 0) exit();
+			if (cmd.compareTo("Accept") == 0) accept();
 		}
 		
 	}
