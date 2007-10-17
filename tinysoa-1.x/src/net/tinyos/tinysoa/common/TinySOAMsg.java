@@ -139,7 +139,7 @@ public class TinySOAMsg extends net.tinyos.message.Message {
         s += "  [parent=0x"+Long.toHexString(get_parent())+"]\n";
       } catch (ArrayIndexOutOfBoundsException aioobe) { /* Skip field */ }
       try {
-        s += "  [nsec=0x"+Long.toHexString(get_nsec())+"]\n";
+        s += "  [nsec=0x"+Long.toHexString(get_nseq())+"]\n";
       } catch (ArrayIndexOutOfBoundsException aioobe) { /* Skip field */ }
       try {
         s += "  [sensor=0x"+Long.toHexString(get_sensor())+"]\n";
@@ -792,56 +792,56 @@ public class TinySOAMsg extends net.tinyos.message.Message {
     /**
      * Return whether the field 'nsec' is signed (false).
      */
-    public static boolean isSigned_nsec() {
+    public static boolean isSigned_nseq() {
         return false;
     }
 
     /**
      * Return whether the field 'nsec' is an array (false).
      */
-    public static boolean isArray_nsec() {
+    public static boolean isArray_nseq() {
         return false;
     }
 
     /**
      * Return the offset (in bytes) of the field 'nsec'
      */
-    public static int offset_nsec() {
+    public static int offset_nseq() {
         return (144 / 8);
     }
 
     /**
      * Return the offset (in bits) of the field 'nsec'
      */
-    public static int offsetBits_nsec() {
+    public static int offsetBits_nseq() {
         return 144 + MY_OFFSET;
     }
 
     /**
      * Return the value (as a short) of the field 'nsec'
      */
-    public short get_nsec() {
-        return (short)getUIntElement(offsetBits_nsec(), 8);
+    public short get_nseq() {
+        return (short)getUIntElement(offsetBits_nseq(), 8);
     }
 
     /**
      * Set the value of the field 'nsec'
      */
-    public void set_nsec(short value) {
-        setUIntElement(offsetBits_nsec(), 8, value);
+    public void set_nseq(short value) {
+        setUIntElement(offsetBits_nseq(), 8, value);
     }
 
     /**
      * Return the size, in bytes, of the field 'nsec'
      */
-    public static int size_nsec() {
+    public static int size_nseq() {
         return (8 / 8);
     }
 
     /**
      * Return the size, in bits, of the field 'nsec'
      */
-    public static int sizeBits_nsec() {
+    public static int sizeBits_nseq() {
         return 8;
     }
 
