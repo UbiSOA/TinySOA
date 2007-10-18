@@ -70,11 +70,11 @@ public class Tabla extends JTable {
 			String value = "";
 			Object val = getValueAt(rowIndex, vColIndex);
 			if (val != null) value = val.toString();
-			if (value.compareTo("Lect.") == 0)
+			if (value.compareTo("Read") == 0)
 				c.setForeground(new Color(38, 130, 36));
 			else if (value.compareTo("0x00") == 0)
 				c.setForeground(new Color(38, 130, 36));
-			else if (value.compareTo("Reg.") == 0)
+			else if (value.compareTo("Reg") == 0)
 				c.setForeground(new Color(230, 139, 44));
 			else if (value.compareTo("0x01") == 0)
 				c.setForeground(new Color(230, 139, 44));

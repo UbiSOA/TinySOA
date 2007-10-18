@@ -99,16 +99,16 @@ public class ListaRedesRenderer implements ListCellRenderer {
 		panel.setLayout(new BorderLayout());
 		panel.setOpaque(true);
 		
-		JLabel etiqueta = new JLabel(((Red)valor).getNombre());
+		JLabel etiqueta = new JLabel(((Network)valor).getName());
 		etiqueta.setIcon(icono);
 		etiqueta.setFont(new Font("Arial", Font.BOLD, 12));
 		panel.add(etiqueta, BorderLayout.NORTH);
 		
-		String descripcion = wrapLine(((Red)valor).getDescripcion(),
+		String descripcion = wrapLine(((Network)valor).getDescription(),
 				new Font("Arial", Font.PLAIN, 12), lista.getWidth() - 35);
 		
 		etiqueta = new JLabel("<html>" + descripcion +
-				"<br><font color=\"#6382BF\">" + ((Red)valor).getWsdl() +
+				"<br><font color=\"#6382BF\">" + ((Network)valor).getWsdl() +
 				"</a></html>");
 		etiqueta.setFont(new Font(lista.getFont().getFamily(), Font.PLAIN,
 				lista.getFont().getSize()));

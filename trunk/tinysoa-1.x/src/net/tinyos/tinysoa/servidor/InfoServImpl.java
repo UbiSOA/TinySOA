@@ -45,7 +45,7 @@ public class InfoServImpl implements InfoServ {
 	/***************************************************************************
 	 * Constructor de la clase.
 	 * 
-	 * @param bd		Conexión de la base de datos a utilizar
+	 * @param db		Conexión de la base de datos a utilizar
 	 * @param puerto	Puerto en el cual se ofrecen los servicios
 	 **************************************************************************/
 	public InfoServImpl(Connection bd, String puerto) {
@@ -57,12 +57,12 @@ public class InfoServImpl implements InfoServ {
 	 * Devuelve un listado de los servicios de red ofrecidos por el servidor.
 	 * 
 	 * @return	Un vector con la información de los servicios ofrecidos
-	 * @see		Red
+	 * @see		Network
 	 **************************************************************************/
 	@WebMethod(operationName="obtenerListadoRedes", action="urn:obtenerListadoRedes")
 	@WebResult(name="listadoRedesResultado")
-	public Vector<Red> obtenerListadoRedes() {
-		Vector<Red> redes = new Vector<Red>();
+	public Vector<Network> obtenerListadoRedes() {
+		Vector<Network> redes = new Vector<Network>();
 		
 		Statement st = null;
 		ResultSet rs = null;
@@ -72,16 +72,16 @@ public class InfoServImpl implements InfoServ {
 			rs = st.executeQuery("SELECT * FROM redes ORDER BY nombre");
 			
 			while (rs.next()) {
-				Red r = new Red();
+				Network r = new Network();
 				r.setId(rs.getInt("id"));
-				r.setNombre(rs.getString("nombre"));
-				r.setDescripcion(rs.getString("descripcion"));
+				r.setName(rs.getString("nombre"));
+				r.setDescription(rs.getString("descripcion"));
 				r.setWsdl("http://" + InetAddress.getLocalHost().getHostAddress() + ":" + puerto + "/RedServ" + r.getId() + "?wsdl");
 				redes.add(r);
 			}
 			
 		} catch (SQLException ex) {
-			Errores.errorBD(ex);
+			Errors.errorBD(ex);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

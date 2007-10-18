@@ -89,9 +89,9 @@ public interface RedServ {
 	 * Regresa una lista de los parámetros de sensado disponibles.
 	 * 
 	 * @return Una lista de parámetros
-	 * @see		Parametro
+	 * @see		Parameter
 	 **************************************************************************/
-	public Vector<Parametro> obtenerParametros();
+	public Vector<Parameter> obtenerParametros();
 	
 	/***************************************************************************
 	 * Regresa un listado de las últimas lecturas por cada uno de los nodos
@@ -190,18 +190,18 @@ public interface RedServ {
 	 * 
 	 * @param limite	El número límite de tareas a regresar
 	 * @return			Un listado de tareas
-	 * @see				Tarea
+	 * @see				Task
 	 **************************************************************************/
-	public Vector<Tarea> obtenerListadoTareas(int limite);
+	public Vector<Task> obtenerListadoTareas(int limite);
 	
 	/***************************************************************************
 	 * Regresa la información de una tarea de mantenimiento.
 	 * 
 	 * @param id	ID de la tarea
 	 * @return		La información de la tarea indicada
-	 * @see			Tarea
+	 * @see			Task
 	 **************************************************************************/
-	public Tarea obtenerTareaPorId(int id);
+	public Task obtenerTareaPorId(int id);
 	
 	/***************************************************************************
 	 * Agrega una tarea de mantenimiento a la lista de tareas. Si existe un

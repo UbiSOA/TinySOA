@@ -52,7 +52,7 @@ public class DialogoEvento extends JDialog {
 	/***************************************************************************
 	 * Constructor de la clase.
 	 * 
-	 * @param procesador	Procesador de mensajes a activar.
+	 * @param processor	Procesador de mensajes a activar.
 	 * @param f			Ventana en la cual se va a desplegar el diálogo.
 	 * @param p			Archivo de propiedades a editar.
 	 * @param arch			Nombre del archivo de propiedades.

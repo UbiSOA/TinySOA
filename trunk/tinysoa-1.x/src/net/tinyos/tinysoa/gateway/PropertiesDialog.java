@@ -251,10 +251,10 @@ public class PropertiesDialog extends JDialog {
 				
 				if (id == 0) {
 					st.executeUpdate(
-							"INSERT INTO networks  VALUES('" + id + "', '" + 
-							name + "', '" + descr + "')");
+							"INSERT INTO networks VALUES('" + id + "', '" + 
+							name + "', '" + descr + "', 'WSN')");
 					rs = st.executeQuery(
-							"SELECT * FROM networks WHERE nombre='" + name + "'");
+							"SELECT * FROM networks WHERE name='" + name + "'");
 					if (rs.next()) id = rs.getInt("id");
 				}
 			} catch (SQLException e) { Errors.errorBD(e); }

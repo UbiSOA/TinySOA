@@ -46,7 +46,7 @@ public class DialogoSeleccionRed extends JDialog {
 	/***************************************************************************
 	 * Constructor de la clase.
 	 * 
-	 * @param ventana	Ventana padre del diálogo
+	 * @param window	Ventana padre del diálogo
 	 * @param icono	Icono de una red
 	 * @param eventos	Controlador de eventos para llamar al seleccionar
 	 **************************************************************************/
@@ -89,7 +89,7 @@ public class DialogoSeleccionRed extends JDialog {
 						return;
 					}
 					setVisible(false);
-					String wsdl = ((Red)listaRedes.
+					String wsdl = ((Network)listaRedes.
 							getSelectedValue()).getWsdl(); 
 					eventosInterfaz.crearServicioRed(
 							wsdl.substring(0, wsdl.length() - 5));
@@ -121,7 +121,7 @@ public class DialogoSeleccionRed extends JDialog {
 	 * @param servicio	Servicio de información a utilizar
 	 **************************************************************************/
 	private void obtenerRedesDisponibles(InfoServ servicio) {
-		Vector<Red> redes = servicio.obtenerListadoRedes();
+		Vector<Network> redes = servicio.obtenerListadoRedes();
 		listaRedes.setListData(redes.toArray());
 	}
 	

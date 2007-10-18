@@ -30,9 +30,9 @@ import java.util.*;
  * @author		Edgardo Avilés López
  * @version	0.2, 07/24/2006
  ******************************************************************************/
-public final class Calendario {
+public final class Calendar {
 	
-	private static Calendar cal;
+	private static java.util.Calendar cal;
 	private static String d, m, y, y2, h, mi, s, ms;
 	
 	/***************************************************************************
@@ -40,14 +40,14 @@ public final class Calendario {
 	 **************************************************************************/
 	public static void leer() {
 		cal = new GregorianCalendar();
-		d	= pad(cal.get(Calendar.DAY_OF_MONTH) + "", 2, "0");
-		m	= pad(cal.get(Calendar.MONTH) + "", 2, "0");
-		y	= pad(cal.get(Calendar.YEAR) + "", 2, "0");
-		y2	= pad(cal.get(Calendar.YEAR) + "", 4, "0");
-		h	= pad(cal.get(Calendar.HOUR_OF_DAY) + "", 2, "0");
-		mi	= pad(cal.get(Calendar.MINUTE) + "", 2, "0");
-		s	= pad(cal.get(Calendar.SECOND) + "", 2, "0");
-		ms	= pad(cal.get(Calendar.MILLISECOND) + "", 3, "0");
+		d	= pad(cal.get(java.util.Calendar.DAY_OF_MONTH) + "", 2, "0");
+		m	= pad(cal.get(java.util.Calendar.MONTH) + "", 2, "0");
+		y	= pad(cal.get(java.util.Calendar.YEAR) + "", 2, "0");
+		y2	= pad(cal.get(java.util.Calendar.YEAR) + "", 4, "0");
+		h	= pad(cal.get(java.util.Calendar.HOUR_OF_DAY) + "", 2, "0");
+		mi	= pad(cal.get(java.util.Calendar.MINUTE) + "", 2, "0");
+		s	= pad(cal.get(java.util.Calendar.SECOND) + "", 2, "0");
+		ms	= pad(cal.get(java.util.Calendar.MILLISECOND) + "", 3, "0");
 	}
 	
 	/***************************************************************************
@@ -55,8 +55,8 @@ public final class Calendario {
 	 * 
 	 * @return	Una cadena con la fecha en formato d/m/y.
 	 **************************************************************************/
-	public static String fechaActual() {
-		leer(); return d + "/" + m + "/" + y;
+	public static String currentDate() {
+		leer(); return m + "/" + d + "/" + y;
 	}
 	
 	/***************************************************************************
@@ -73,7 +73,7 @@ public final class Calendario {
 	 * 
 	 * @return	Una cadena con la hora en formato h:mi:s.ms.
 	 **************************************************************************/
-	public static String horaActual() {
+	public static String currentTime() {
 		leer(); return h + ":" + mi + ":" + s + "." + ms;
 	}
 	

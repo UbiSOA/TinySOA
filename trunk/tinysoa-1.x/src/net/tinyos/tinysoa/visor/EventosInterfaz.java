@@ -93,7 +93,7 @@ public class EventosInterfaz
 	 * Constructor principal de la clase.
 	 * 
 	 * @param archivoConfiguracion	Archivo con los valores de configuración
-	 * @param ventana				Ventana padre de la clase
+	 * @param window				Ventana padre de la clase
 	 * @param iconoRed				Icono de una red
 	 * @param iconoEstadoNormal	Icono de nodo con estado normal
 	 * @param iconoEstadoEspera	Icono de nodo con estado de espera
@@ -476,7 +476,7 @@ public class EventosInterfaz
 	}
 
 	/***************************************************************************
-	 * Crea y prepara el servicio cliente de red.
+	 * Crea y prepara el servicio client de red.
 	 * 
 	 * @param url	URL del servidor de servicios
 	 **************************************************************************/
@@ -619,7 +619,7 @@ public class EventosInterfaz
 					
 				}
 			});
-		} catch (Exception e) { Errores.error(e, "actualizarTablaDatos"); }
+		} catch (Exception e) { Errors.error(e, "actualizarTablaDatos"); }
 	}
 
 	/***************************************************************************
@@ -721,7 +721,7 @@ public class EventosInterfaz
 			});
 			
 			graficador.repaint();
-		} catch (Exception e) { Errores.error(e, "actualizarGraficador"); }
+		} catch (Exception e) { Errors.error(e, "actualizarGraficador"); }
 	}
 
 	/***************************************************************************
@@ -799,7 +799,7 @@ public class EventosInterfaz
 					graficadorTopologia.repaint();
 				}
 			});
-		} catch (Exception e) { Errores.error(e, "actualizarTopologia"); }
+		} catch (Exception e) { Errors.error(e, "actualizarTopologia"); }
 	}
 	
 	/***************************************************************************
@@ -840,7 +840,7 @@ public class EventosInterfaz
 					}
 				}
 			});
-		} catch (Exception e) { Errores.error(e, "actualizarTablaEventos"); }
+		} catch (Exception e) { Errors.error(e, "actualizarTablaEventos"); }
 	}
 	
 	/***************************************************************************
@@ -850,75 +850,75 @@ public class EventosInterfaz
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				public void run() {
-					Vector<Tarea> tareas = servicioRed.
+					Vector<Task> tasks = servicioRed.
 							obtenerListadoTareas(0);
 					
 					String id, accion, valor, nid, tiempo,
 						ejecutada, listo, repetir;
 
 					tablaMantenimiento.clearTable();
-					Enumeration e = tareas.elements();
+					Enumeration e = tasks.elements();
 					while (e.hasMoreElements()) {
-						Tarea tarea = (Tarea)e.nextElement();
+						Task task = (Task)e.nextElement();
 						
-						id = tarea.getId() + "";
+						id = task.getId() + "";
 						
 						accion = "";
-						if (tarea.getTipo() ==
-							Constants.TIPO_ACTIVA_ACTUADOR)
+						if (task.getType() ==
+							Constants.TYPE_ACTUATOR_START)
 							accion = "Enc. Act.";
-						if (tarea.getTipo() ==
-							Constants.TIPO_DESACTIVA_ACTUADOR)
+						if (task.getType() ==
+							Constants.TYPE_ACTUATOR_STOP)
 							accion = "Apa. Act.";
-						if (tarea.getTipo() ==
-							Constants.TIPO_CAMBIA_DATA_RATE)
+						if (task.getType() ==
+							Constants.TYPE_CHANGE_DATA_RATE)
 							accion = "Cam. Tasa";
-						if (tarea.getTipo() ==
-							Constants.TIPO_DUERME)
+						if (task.getType() ==
+							Constants.TYPE_SLEEP)
 							accion = "Entrar Esp.";
-						if (tarea.getTipo() ==
-							Constants.TIPO_DESPIERTA)
+						if (task.getType() ==
+							Constants.TYPE_WAKEUP)
 							accion = "Salir Esp.";
 						
 						valor = "-";
-						if (tarea.getValor() > 0)
-							valor = tarea.getValor() + " segs";
-						if (tarea.getValor() ==
-							Constants.ACTUADOR_BOCINA)
+						if (task.getValue() > 0)
+							valor = task.getValue() + " segs";
+						if (task.getValue() ==
+							Constants.ACTUATOR_BUZZER)
 							valor = "Bocina";
-						if (tarea.getValor() ==
-							Constants.ACTUADOR_LED_AMARILLO)
+						if (task.getValue() ==
+							Constants.ACTUATOR_LED_YELLOW)
 							valor = "Led Ama.";
-						if (tarea.getValor() ==
-							Constants.ACTUADOR_LED_ROJO)
+						if (task.getValue() ==
+							Constants.ACTUATOR_LED_RED)
 							valor = "Led Rojo";
-						if (tarea.getValor() ==
-							Constants.ACTUADOR_LED_VERDE)
+						if (task.getValue() ==
+							Constants.ACTUATOR_LED_GREEN)
 							valor = "Led Ver.";
 						
 						nid = "-";
-						if (tarea.getNid() > 0)
-							nid = tarea.getNid() + "";
+						if (task.getNid() > 0)
+							nid = task.getNid() + "";
 						
-						tiempo = tarea.getTiempo();
+						tiempo = task.getTime();
 						tiempo = tiempo.substring(0, tiempo.length() - 2);
-						if (tarea.getEvento() > 0)
-							tiempo = "Esperando evento " + tarea.getEvento();
+						if (task.getEvent() > 0)
+							tiempo = "Esperando evento " + task.getEvent();
 						
 						ejecutada = "-";
-						if (tarea.getEjecutada() != null)
-							if (tarea.getEjecutada().compareTo("") != 0)
-								ejecutada = tarea.getEjecutada();
+						if (task.getExecuted() != null)
+							if (task.getExecuted().compareTo("") != 0)
+								ejecutada = task.getExecuted();
 						
 						listo = "No";
-						if (tarea.getListo())
+						if (task.getDone())
 							listo = "Sí";
-						if (tarea.getRepetir() > 0)
+						if (task.getRepeat() > 0)
 							listo = "-";
 						
 						repetir = "-";
-						if (tarea.getRepetir() > 0)
-							repetir = tarea.getRepetir() + " min";
+						if (task.getRepeat() > 0)
+							repetir = task.getRepeat() + " min";
 
 						modeloMantenimiento.addRow(new Object[]{
 								id, accion, valor, nid, tiempo,
@@ -926,7 +926,7 @@ public class EventosInterfaz
 					}
 				}
 			});
-		} catch (Exception e) { Errores.error(e, "actualizarTablaEventos"); }
+		} catch (Exception e) { Errors.error(e, "actualizarTablaEventos"); }
 	}
 
 	/***************************************************************************
@@ -948,7 +948,7 @@ public class EventosInterfaz
 							"</b></center></html>");
 				}
 			});
-		} catch (Exception e) { Errores.error(e, "actualizarTiempo"); }
+		} catch (Exception e) { Errors.error(e, "actualizarTiempo"); }
 	}
 
 	/***************************************************************************
@@ -965,7 +965,7 @@ public class EventosInterfaz
 			tiempoMinimo = inicio.getTime();
 			tiempoMaximo = fin.getTime();
 			slider.setValue(10000);
-		} catch (Exception e) { Errores.error(e, "definirTiempos"); }
+		} catch (Exception e) { Errors.error(e, "definirTiempos"); }
 	}
 	
 	//--------------------------------------------------------------------------
@@ -989,12 +989,12 @@ public class EventosInterfaz
 	 * Procesa los parámetros de la red.
 	 **************************************************************************/
 	private void procesarParametros() {
-		Vector<Parametro> parametros = servicioRed.obtenerParametros();
+		Vector<Parameter> parameters = servicioRed.obtenerParametros();
 		comboParsGraf.removeAllItems();
 		comboParsTopologia.removeAllItems();
-		for (int i = 0; i < parametros.size(); i++) {
-			comboParsGraf.addItem(parametros.get(i).getNombre());
-			comboParsTopologia.addItem(parametros.get(i).getNombre());
+		for (int i = 0; i < parameters.size(); i++) {
+			comboParsGraf.addItem(parameters.get(i).getName());
+			comboParsTopologia.addItem(parameters.get(i).getName());
 		}
 		if (comboParsGraf.getItemCount() > 2) {
 			comboParsGraf.setSelectedIndex(
@@ -1028,12 +1028,12 @@ public class EventosInterfaz
 	 * @param nodos	Un arreglo con el ID de los nodos
 	 **************************************************************************/
 	private void crearTabla(Object[] nodos) {
-		Vector<Parametro> parametros = servicioRed.obtenerParametros();
-		Object[] parametrosCols = new Object[parametros.size() + 2];
+		Vector<Parameter> parameters = servicioRed.obtenerParametros();
+		Object[] parametrosCols = new Object[parameters.size() + 2];
 		parametrosCols[0] = "ID";
 		parametrosCols[1] = "Tiempo";
-		for (int i = 0; i < parametros.size(); i++)
-			parametrosCols[i + 2] = parametros.get(i).getNombre();
+		for (int i = 0; i < parameters.size(); i++)
+			parametrosCols[i + 2] = parameters.get(i).getName();
 		
 		modeloDatos = new DefaultTableModel();
 		TableSorter ordenador = new TableSorter(modeloDatos);
@@ -1104,7 +1104,7 @@ public class EventosInterfaz
 					barraProgreso.setVisible(false);
 				}
 			});
-		} catch (Exception e) { Errores.error(e, "desbloquearActualizacion"); }
+		} catch (Exception e) { Errors.error(e, "desbloquearActualizacion"); }
 	}
 
 	/***************************************************************************
@@ -1117,7 +1117,7 @@ public class EventosInterfaz
 					barraProgreso.setVisible(true);
 				}
 			});
-		} catch (Exception e) { Errores.error(e, "bloquearActualizacion"); }
+		} catch (Exception e) { Errors.error(e, "bloquearActualizacion"); }
 	}
 
 	/***************************************************************************
@@ -1603,7 +1603,7 @@ public class EventosInterfaz
 				
 				int res = JOptionPane.showConfirmDialog(
 						ventana, "¿Desea eliminar la tarea con ID " + id + "?",
-						"Eliminar Tarea", JOptionPane.YES_NO_OPTION);
+						"Eliminar Task", JOptionPane.YES_NO_OPTION);
 				
 				if (res == JOptionPane.NO_OPTION) return;
 				if (res == -1) return;
@@ -1721,7 +1721,7 @@ public class EventosInterfaz
 			cmd = ((JComboBox)evt.getSource()).getToolTipText();
 			if (cmd.compareTo("Parámetro a graficar") == 0)
 				if (((JComboBox)evt.getSource()).isEnabled()) {
-				System.out.println("act Parametro a graficar");
+				System.out.println("act Parameter a graficar");
 				actualizar();
 			}
 		} else if (cmd.compareTo("Importar imagen de fondo...") == 0) {

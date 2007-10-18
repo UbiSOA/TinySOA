@@ -59,7 +59,7 @@ public class DialogoMantenimiento extends JDialog {
 	
 	public DialogoMantenimiento(JFrame ventana, RedServ servicioRed,
 			JProgressBar progreso) {
-		super(ventana, "Agregar Tarea", false);
+		super(ventana, "Agregar Task", false);
 		this.servicioRed = servicioRed;
 		this.progreso = progreso;
 		
@@ -347,14 +347,14 @@ public class DialogoMantenimiento extends JDialog {
 		s03.setValue(10);
 		if (cb03.getModel().getSize() > 0)
 			cb03.setSelectedIndex(0);
-		setTitle("Agregar Tarea");
+		setTitle("Agregar Task");
 		b01.setEnabled(true);
 		mostrar();
 	}
 	
 	public void mostrarModificar(int id) {
 		progreso.setVisible(true);
-		Tarea tarea = servicioRed.obtenerTareaPorId(id);
+		Task task = servicioRed.obtenerTareaPorId(id);
 		progreso.setVisible(false);
 		
 		if (cb01.getItemCount() == 0) {
@@ -371,60 +371,60 @@ public class DialogoMantenimiento extends JDialog {
 			progreso.setVisible(false);
 		}
 		
-		if ((tarea.getTipo() == Constants.TIPO_ACTIVA_ACTUADOR) ||
-				(tarea.getTipo() == Constants.TIPO_DESACTIVA_ACTUADOR)) {
+		if ((task.getType() == Constants.TYPE_ACTUATOR_START) ||
+				(task.getType() == Constants.TYPE_ACTUATOR_STOP)) {
 			tp01.setSelectedIndex(0);
-			if (tarea.getValor() == Constants.ACTUADOR_BOCINA)
+			if (task.getValue() == Constants.ACTUATOR_BUZZER)
 				cb01.setSelectedIndex(0);
-			if (tarea.getValor() == Constants.ACTUADOR_LED_AMARILLO)
+			if (task.getValue() == Constants.ACTUATOR_LED_YELLOW)
 				cb01.setSelectedIndex(1);
-			if (tarea.getValor() == Constants.ACTUADOR_LED_ROJO)
+			if (task.getValue() == Constants.ACTUATOR_LED_RED)
 				cb01.setSelectedIndex(3);
-			if (tarea.getValor() == Constants.ACTUADOR_LED_VERDE)
+			if (task.getValue() == Constants.ACTUATOR_LED_GREEN)
 				cb01.setSelectedIndex(4);
 			s01.setValue(10);
-			if (tarea.getTipo() == Constants.TIPO_ACTIVA_ACTUADOR)
+			if (task.getType() == Constants.TYPE_ACTUATOR_START)
 				rb01.setSelected(true);
 			else rb02.setSelected(true);
 		}
 		
-		if (tarea.getTipo() == Constants.TIPO_CAMBIA_DATA_RATE) {
+		if (task.getType() == Constants.TYPE_CHANGE_DATA_RATE) {
 			tp01.setSelectedIndex(1);
 			cb01.setSelectedIndex(0);
-			s01.setValue(tarea.getValor());
+			s01.setValue(task.getValue());
 			rb03.setSelected(true);
 		}
 		
-		if ((tarea.getTipo() == Constants.TIPO_DUERME) ||
-				(tarea.getTipo() == Constants.TIPO_DESPIERTA)) {
+		if ((task.getType() == Constants.TYPE_SLEEP) ||
+				(task.getType() == Constants.TYPE_WAKEUP)) {
 			tp01.setSelectedIndex(2);
 			cb01.setSelectedIndex(0);
 			s01.setValue(10);
-			if (tarea.getTipo() == Constants.TIPO_DUERME)
+			if (task.getType() == Constants.TYPE_SLEEP)
 				rb03.setSelected(true);
 			else rb04.setSelected(true);
 		}
 		
-		if (tarea.getNid() == 0)
+		if (task.getNid() == 0)
 			cb02.setSelectedIndex(0);
 		for (int i = 1; i < cb02.getModel().getSize(); i++)
 			if (Integer.parseInt(cb02.getModel().getElementAt(i).
-					toString().substring(5)) == tarea.getNid())
+					toString().substring(5)) == task.getNid())
 				cb02.setSelectedIndex(i);
 		
-		if (tarea.getEvento() == 0) {
+		if (task.getEvent() == 0) {
 			rb06.setSelected(true);
 			s02.setEnabled(true);
 			DateFormat formato = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			try {
-				s02.setValue(formato.parse(tarea.getTiempo()));
+				s02.setValue(formato.parse(task.getTime()));
 			} catch (ParseException e) {
-				System.out.println("Problema parseando: " + tarea.getTiempo());
+				System.out.println("Problema parseando: " + task.getTime());
 				s02.setValue(new Date());
 			}
-			if (tarea.getRepetir() > 0) {
+			if (task.getRepeat() > 0) {
 				ckb01.setSelected(true);
-				s03.setValue(tarea.getRepetir());
+				s03.setValue(task.getRepeat());
 			} else {
 				ckb01.setSelected(false);
 			}
@@ -432,7 +432,7 @@ public class DialogoMantenimiento extends JDialog {
 			rb07.setSelected(true);
 			String nes = "";
 			for (int i = 0; i < eventos.length; i++)
-				if (((Event)eventos[i]).getId() == tarea.getEvento())
+				if (((Event)eventos[i]).getId() == task.getEvent())
 					nes = ((Event)eventos[i]).getName();
 			for (int i = 0; i < cb03.getModel().getSize(); i++)
 				if (cb03.getModel().getElementAt(i).
@@ -441,7 +441,7 @@ public class DialogoMantenimiento extends JDialog {
 		}
 		
 		this.id = id;
-		setTitle("Modificar Tarea");
+		setTitle("Modificar Task");
 		b01.setEnabled(true);
 		mostrar();
 	}
@@ -489,29 +489,29 @@ public class DialogoMantenimiento extends JDialog {
 					
 					if (tp01.getSelectedIndex() == 0) {
 						if (rb01.isSelected())
-							tipo = Constants.TIPO_ACTIVA_ACTUADOR;
+							tipo = Constants.TYPE_ACTUATOR_START;
 						if (rb02.isSelected())
-							tipo = Constants.TIPO_DESACTIVA_ACTUADOR;
+							tipo = Constants.TYPE_ACTUATOR_STOP;
 						if (cb01.getSelectedIndex() == 0)
-							valor = Constants.ACTUADOR_BOCINA;
+							valor = Constants.ACTUATOR_BUZZER;
 						if (cb01.getSelectedIndex() == 1)
-							valor = Constants.ACTUADOR_LED_AMARILLO;
+							valor = Constants.ACTUATOR_LED_YELLOW;
 						if (cb01.getSelectedIndex() == 2)
-							valor = Constants.ACTUADOR_LED_AZUL;
+							valor = Constants.ACTUATOR_LED_BLUE;
 						if (cb01.getSelectedIndex() == 3)
-							valor = Constants.ACTUADOR_LED_ROJO;
+							valor = Constants.ACTUATOR_LED_RED;
 						if (cb01.getSelectedIndex() == 4)
-							valor = Constants.ACTUADOR_LED_VERDE;
+							valor = Constants.ACTUATOR_LED_GREEN;
 					}
 					if (tp01.getSelectedIndex() == 1) {
-						tipo = Constants.TIPO_CAMBIA_DATA_RATE;
+						tipo = Constants.TYPE_CHANGE_DATA_RATE;
 						valor = Integer.parseInt(s01.getValue().toString());
 					}
 					if (tp01.getSelectedIndex() == 2) {
 						if (rb03.isSelected())
-							tipo = Constants.TIPO_DUERME;
+							tipo = Constants.TYPE_SLEEP;
 						if (rb04.isSelected())
-							tipo = Constants.TIPO_DESPIERTA;
+							tipo = Constants.TYPE_WAKEUP;
 					}
 					
 					if (cb02.getSelectedItem().toString().substring(0, 4).
@@ -535,10 +535,10 @@ public class DialogoMantenimiento extends JDialog {
 						}
 					
 					boolean res = false;
-					if (getTitle().compareTo("Agregar Tarea") == 0)
+					if (getTitle().compareTo("Agregar Task") == 0)
 						res = servicioRed.agregarTarea(
 								tipo, valor, destino, tiempo, repetir, evento);
-					if (getTitle().compareTo("Modificar Tarea") == 0)
+					if (getTitle().compareTo("Modificar Task") == 0)
 						res = servicioRed.modificarTarea(
 								id, tipo, valor, destino, tiempo,
 								repetir, evento);

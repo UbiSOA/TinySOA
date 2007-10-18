@@ -31,7 +31,7 @@ import java.util.logging.*;
  * @author		Edgardo Avilés López
  * @version	0.2, 07/24/2006
  ******************************************************************************/
-public final class Errores {
+public final class Errors {
 
 	/***************************************************************************
 	 * Cierra el programa, presenta y registra el error de SQL causante del
@@ -50,6 +50,7 @@ public final class Errores {
 		} catch (Exception e) { e.printStackTrace(); }
 		
 		System.err.println("Error en la base de datos: " + ex.getMessage());
+		ex.printStackTrace();
 		System.exit(1);
 	}
 	

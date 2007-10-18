@@ -23,6 +23,9 @@ import net.tinyos.tinysoa.util.*;
 import javax.swing.border.*;
 import javax.swing.table.*;
 import javax.swing.*;
+
+import org.apache.log4j.*;
+
 import java.awt.*;
 import java.io.*;
 import java.util.*;
@@ -36,7 +39,7 @@ import java.sql.*;
  ******************************************************************************/
 public class TinySOAGateway {
 	
-	private static String WINDOW_TITLE = "TinySOA Gateway v0.2";
+	private static String WINDOW_TITLE = "TinySOA Gateway";
 	private static String CONFIG_FILE = "config.xml";
 
 	/** JFrame of the main window. */
@@ -68,7 +71,9 @@ public class TinySOAGateway {
 	private static BorderLayout bl02, bl03;
 	private static JTabbedPane tp01;
 	private static Font f01, f02;
-	static ImageIcon i01, i02, i03;
+	static ImageIcon i01, i02, i03, i04;
+	
+	private static Logger logger = Logger.getLogger(TinySOAGateway.class);
 
 	/***************************************************************************
 	 * Starts SerialForwarder connection.
@@ -184,6 +189,7 @@ public class TinySOAGateway {
 		
 		window = new JFrame(WINDOW_TITLE);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setIconImage(i04.getImage());
 		
 		// Starts user interface construction --------------------------
 
@@ -232,7 +238,7 @@ public class TinySOAGateway {
 		sp01.setBorder(bo03);
 		sp01.setOpaque(false);
 		tp01.add(sp01, i01);
-		tp01.add(new JPanel(), i02);
+		//tp01.add(new JPanel(), i02);
 
 		// Ends user interface construction ------------------------
 		
@@ -259,7 +265,8 @@ public class TinySOAGateway {
 	 **************************************************************************/
 	private static void setStatus(String s, boolean justGUI) {
 		l01.setText(s);
-		if (!justGUI) System.out.println(s.replaceAll("\\<.*?\\>",""));
+		if (!justGUI) logger.info(
+				s.replaceAll("&hellip;", "...").replaceAll("\\<.*?\\>",""));
 	}
 	
 	/***************************************************************************
@@ -268,14 +275,18 @@ public class TinySOAGateway {
 	 * @param	args	Input arguments
 	 **************************************************************************/
 	public static void main(String[] args) {
+		PropertyConfigurator.configure("log4j.properties");
+		
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				i01 = new ImageIcon(getClass().getResource(
-						"/net/tinyos/tinysoa/img/tab.readings.gif"));
+						"/net/tinyos/tinysoa/img/tab.readings.png"));
 				i02 = new ImageIcon(getClass().getResource(
-						"/net/tinyos/tinysoa/img/tab.messages.gif"));
+						"/net/tinyos/tinysoa/img/tab.messages.png"));
 				i03 = new ImageIcon(getClass().getResource(
 						"/net/tinyos/tinysoa/img/ico.properties.gif"));
+				i04 = new ImageIcon(getClass().getResource(
+						"/net/tinyos/tinysoa/img/ico.tinysoa.png"));
 				
 				configuration	= new Properties();
 		

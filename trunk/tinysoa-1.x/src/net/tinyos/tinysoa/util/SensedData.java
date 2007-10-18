@@ -32,7 +32,7 @@ import net.tinyos.tinysoa.common.Constants;
  * @author		Edgardo Avilés López
  * @version	0.1, 07/24/2006
  ******************************************************************************/
-public class DatoSensado {
+public class SensedData {
 	
 	private int tipo, dato, nid;
 	private boolean convertir;
@@ -48,7 +48,7 @@ public class DatoSensado {
 	 * @param tiempo		Tiempo de la lectura
 	 * @param convertir	Falso si se desea sólo valores en hexadecimal
 	 **************************************************************************/
-	public DatoSensado(int nid, int tipo, int dato,
+	public SensedData(int nid, int tipo, int dato,
 			long tiempo, boolean convertir) {
 		this.nid = nid;
 		this.tipo = tipo;
@@ -57,9 +57,9 @@ public class DatoSensado {
 		this.convertir = convertir;
 		
 		if (tipo == Constants.SENSOR_TEMP)
-			valor = Convertidor.adcToTempD(dato);
+			valor = Converter.adcToTempD(dato);
 		else if (tipo == Constants.SENSOR_VOLT)
-			valor = Convertidor.adcToVoltD(dato);
+			valor = Converter.adcToVoltD(dato);
 		else valor = dato;
 	}
 	
@@ -70,7 +70,7 @@ public class DatoSensado {
 	 * @param dato			Valor ADC del parámetro
 	 * @param convertir	Falso si se desea sólo valores en hexadecimal
 	 **************************************************************************/
-	public DatoSensado(int tipo, int dato, boolean convertir) {
+	public SensedData(int tipo, int dato, boolean convertir) {
 		this(0, tipo, dato, new Date().getTime(), convertir);
 	}
 
@@ -119,17 +119,17 @@ public class DatoSensado {
 	public String getTooltip() {
 		String tip = "<html><table cellspacing=\"0\" cellpadding=\"1\" " +
 				"border=\"0\">";
-		String t = Convertidor.sensorEtiqueta(tipo, 0);
+		String t = Converter.sensorLabel(tipo, 0);
 		if (t.compareTo("v0") == 0) t = "Nulo";
 		tip += r("Tipo:", t);
 		
 		if (tipo == Constants.SENSOR_TEMP)
-			tip += r("Valor:", Convertidor.adcToTemp(dato));
+			tip += r("Valor:", Converter.adcToTemp(dato));
 		if (tipo == Constants.SENSOR_VOLT)
-			tip += r("Valor:", Convertidor.adcToVolt(dato));
+			tip += r("Valor:", Converter.adcToVolt(dato));
 		
 		tip += r("Dec:", dato + "");
-		tip += r("Hex:", Convertidor.intToHex(dato));
+		tip += r("Hex:", Converter.intToHex(dato));
 		return tip + "</table></html>";
 	}
 
@@ -154,12 +154,12 @@ public class DatoSensado {
 	public String toString() {
 		if (convertir) {
 			if (tipo == Constants.SENSOR_TEMP)
-				return Convertidor.adcToTemp(dato);
+				return Converter.adcToTemp(dato);
 			else if (tipo == Constants.SENSOR_VOLT)
-				return Convertidor.adcToVolt(dato);
+				return Converter.adcToVolt(dato);
 			else return dato + "";
 		}
-		else return Convertidor.intToHex(dato, 4);
+		else return Converter.intToHex(dato, 4);
 	}
 	
 }
