@@ -221,7 +221,7 @@ public class MessageProcessor {
 		
 		try {
 			st = db.createStatement();
-			rs = st.executeQuery("SELECT * FROM maintenance WHERE ready=0");
+			rs = st.executeQuery("SELECT * FROM maintenance WHERE done=0");
 			while (rs.next()) {
 				
 				if (!client.getSendBusy()) {
@@ -430,6 +430,9 @@ public class MessageProcessor {
 			registerActuator(Constants.ACTUATOR_LED_YELLOW);
 			registerActuator(Constants.ACTUATOR_LED_RED);
 			registerActuator(Constants.ACTUATOR_LED_GREEN);
+		} else {
+			System.err.println("SensorBoard not expected!");
+			System.exit(-1);
 		}
 	}
 	
@@ -471,21 +474,21 @@ public class MessageProcessor {
 		registerActuators(sensorBoard);
 		
 		table.getColumnModel().getColumn(5).setHeaderValue(
-				Converter.sensorEtiqueta(m.get_l1(), 1));
+				Converter.sensorLabel(m.get_l1(), 1));
 		table.getColumnModel().getColumn(6).setHeaderValue(
-				Converter.sensorEtiqueta(m.get_l2(), 2));
+				Converter.sensorLabel(m.get_l2(), 2));
 		table.getColumnModel().getColumn(7).setHeaderValue(
-				Converter.sensorEtiqueta(m.get_l3(), 3));
+				Converter.sensorLabel(m.get_l3(), 3));
 		table.getColumnModel().getColumn(8).setHeaderValue(
-				Converter.sensorEtiqueta(m.get_l4(), 4));
+				Converter.sensorLabel(m.get_l4(), 4));
 		table.getColumnModel().getColumn(9).setHeaderValue(
-				Converter.sensorEtiqueta(m.get_l5(), 5));
+				Converter.sensorLabel(m.get_l5(), 5));
 		table.getColumnModel().getColumn(10).setHeaderValue(
-				Converter.sensorEtiqueta(m.get_l6(), 6));
+				Converter.sensorLabel(m.get_l6(), 6));
 		table.getColumnModel().getColumn(11).setHeaderValue(
-				Converter.sensorEtiqueta(m.get_l7(), 7));
+				Converter.sensorLabel(m.get_l7(), 7));
 		table.getColumnModel().getColumn(12).setHeaderValue(
-				Converter.sensorEtiqueta(m.get_l8(), 8));
+				Converter.sensorLabel(m.get_l8(), 8));
 		table.getTableHeader().repaint();
 		
 		new Thread() {

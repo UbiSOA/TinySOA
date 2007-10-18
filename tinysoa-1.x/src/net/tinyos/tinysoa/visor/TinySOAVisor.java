@@ -40,7 +40,7 @@ import net.tinyos.tinysoa.util.*;
  ******************************************************************************/
 public class TinySOAVisor {
 
-	private static String ARCHIVO_CONFIGURACION = "configuracion.xml";
+	private static String ARCHIVO_CONFIGURACION = "config.xml";
 	
 	private static JFrame ventana;
 	
@@ -640,7 +640,7 @@ public class TinySOAVisor {
 				iconos[2] = new ImageIcon(getClass().getResource(
 						"/net/tinyos/tinysoa/img/men.seleccionar.red.png"));
 				iconos[3] = new ImageIcon(getClass().getResource(
-						"/net/tinyos/tinysoa/img/men.actualizar.png"));
+						"/net/tinyos/tinysoa/img/men.refresh.png"));
 				iconos[4] = new ImageIcon(getClass().getResource(
 						"/net/tinyos/tinysoa/img/men.control.inicio.png"));
 				iconos[5] = new ImageIcon(getClass().getResource(

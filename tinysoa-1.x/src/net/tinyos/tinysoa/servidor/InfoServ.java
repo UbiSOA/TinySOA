@@ -39,6 +39,6 @@ public interface InfoServ {
 	 * 
 	 * @return Un vector con la información de los servicios disponibles
 	 **************************************************************************/
-	public Vector<Red> obtenerListadoRedes();
+	public Vector<Network> obtenerListadoRedes();
 	
 }

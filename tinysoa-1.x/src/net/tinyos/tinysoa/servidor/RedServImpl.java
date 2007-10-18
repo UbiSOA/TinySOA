@@ -45,7 +45,7 @@ public class RedServImpl implements RedServ
 	/***************************************************************************
 	 * Constructor de la clase.
 	 * 
-	 * @param bd	Conexión de la base de datos a utilizar
+	 * @param db	Conexión de la base de datos a utilizar
 	 * @param rid	ID de la red del servicio
 	 **************************************************************************/
 	public RedServImpl(Connection bd, int rid) {
@@ -82,7 +82,7 @@ public class RedServImpl implements RedServ
 			rs = st.executeQuery("SELECT nombre FROM redes WHERE id=" + rid);
 			if (rs.next()) nombre = rs.getString("nombre");
 		} catch (SQLException ex) {
-			Errores.errorBD(ex);
+			Errors.errorBD(ex);
 		} finally {
 			if ((rs != null) && (st != null)) {
 				try {
@@ -112,7 +112,7 @@ public class RedServImpl implements RedServ
 					"SELECT descripcion FROM redes WHERE id=" + rid);
 			if (rs.next()) descripcion = rs.getString("descripcion");
 		} catch (SQLException ex) {
-			Errores.errorBD(ex);
+			Errors.errorBD(ex);
 		} finally {
 			if ((rs != null) && (st != null)) {
 				try {
@@ -142,7 +142,7 @@ public class RedServImpl implements RedServ
 					"historico WHERE rid=" + rid);
 			if (rs.next()) tiempo = rs.getString("tiempo");
 		} catch (SQLException ex) {
-			Errores.errorBD(ex);
+			Errors.errorBD(ex);
 		} finally {
 			if ((rs != null) && (st != null)) {
 				try {
@@ -172,7 +172,7 @@ public class RedServImpl implements RedServ
 					"historico WHERE rid=" + rid);
 			if (rs.next()) tiempo = rs.getString("tiempo");
 		} catch (SQLException ex) {
-			Errores.errorBD(ex);
+			Errors.errorBD(ex);
 		} finally {
 			if ((rs != null) && (st != null)) {
 				try {
@@ -210,7 +210,7 @@ public class RedServImpl implements RedServ
 				nodos.add(n);
 			}
 		} catch (SQLException ex) {
-			Errores.errorBD(ex);
+			Errors.errorBD(ex);
 		} finally {
 			if ((rs != null) && (st != null)) {
 				try {
@@ -241,13 +241,13 @@ public class RedServImpl implements RedServ
 	 * Regresa una lista de los parámetros de sensado disponibles.
 	 * 
 	 * @return Una lista de parámetros
-	 * @see		Parametro
+	 * @see		Parameter
 	 **************************************************************************/
 	@WebMethod(operationName="obtenerParametros",
 			action="urn:obtenerParametros")
 	@WebResult(name="parametrosResultado")
-	public Vector<Parametro> obtenerParametros() {
-		Vector<Parametro> parametros = new Vector<Parametro>();
+	public Vector<Parameter> obtenerParametros() {
+		Vector<Parameter> parameters = new Vector<Parameter>();
 		
 		Statement st = null;
 		ResultSet rs = null;
@@ -259,14 +259,14 @@ public class RedServImpl implements RedServ
 					" AND t1.parametro = t2.parametro ORDER BY t1.parametro");
 			
 			while (rs.next()) {
-				Parametro p = new Parametro();
-				p.setNombre(rs.getString("parametro"));
-				p.setDescripcion(rs.getString("descripcion"));
-				parametros.add(p);
+				Parameter p = new Parameter();
+				p.setName(rs.getString("parametro"));
+				p.setDescription(rs.getString("descripcion"));
+				parameters.add(p);
 			}
 			
 		} catch (SQLException ex) {
-			Errores.errorBD(ex);
+			Errors.errorBD(ex);
 		} finally {
 			if ((rs != null) && (st != null)) {
 				try {
@@ -276,7 +276,7 @@ public class RedServImpl implements RedServ
 			}
 		}		
 		
-		return parametros;
+		return parameters;
 	}
 	
 	/***************************************************************************
@@ -323,7 +323,7 @@ public class RedServImpl implements RedServ
 				}
 			}
 		} catch (SQLException ex) {
-			Errores.errorBD(ex);
+			Errors.errorBD(ex);
 		} finally {
 			if ((rs != null) && (st != null)) {
 				try {
@@ -376,7 +376,7 @@ public class RedServImpl implements RedServ
 			}
 			
 		} catch (SQLException ex) {
-			Errores.errorBD(ex);
+			Errors.errorBD(ex);
 		} finally {
 			if ((rs != null) && (st != null)) {
 				try {
@@ -438,7 +438,7 @@ public class RedServImpl implements RedServ
 			}
 			
 		} catch (SQLException ex) {
-			Errores.errorBD(ex);
+			Errors.errorBD(ex);
 		} finally {
 			if ((rs != null) && (st != null)) {
 				try {
@@ -492,7 +492,7 @@ public class RedServImpl implements RedServ
 			}
 			
 		} catch (SQLException ex) {
-			Errores.errorBD(ex);
+			Errors.errorBD(ex);
 		} finally {
 			if ((rs != null) && (st != null)) {
 				try {
@@ -540,7 +540,7 @@ public class RedServImpl implements RedServ
 			}
 			
 		} catch (SQLException ex) {
-			Errores.errorBD(ex);
+			Errors.errorBD(ex);
 		} finally {
 			if ((rs != null) && (st != null)) {
 				try {
@@ -622,7 +622,7 @@ public class RedServImpl implements RedServ
 					"', '" + criterio + "')");
 			
 		} catch (SQLException ex) {
-			Errores.errorBD(ex);
+			Errors.errorBD(ex);
 		} finally {
 			if (st != null) {
 				try {
@@ -705,7 +705,7 @@ public class RedServImpl implements RedServ
 					"', criterio='" + criterio + "' WHERE id=" + id);
 			
 		} catch (SQLException ex) {
-			Errores.errorBD(ex);
+			Errors.errorBD(ex);
 		} finally {
 			if (st != null) {
 				try {
@@ -729,7 +729,7 @@ public class RedServImpl implements RedServ
 			st = bd.createStatement();
 			st.executeUpdate("DELETE FROM eventos WHERE id=" + id);
 		} catch (SQLException ex) {
-			Errores.errorBD(ex);
+			Errors.errorBD(ex);
 		} finally {
 			if (st != null) {
 				try {
@@ -746,14 +746,14 @@ public class RedServImpl implements RedServ
 	 * 
 	 * @param limite	El número límite de tareas a regresar
 	 * @return			Un listado de tareas
-	 * @see				Tarea
+	 * @see				Task
 	 **************************************************************************/
 	@WebMethod(operationName="obtenerListadoTareas",
 			action="urn:obtenerListadoTareas")
 	@WebResult(name="listadoTareasResultado")
-	public Vector<Tarea> obtenerListadoTareas(
+	public Vector<Task> obtenerListadoTareas(
 			@WebParam(name="limite") int limite) {
-		Vector<Tarea> tareas = new Vector<Tarea>();
+		Vector<Task> tasks = new Vector<Task>();
 		
 		Statement st = null;
 		ResultSet rs = null;
@@ -768,21 +768,21 @@ public class RedServImpl implements RedServ
 			rs = st.executeQuery(query);
 			
 			while (rs.next()) {
-				Tarea t = new Tarea();
+				Task t = new Task();
 				t.setId(rs.getInt("id"));
-				t.setTipo(rs.getInt("tipo"));
-				t.setValor(rs.getInt("valor"));
+				t.setType(rs.getInt("tipo"));
+				t.setValue(rs.getInt("valor"));
 				t.setNid(rs.getInt("nid"));
-				t.setRepetir(rs.getInt("repetir") / 1000);
-				t.setEvento(rs.getInt("evento"));
-				t.setTiempo(rs.getString("tiempo"));
-				t.setEjecutada(rs.getString("ejecutada"));
-				t.setListo(rs.getBoolean("listo"));
-				tareas.add(t);
+				t.setRepeat(rs.getInt("repetir") / 1000);
+				t.setEvent(rs.getInt("evento"));
+				t.setTime(rs.getString("tiempo"));
+				t.setExecuted(rs.getString("ejecutada"));
+				t.setDone(rs.getBoolean("listo"));
+				tasks.add(t);
 			}
 			
 		} catch (SQLException ex) {
-			Errores.errorBD(ex);
+			Errors.errorBD(ex);
 		} finally {
 			if ((rs != null) && (st != null)) {
 				try {
@@ -792,7 +792,7 @@ public class RedServImpl implements RedServ
 			}
 		}		
 		
-		return tareas;
+		return tasks;
 	}
 	
 	/***************************************************************************
@@ -800,13 +800,13 @@ public class RedServImpl implements RedServ
 	 * 
 	 * @param id	ID de la tarea
 	 * @return		La información de la tarea indicada
-	 * @see			Tarea
+	 * @see			Task
 	 **************************************************************************/
 	@WebMethod(operationName="obtenerTareaPorId",
 			action="urn:obtenerTareaPorId")
 	@WebResult(name="tareaPorIdResultado")
-	public Tarea obtenerTareaPorId(@WebParam(name="id") int id) {
-		Tarea tarea = new Tarea();
+	public Task obtenerTareaPorId(@WebParam(name="id") int id) {
+		Task task = new Task();
 		
 		Statement st = null;
 		ResultSet rs = null;
@@ -820,19 +820,19 @@ public class RedServImpl implements RedServ
 			rs = st.executeQuery(query);
 			
 			while (rs.next()) {
-				tarea.setId(rs.getInt("id"));
-				tarea.setTipo(rs.getInt("tipo"));
-				tarea.setValor(rs.getInt("valor"));
-				tarea.setNid(rs.getInt("nid"));
-				tarea.setRepetir(rs.getInt("repetir") / 1000);
-				tarea.setEvento(rs.getInt("evento"));
-				tarea.setTiempo(rs.getString("tiempo"));
-				tarea.setEjecutada(rs.getString("ejecutada"));
-				tarea.setListo(rs.getBoolean("listo"));
+				task.setId(rs.getInt("id"));
+				task.setType(rs.getInt("tipo"));
+				task.setValue(rs.getInt("valor"));
+				task.setNid(rs.getInt("nid"));
+				task.setRepeat(rs.getInt("repetir") / 1000);
+				task.setEvent(rs.getInt("evento"));
+				task.setTime(rs.getString("tiempo"));
+				task.setExecuted(rs.getString("ejecutada"));
+				task.setDone(rs.getBoolean("listo"));
 			}
 			
 		} catch (SQLException ex) {
-			Errores.errorBD(ex);
+			Errors.errorBD(ex);
 		} finally {
 			if ((rs != null) && (st != null)) {
 				try {
@@ -842,7 +842,7 @@ public class RedServImpl implements RedServ
 			}
 		}		
 		
-		return tarea;
+		return task;
 	}
 	
 	/***************************************************************************
@@ -887,7 +887,7 @@ public class RedServImpl implements RedServ
 			st = bd.createStatement();
 			st.executeUpdate(query);
 		} catch (SQLException ex) {
-			Errores.errorBD(ex);
+			Errors.errorBD(ex);
 		} finally {
 			if (st != null) {
 				try {
@@ -939,7 +939,7 @@ public class RedServImpl implements RedServ
 			st = bd.createStatement();
 			st.executeUpdate(query);
 		} catch (SQLException ex) {
-			Errores.errorBD(ex);
+			Errors.errorBD(ex);
 		} finally {
 			if (st != null) {
 				try {
@@ -963,7 +963,7 @@ public class RedServImpl implements RedServ
 			st = bd.createStatement();
 			st.executeUpdate("DELETE FROM mantenimiento WHERE id=" + id);
 		} catch (SQLException ex) {
-			Errores.errorBD(ex);
+			Errors.errorBD(ex);
 		} finally {
 			if (st != null) {
 				try {

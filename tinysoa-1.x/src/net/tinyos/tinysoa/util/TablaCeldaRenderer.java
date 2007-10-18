@@ -67,8 +67,8 @@ public class TablaCeldaRenderer extends JLabel
         if (value != null) setText(value.toString()); else setText(" ");
         this.setHorizontalAlignment(alineacion);
         
-        if ((vColIndex > 4) && (value instanceof DatoSensado))
-        	setToolTipText(((DatoSensado)value).getTooltip());
+        if ((vColIndex > 4) && (value instanceof SensedData))
+        	setToolTipText(((SensedData)value).getTooltip());
         
        if (value instanceof CeldaTablaTooltip) {
     	   setToolTipText(((CeldaTablaTooltip)value).getTooltip());

@@ -27,7 +27,7 @@ import java.net.*;
 import java.sql.*;
 import java.util.*;
 
-import net.tinyos.tinysoa.util.Errores;
+import net.tinyos.tinysoa.util.Errors;
 
 import org.codehaus.xfire.*;
 import org.codehaus.xfire.annotations.*;
@@ -45,7 +45,7 @@ import org.codehaus.xfire.service.invoker.*;
 
 public class TinySOAServidor {
 	private static String TITULO_VENTANA = "TinySOA Servidor v0.1";
-	private static String ARCHIVO_CONFIGURACION = "configuracion.xml";
+	private static String ARCHIVO_CONFIGURACION = "config.xml";
 	private static String serv, usuario, passwd, bDatos;
 	private static String puerto;
 	private static Connection bd;
@@ -97,7 +97,7 @@ public class TinySOAServidor {
 			System.err.println("Imposible conectar a la base de datos.");
 			System.err.println(
 					"Verifique que la información en el archivo " +
-					"configuracion.xml es correcta y que la base de datos " +
+					"config.xml es correcta y que la base de datos " +
 					"responde adecuadamente.");
 			System.exit(1);
 		}
@@ -133,7 +133,7 @@ public class TinySOAServidor {
 				xfire.getServiceRegistry().register(servicioRed);
 			}
 		} catch (SQLException ex) {
-			Errores.errorBD(ex);
+			Errors.errorBD(ex);
 		} finally {
 			if ((rs != null) && (st != null)) {
 				try {
@@ -148,7 +148,7 @@ public class TinySOAServidor {
 			servidor.setPort(Integer.parseInt(puerto));
 			servidor.start();
 		} catch (Exception e) {
-			Errores.error(e, "Error al iniciar el servidor.");
+			Errors.error(e, "Error al iniciar el servidor.");
 		}
 	}
 	
@@ -159,7 +159,7 @@ public class TinySOAServidor {
 		try {
 			servidor.stop();
 		} catch (Exception e) {
-			Errores.error(e, "Error al detener el servidor.");
+			Errors.error(e, "Error al detener el servidor.");
 		}
 	}
 	
@@ -223,7 +223,7 @@ public class TinySOAServidor {
 			start();
 			System.out.println("Listo y esperando solicitudes...");
 		} catch(Exception ex) {
-			Errores.error(ex, "Error al iniciar el sistema.");
+			Errors.error(ex, "Error al iniciar el sistema.");
 		}
 	}	
 	

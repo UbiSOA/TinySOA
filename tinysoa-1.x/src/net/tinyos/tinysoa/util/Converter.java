@@ -33,7 +33,7 @@ import net.tinyos.tinysoa.common.*;
  * @author		Edgardo Avilés López
  * @version	0.3, 07/24/2006 
  ******************************************************************************/
-public final class Convertidor {
+public final class Converter {
 	
 	private static NumberFormat nf1d = new DecimalFormat("0.0");
 	private static NumberFormat nf2d = new DecimalFormat("0.00");
@@ -125,7 +125,7 @@ public final class Convertidor {
 		if (convertir) {
 			if (i == 0x7e) return "-";
 			else return i + "";
-		} else return Convertidor.intToHex(i, 2);
+		} else return Converter.intToHex(i, 2);
 	}
 	
 	/***************************************************************************
@@ -135,13 +135,13 @@ public final class Convertidor {
 	 * @return		Una cadena con el nombre abreviado del actuador
 	 * @see			Constants
 	 **************************************************************************/
-	public static String intToActuador(int i) {
+	public static String intToActuator(int i) {
 		String s = "";
-		if (i == Constants.ACTUADOR_BOCINA)		s = "Boc";
-		if (i == Constants.ACTUADOR_LED_AMARILLO)	s = "LedAm";
-		if (i == Constants.ACTUADOR_LED_AZUL)		s = "LedAz";
-		if (i == Constants.ACTUADOR_LED_ROJO)		s = "LedRo";
-		if (i == Constants.ACTUADOR_LED_VERDE)		s = "LedVe";
+		if (i == Constants.ACTUATOR_BUZZER)		s = "Buzz";
+		if (i == Constants.ACTUATOR_LED_YELLOW)	s = "LedY";
+		if (i == Constants.ACTUATOR_LED_BLUE)		s = "LedB";
+		if (i == Constants.ACTUATOR_LED_RED)		s = "LedR";
+		if (i == Constants.ACTUATOR_LED_GREEN)		s = "LedG";
 		return s;
 	}
 
@@ -154,11 +154,11 @@ public final class Convertidor {
 	 * @return				Una cadena con el tipo de mensaje
 	 * @see					Constants
 	 **************************************************************************/
-	public static String intToTipo(int i, boolean convertir) {
-		String[] TIPOS = {"Lect.", "Reg.", "Act. Act.", "Des. Act.", "Duerme",
-				"Desp.", "Cam. D.R."};
-		if (convertir) return TIPOS[i];
-		else return Convertidor.intToHex(i, 2);
+	public static String intToType(int i, boolean convertir) {
+		String[] TYPES = {"Read", "Reg", "Act. Act.", "Des. Act.", "Sleep",
+				"Wake Up", "Chg. Data Rate"};
+		if (convertir) return TYPES[i];
+		else return Converter.intToHex(i, 2);
 	}
 	
 	/***************************************************************************
@@ -199,7 +199,7 @@ public final class Convertidor {
 		if (i == 0x90) s = "MDA320";
 		if (i == 0xA0) s = "MSP410";
 		if (convertir) return s;
-		else return Convertidor.intToHex(i, 2);
+		else return Converter.intToHex(i, 2);
 	}
 	
 	/***************************************************************************
@@ -214,10 +214,10 @@ public final class Convertidor {
 	 * @see					Constants
 	 **************************************************************************/
 	public static String intToSensParam(int i, boolean convertir) {
-		String s = sensorEtiqueta(i, 0);
+		String s = sensorLabel(i, 0);
 		if (s.compareTo("v0") == 0) s = "?";
 		if (convertir) return s;
-		else return Convertidor.intToHex(i, 4);
+		else return Converter.intToHex(i, 4);
 	}
 
 	/***************************************************************************
@@ -229,8 +229,8 @@ public final class Convertidor {
 	 * @return			Una cadena con el parámetro de sensado
 	 * @see				Constants
 	 **************************************************************************/
-	public static String sensorEtiqueta(int sensor) {
-		String t = sensorEtiqueta(sensor, 0);
+	public static String sensorLabel(int sensor) {
+		String t = sensorLabel(sensor, 0);
 		if ("v0".compareTo(t) == 0) t = null;
 		return t;
 	}
@@ -246,10 +246,10 @@ public final class Convertidor {
 	 * @return			Una cadena con el parámetro de sensado
 	 * @see				Constants
 	 **************************************************************************/
-	public static String sensorEtiqueta(int sensor, int pos) {
-		if (sensor == Constants.SENSOR_NULO) return "v" + pos;
+	public static String sensorLabel(int sensor, int pos) {
+		if (sensor == Constants.SENSOR_NULL) return "v" + pos;
 		else if (sensor == Constants.SENSOR_TEMP)	return "Temp";
-		else if (sensor == Constants.SENSOR_LUZ) return "Luz";
+		else if (sensor == Constants.SENSOR_LIGHT) return "Light";
 		else if (sensor == Constants.SENSOR_MAGX) return "MagX";
 		else if (sensor == Constants.SENSOR_MAGY) return "MagY";
 		else if (sensor == Constants.SENSOR_ACEX) return "AceX";
@@ -270,7 +270,7 @@ public final class Convertidor {
 	 **************************************************************************/
 	public static int sensorEtiquetaToId(String sensor) {
 		if (sensor.compareTo("Temp") == 0) return Constants.SENSOR_TEMP;
-		else if (sensor.compareTo("Luz") == 0) return Constants.SENSOR_LUZ;
+		else if (sensor.compareTo("Light") == 0) return Constants.SENSOR_LIGHT;
 		else if (sensor.compareTo("MagX") == 0) return Constants.SENSOR_MAGX;
 		else if (sensor.compareTo("MagY") == 0) return Constants.SENSOR_MAGY;
 		else if (sensor.compareTo("AceX") == 0) return Constants.SENSOR_ACEX;
@@ -320,7 +320,7 @@ public final class Convertidor {
 	 **************************************************************************/
 	public static String intToN(int i, int longitud, boolean convertir) {
 		if (convertir) return i + "";
-		else return Convertidor.intToHex(i, longitud);
+		else return Converter.intToHex(i, longitud);
 	}
 
 	/***************************************************************************
