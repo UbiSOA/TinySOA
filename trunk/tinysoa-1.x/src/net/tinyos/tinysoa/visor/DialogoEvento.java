@@ -26,7 +26,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-import net.tinyos.tinysoa.servidor.*;
+import net.tinyos.tinysoa.server.*;
 
 /*******************************************************************************
  * Diálogo para agregar o modificar un evento. 

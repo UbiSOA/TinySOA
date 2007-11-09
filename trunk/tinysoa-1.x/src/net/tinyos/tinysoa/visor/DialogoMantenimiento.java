@@ -33,7 +33,7 @@ import javax.swing.*;
 
 import net.tinyos.tinysoa.common.*;
 import net.tinyos.tinysoa.common.Event;
-import net.tinyos.tinysoa.servidor.*;
+import net.tinyos.tinysoa.server.*;
 
 /*******************************************************************************
  * Diálogo para agregar o modificar una tarea de mantenimiento. 
