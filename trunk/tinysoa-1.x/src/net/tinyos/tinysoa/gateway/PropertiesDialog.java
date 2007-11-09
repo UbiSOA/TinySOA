@@ -41,6 +41,7 @@ public class PropertiesDialog extends JDialog {
 	private JComboBox cb01;
 	private JTextArea ta01;
 	private JScrollPane sp01;
+	@SuppressWarnings("unchecked")
 	private Vector v;
 	private Connection c;
 	private Properties p;

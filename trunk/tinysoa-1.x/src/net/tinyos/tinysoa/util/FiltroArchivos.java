@@ -61,7 +61,8 @@ public class FiltroArchivos extends FileFilter {
     //private static String TYPE_UNKNOWN = "Type Unknown";
     //private static String HIDDEN_FILE = "Hidden File";
 
-    private Hashtable filters = null;
+    @SuppressWarnings("unchecked")
+	private Hashtable filters = null;
     private String description = null;
     private String fullDescription = null;
     private boolean useExtensionsInDescription = true;
@@ -72,7 +73,8 @@ public class FiltroArchivos extends FileFilter {
      *
      * @see #addExtension
      */
-    public FiltroArchivos() {
+    @SuppressWarnings("unchecked")
+	public FiltroArchivos() {
 	this.filters = new Hashtable();
     }
 
@@ -197,7 +199,8 @@ public class FiltroArchivos extends FileFilter {
      *
      * @see FileFilter#getDescription
      */
-    public String getDescription() {
+    @SuppressWarnings("unchecked")
+	public String getDescription() {
 	if(fullDescription == null) {
 	    if(description == null || isExtensionListInDescription()) {
  		fullDescription = description==null ? "(" : description + " (";

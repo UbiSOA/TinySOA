@@ -50,6 +50,7 @@ public class RedNodoArbolSeleccionListener extends MouseAdapter {
 	 * Método ejecutado al detectarse un click en el arbol. Este selecciona o
 	 * deselecciona según sea el caso al nodo en el cual se presionó el ratón.
 	 **************************************************************************/
+	@SuppressWarnings("unchecked")
 	public void mouseClicked(MouseEvent e) {
 		int x = e.getX();
 		int y = e.getY();

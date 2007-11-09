@@ -75,13 +75,15 @@ public class TableSorter extends AbstractTableModel {
 
     private static Directive EMPTY_DIRECTIVE = new Directive(-1, NOT_SORTED);
 
-    public static final Comparator COMPARABLE_COMAPRATOR = new Comparator() {
+    @SuppressWarnings("unchecked")
+	public static final Comparator COMPARABLE_COMAPRATOR = new Comparator() {
         @SuppressWarnings("unchecked")
 		public int compare(Object o1, Object o2) {
             return ((Comparable) o1).compareTo(o2);
         }
     };
-    public static final Comparator LEXICAL_COMPARATOR = new Comparator() {
+    @SuppressWarnings("unchecked")
+	public static final Comparator LEXICAL_COMPARATOR = new Comparator() {
         public int compare(Object o1, Object o2) {
             return o1.toString().compareTo(o2.toString());
         }
@@ -93,8 +95,10 @@ public class TableSorter extends AbstractTableModel {
     private JTableHeader tableHeader;
     private MouseListener mouseListener;
     private TableModelListener tableModelListener;
-    private Map columnComparators = new HashMap();
-    private List sortingColumns = new ArrayList();
+    @SuppressWarnings("unchecked")
+	private Map columnComparators = new HashMap();
+    @SuppressWarnings("unchecked")
+	private List sortingColumns = new ArrayList();
 
     public TableSorter() {
         this.mouseListener = new MouseHandler();
@@ -215,7 +219,8 @@ public class TableSorter extends AbstractTableModel {
         }
     }
 
-    protected Comparator getComparator(int column) {
+    @SuppressWarnings("unchecked")
+	protected Comparator getComparator(int column) {
         Class columnType = tableModel.getColumnClass(column);
         Comparator comparator = (Comparator) columnComparators.get(columnType);
         if (comparator != null) {
@@ -290,7 +295,8 @@ public class TableSorter extends AbstractTableModel {
 
     // Helper classes
     
-    private class Row implements Comparable {
+    @SuppressWarnings("unchecked")
+	private class Row implements Comparable {
         private int modelIndex;
 
         public Row(int index) {

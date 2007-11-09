@@ -634,49 +634,49 @@ public class TinySOAVisor {
 			public void run() {
 				iconos = new ImageIcon[21];
 				iconos[0] = new ImageIcon(getClass().getResource(
-						"/net/tinyos/tinysoa/img/men.vacio.png"));
+						"/net/tinyos/tinysoa/img/men.empty.png"));
 				iconos[1] = new ImageIcon(getClass().getResource(
-						"/net/tinyos/tinysoa/img/men.servidor.png"));
+						"/net/tinyos/tinysoa/img/men.server.png"));
 				iconos[2] = new ImageIcon(getClass().getResource(
-						"/net/tinyos/tinysoa/img/men.seleccionar.red.png"));
+						"/net/tinyos/tinysoa/img/men.select.net.png"));
 				iconos[3] = new ImageIcon(getClass().getResource(
 						"/net/tinyos/tinysoa/img/men.refresh.png"));
 				iconos[4] = new ImageIcon(getClass().getResource(
-						"/net/tinyos/tinysoa/img/men.control.inicio.png"));
+						"/net/tinyos/tinysoa/img/men.control.start.png"));
 				iconos[5] = new ImageIcon(getClass().getResource(
-						"/net/tinyos/tinysoa/img/men.control.atrasar.png"));
+						"/net/tinyos/tinysoa/img/men.control.back.png"));
 				iconos[6] = new ImageIcon(getClass().getResource(
-						"/net/tinyos/tinysoa/img/men.control.pausar.png"));
+						"/net/tinyos/tinysoa/img/men.control.pause.png"));
 				iconos[7] = new ImageIcon(getClass().getResource(
-						"/net/tinyos/tinysoa/img/men.control.reproducir.png"));
+						"/net/tinyos/tinysoa/img/men.control.play.png"));
 				iconos[8] = new ImageIcon(getClass().getResource(
-						"/net/tinyos/tinysoa/img/men.control.adelantar.png"));
+						"/net/tinyos/tinysoa/img/men.control.forward.png"));
 				iconos[9] = new ImageIcon(getClass().getResource(
 						"/net/tinyos/tinysoa/img/men.control.final.png"));
 				iconos[10] = new ImageIcon(getClass().getResource(
-						"/net/tinyos/tinysoa/img/men.control2.inicio.png"));
+						"/net/tinyos/tinysoa/img/men.control2.start.png"));
 				iconos[11] = new ImageIcon(getClass().getResource(
-						"/net/tinyos/tinysoa/img/men.control2.pausar.png"));
+						"/net/tinyos/tinysoa/img/men.control2.pause.png"));
 				iconos[12] = new ImageIcon(getClass().getResource(
-						"/net/tinyos/tinysoa/img/men.control2.reproducir.png"));
+						"/net/tinyos/tinysoa/img/men.control2.play.png"));
 				iconos[13] = new ImageIcon(getClass().getResource(
 						"/net/tinyos/tinysoa/img/men.control2.final.png"));
 				iconos[14] = new ImageIcon(getClass().getResource(
-						"/net/tinyos/tinysoa/img/men.sensor.esperando.png"));
+						"/net/tinyos/tinysoa/img/men.sensor.waiting.png"));
 				iconos[15] = new ImageIcon(getClass().getResource(
 						"/net/tinyos/tinysoa/img/men.sensor.normal.png"));
 				iconos[16] = new ImageIcon(getClass().getResource(
-						"/net/tinyos/tinysoa/img/men.sensor.problema.png"));
+						"/net/tinyos/tinysoa/img/men.sensor.problem.png"));
 				iconos[17] = new ImageIcon(getClass().getResource(
-						"/net/tinyos/tinysoa/img/men.exportar.png"));
+						"/net/tinyos/tinysoa/img/men.export.png"));
 				iconos[18] = new ImageIcon(getClass().getResource(
-						"/net/tinyos/tinysoa/img/men.zoom.acercar.png"));
+						"/net/tinyos/tinysoa/img/men.zoom.in.png"));
 				iconos[19] = new ImageIcon(getClass().getResource(
-						"/net/tinyos/tinysoa/img/men.zoom.alejar.png"));
+						"/net/tinyos/tinysoa/img/men.zoom.out.png"));
 				iconos[20] = new ImageIcon(getClass().getResource(
-						"/net/tinyos/tinysoa/img/men.importar.imagen.png"));
+						"/net/tinyos/tinysoa/img/men.import.image.png"));
 
-				Locale.setDefault(new Locale("es", "MX"));
+				Locale.setDefault(new Locale("us", "US"));
 				
 				crearVentana();
 				eventosInterfaz.desactivarControles();

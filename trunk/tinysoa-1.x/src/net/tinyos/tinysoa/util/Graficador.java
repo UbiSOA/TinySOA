@@ -43,6 +43,7 @@ import net.tinyos.tinysoa.common.*;
 public class Graficador extends JPanel {
 	private static final long serialVersionUID = -2891710764794158927L;
 
+	@SuppressWarnings("unchecked")
 	private Vector<Vector> datos;
 	private double margIzq = 52, margSup = 20, margDer = 20, margInf = 62,
 		ancho, alto, sepHor = 12, sepVer = 20;
@@ -79,6 +80,7 @@ public class Graficador extends JPanel {
 	 * 
 	 * @param datos	Vector de datos a graficar
 	 **************************************************************************/
+	@SuppressWarnings("unchecked")
 	public void defDatos(Vector<Vector> datos) {
 		this.datos = datos;
 		
@@ -367,6 +369,7 @@ public class Graficador extends JPanel {
 	 * 
 	 * @param g2d	Gráfica a utilizar
 	 **************************************************************************/
+	@SuppressWarnings("unchecked")
 	private void dibujarDatos(Graphics2D g2d) {
 		DateFormat formato = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
@@ -567,6 +570,7 @@ public class Graficador extends JPanel {
 	 * 
 	 * @param g2d	Gráfica a utilizar
 	 **************************************************************************/
+	@SuppressWarnings("unchecked")
 	private void dibujarLeyenda(Graphics2D g2d) {
 		if (datos == null) return;
 
