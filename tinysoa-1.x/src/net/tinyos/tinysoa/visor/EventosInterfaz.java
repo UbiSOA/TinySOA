@@ -36,7 +36,7 @@ import javax.swing.tree.*;
 
 import net.tinyos.tinysoa.common.*;
 import net.tinyos.tinysoa.common.Event;
-import net.tinyos.tinysoa.servidor.*;
+import net.tinyos.tinysoa.server.*;
 import net.tinyos.tinysoa.util.*;
 
 import org.codehaus.xfire.client.*;

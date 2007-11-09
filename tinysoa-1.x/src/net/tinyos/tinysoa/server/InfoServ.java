@@ -20,7 +20,7 @@
  * 
  ******************************************************************************/
 
-package net.tinyos.tinysoa.servidor;
+package net.tinyos.tinysoa.server;
 
 import java.util.*;
 
