@@ -69,7 +69,7 @@ public class InfoServImpl implements InfoServ {
 		
 		try {
 			st = bd.createStatement();
-			rs = st.executeQuery("SELECT * FROM redes ORDER BY nombre");
+			rs = st.executeQuery("SELECT * FROM networks ORDER BY nombre");
 			
 			while (rs.next()) {
 				Network r = new Network();

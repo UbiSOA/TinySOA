@@ -65,6 +65,7 @@ public class RedNodoArbol extends DefaultMutableTreeNode {
 	 * 
 	 * @param isSelected	Verdadero si está seleccionado
 	 **************************************************************************/
+	@SuppressWarnings("unchecked")
 	public void setSelected(boolean isSelected) {
 		this.isSelected = isSelected;
 		

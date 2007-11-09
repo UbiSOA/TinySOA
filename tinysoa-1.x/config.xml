@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-<entry key="red.id">6</entry>
-<entry key="mysql.user">avilesl</entry>
-<entry key="servidor.puerto">8080</entry>
-<entry key="red.nombre">Demo Segovia</entry>
-<entry key="mysql.database">tinysoadb</entry>
-<entry key="mysql.password">quijote</entry>
+<entry key="mysql.password">tsoa_pwd</entry>
+<entry key="server.port">8080</entry>
+<entry key="mysql.user">tinysoa_user</entry>
 <entry key="visor.servidor">http://localhost:8080</entry>
-<entry key="red.descripcion">Demo preparado para el Dr. Manuel Segovia.</entry>
-<entry key="mysql.server">serv-labca.cicese.mx</entry>
-<entry key="network.description">Test sensor network.</entry>
-<entry key="network.name">Test</entry>
-<entry key="network.id">9</entry>
-<entry key="mysql.bDatos">tinysoadb</entry>
+<entry key="mysql.database">tinysoadb</entry>
+<entry key="mysql.server">localhost</entry>
 </properties>

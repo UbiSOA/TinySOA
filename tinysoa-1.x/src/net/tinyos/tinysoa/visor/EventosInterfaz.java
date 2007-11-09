@@ -625,6 +625,7 @@ public class EventosInterfaz
 	/***************************************************************************
 	 * Actualiza los nodos de la tabla de datos
 	 **************************************************************************/
+	@SuppressWarnings("unchecked")
 	private void actualizarNodosTablaDatos() {
 		int renglon; boolean modificado = false;
 	
@@ -660,6 +661,7 @@ public class EventosInterfaz
 	private void actualizarGraficador() {
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
+				@SuppressWarnings("unchecked")
 				public void run() {
 					if (servicioRed == null) return;
 					if (comboParsGraf.getSelectedItem() == null) return;
@@ -730,6 +732,7 @@ public class EventosInterfaz
 	private void actualizarTopologia() {
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
+				@SuppressWarnings("unchecked")
 				public void run() {
 					DateFormat formato4 = new SimpleDateFormat(
 							"yyyy-MM-dd HH:mm:ss");
@@ -808,6 +811,7 @@ public class EventosInterfaz
 	private void actualizarTablaEventos() {
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
+				@SuppressWarnings("unchecked")
 				public void run() {
 					Vector<Event> eventos = servicioRed.
 							obtenerListadoEventos(0);
@@ -849,6 +853,7 @@ public class EventosInterfaz
 	private void actualizarTablaMant() {
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
+				@SuppressWarnings("unchecked")
 				public void run() {
 					Vector<Task> tasks = servicioRed.
 							obtenerListadoTareas(0);

@@ -62,23 +62,23 @@ public class TinySOAServidor {
 			Properties configuracion = new Properties();
 			configuracion.loadFromXML(
 					new FileInputStream(ARCHIVO_CONFIGURACION));
-			serv	= configuracion.getProperty("mysql.servidor");
-			usuario	= configuracion.getProperty("mysql.usuario");
+			serv	= configuracion.getProperty("mysql.server");
+			usuario	= configuracion.getProperty("mysql.user");
 			passwd	= configuracion.getProperty("mysql.password");
-			bDatos	= configuracion.getProperty("mysql.bDatos");
-			puerto	= configuracion.getProperty("servidor.puerto");
+			bDatos	= configuracion.getProperty("mysql.database");
+			puerto	= configuracion.getProperty("server.port");
 			
 			if (serv == null)		serv = "localhost";
 			if (usuario == null)	usuario = "root";
 			if (passwd == null)		passwd = "";
-			if (bDatos == null)		bDatos = "tinysoabd";
+			if (bDatos == null)		bDatos = "tinysoadb";
 			if (puerto == null)		puerto = "8080";
 			
-			configuracion.setProperty("mysql.servidor", serv);
-			configuracion.setProperty("mysql.usuario", usuario);
+			configuracion.setProperty("mysql.server", serv);
+			configuracion.setProperty("mysql.user", usuario);
 			configuracion.setProperty("mysql.password", passwd);
-			configuracion.setProperty("mysql.bDatos", bDatos);
-			configuracion.setProperty("servidor.puerto", puerto);
+			configuracion.setProperty("mysql.database", bDatos);
+			configuracion.setProperty("server.port", puerto);
 			configuracion.storeToXML(
 					new FileOutputStream(ARCHIVO_CONFIGURACION), null);
 		} catch (IOException e) {}
@@ -122,7 +122,7 @@ public class TinySOAServidor {
 
 		try {
 			st = bd.createStatement();
-			rs = st.executeQuery("SELECT * FROM redes ORDER BY id");
+			rs = st.executeQuery("SELECT * FROM networks ORDER BY id");
 			while (rs.next()) {
 				int rid = rs.getInt("id");
 				Service servicioRed = fabrica.create(
