@@ -37,7 +37,7 @@ import org.codehaus.xfire.service.*;
 import org.codehaus.xfire.service.invoker.*;
 
 /*******************************************************************************
- * Clase que implementa la funcionalidad de TinySOA Servidor
+ * Clase que implementa la funcionalidad de TinySOA Servidor.
  * 
  * @author		Edgardo Avilés López
  * @version	0.2, 07/24/2006
