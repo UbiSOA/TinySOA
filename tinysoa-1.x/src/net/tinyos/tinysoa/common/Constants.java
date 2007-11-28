@@ -26,7 +26,7 @@ package net.tinyos.tinysoa.common;
  ******************************************************************************/
 public final class Constants {
 	
-	// Sensor boards identification numbers
+	// Sensor board identification numbers
 	public static int MDA500 = 0x01;
 	public static int MDA510 = 0x02;
 	public static int MEP500 = 0x03;
@@ -76,7 +76,7 @@ public final class Constants {
 	public static int ACTUATOR_LED_BLUE		= 0xA003;
 	public static int ACTUATOR_LED_GREEN	= 0xA004;
 	
-	// TinyOS message types
+	// Internal TinySOA message types
 	public static int AM_TINYSOAMSG		= 24;
 	public static int AM_TINYSOACMDMSG	= 25;
 	

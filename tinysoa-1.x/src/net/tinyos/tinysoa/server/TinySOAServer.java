@@ -24,7 +24,6 @@ import java.util.*;
 
 import javax.swing.JOptionPane;
 
-import net.tinyos.tinysoa.gateway.TinySOAGateway;
 import net.tinyos.tinysoa.util.DatabaseDialog;
 import net.tinyos.tinysoa.util.Errors;
 

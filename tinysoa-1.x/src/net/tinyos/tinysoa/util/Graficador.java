@@ -395,7 +395,7 @@ public class Graficador extends JPanel {
 				try {
 					x = interpolar(0, g2d.getClip().getBounds().width,
 							anterior.getTime(), actual.getTime(),
-							((Date)formato.parse(dato.getTime())).getTime());
+							((Date)formato.parse(dato.getDateTime())).getTime());
 					y = interpolar(g2d.getClip().getBounds().height, 0, min,
 							max, Double.parseDouble(dato.getValue()));
 				} catch (Exception ex) { ex.printStackTrace(); return; }
@@ -419,7 +419,7 @@ public class Graficador extends JPanel {
 				try {
 					x = interpolar(0, g2d.getClip().getBounds().width,
 							anterior.getTime(), actual.getTime(),
-							((Date)formato.parse(dato.getTime())).getTime());
+							((Date)formato.parse(dato.getDateTime())).getTime());
 					y = interpolar(g2d.getClip().getBounds().height, 0, min,
 							max, Double.parseDouble(dato.getValue()));
 				} catch (Exception ex) { ex.printStackTrace(); return; }

@@ -57,7 +57,7 @@ public class EventosInterfaz
 	private String archivoConfiguracion;
 	private String urlServidor;
 	private InfoServ servicioInformacion;
-	private RedServ servicioRed;
+	private NetServ servicioRed;
 	private DialogoSeleccionRed dialogoSeleccionRed;
 	private JTree arbol;
 	private JSlider slider;
@@ -488,8 +488,8 @@ public class EventosInterfaz
 					actualizacionOcupada = true;
 					barraProgreso.setVisible(true);
 					Service modeloServicio = new ObjectServiceFactory().
-							create(RedServ.class);
-					servicioRed = (RedServ)new XFireProxyFactory().
+							create(NetServ.class);
+					servicioRed = (NetServ)new XFireProxyFactory().
 							create(modeloServicio, urlServicioRed);
 
 					dialogoEvento = new DialogoEvento(
@@ -569,7 +569,7 @@ public class EventosInterfaz
 					DateFormat formato4 = new SimpleDateFormat(
 							"yyyy-MM-dd HH:mm:ss");
 					Vector<Reading> lecturas = servicioRed.
-							obtenerLecturasAlTiempo(formato4.format(tiempo),
+							getReadingsUntil(formato4.format(tiempo),
 									((RedNodoArbol)arbol.getModel().getRoot()).
 									getChildCount() * 
 									modeloDatos.getColumnCount() * 3);
@@ -598,14 +598,14 @@ public class EventosInterfaz
 							}
 							if (vacio[renglon][1].compareTo("") == 0) {
 								modeloDatos.setValueAt(
-										l.getTime().substring(0,
-										l.getTime().length() - 2),
+										l.getDateTime().substring(0,
+										l.getDateTime().length() - 2),
 										renglon, 1);
-								vacio[renglon][1] =l.getTime().substring(0,
-										l.getTime().length() - 2);
+								vacio[renglon][1] =l.getDateTime().substring(0,
+										l.getDateTime().length() - 2);
 							}
-							if (l.getTime().compareTo(tiempoMayor) > 0)
-								tiempoMayor = l.getTime();
+							if (l.getDateTime().compareTo(tiempoMayor) > 0)
+								tiempoMayor = l.getDateTime();
 						}
 					}
 					
@@ -671,7 +671,7 @@ public class EventosInterfaz
 					
 					DateFormat formato4 = new SimpleDateFormat(
 							"yyyy-MM-dd HH:mm:ss");
-					Vector<Reading> lecturas = servicioRed.obtenerLecturas(
+					Vector<Reading> lecturas = servicioRed.getReadings(
 							formato4.format(new Date(tiempo.getTime() -
 									graficador.obtDif() - 1000)),
 							formato4.format(tiempo), parametro, 0);
@@ -737,7 +737,7 @@ public class EventosInterfaz
 					DateFormat formato4 = new SimpleDateFormat(
 							"yyyy-MM-dd HH:mm:ss");
 					Vector<Reading> lecturas = servicioRed.
-							obtenerLecturasAlTiempo(formato4.format(tiempo),
+							getReadingsUntil(formato4.format(tiempo),
 									((RedNodoArbol)arbol.getModel().getRoot()).
 									getChildCount() * 
 									modeloDatos.getColumnCount() * 3);
@@ -814,7 +814,7 @@ public class EventosInterfaz
 				@SuppressWarnings("unchecked")
 				public void run() {
 					Vector<Event> eventos = servicioRed.
-							obtenerListadoEventos(0);
+							getEventsList(0);
 					
 					String id, nombre, criterio, listo, nid, tiempo;
 					
@@ -826,15 +826,15 @@ public class EventosInterfaz
 						id = evento.getId() + "";
 						nombre = evento.getName();
 						criterio = evento.getCriteria();
-						if (evento.getReady()) listo = "Sí";
+						if (evento.getDetected()) listo = "Sí";
 						else listo = "No";
 						if (evento.getNid() == 0) nid = "-";
 						else nid = evento.getNid() + "";
-						if (evento.getTime() == null)
+						if (evento.getDateTime() == null)
 							tiempo = "En espera";
-						else if (evento.getTime().compareTo("") == 0)
+						else if (evento.getDateTime().compareTo("") == 0)
 							tiempo = "En espera";
-						else tiempo = evento.getTime();
+						else tiempo = evento.getDateTime();
 						
 						modeloEventos.addRow(new Object[]{id, nombre,
 								new CeldaTablaTooltip(criterio),
@@ -856,7 +856,7 @@ public class EventosInterfaz
 				@SuppressWarnings("unchecked")
 				public void run() {
 					Vector<Task> tasks = servicioRed.
-							obtenerListadoTareas(0);
+							getTasksList(0);
 					
 					String id, accion, valor, nid, tiempo,
 						ejecutada, listo, repetir;
@@ -902,28 +902,28 @@ public class EventosInterfaz
 							valor = "Led Ver.";
 						
 						nid = "-";
-						if (task.getNid() > 0)
-							nid = task.getNid() + "";
+						if (task.getTargetNodeID() > 0)
+							nid = task.getTargetNodeID() + "";
 						
-						tiempo = task.getTime();
+						tiempo = task.getExecutionDateTime();
 						tiempo = tiempo.substring(0, tiempo.length() - 2);
-						if (task.getEvent() > 0)
-							tiempo = "Esperando evento " + task.getEvent();
+						if (task.getWaitEventID() > 0)
+							tiempo = "Esperando evento " + task.getWaitEventID();
 						
 						ejecutada = "-";
-						if (task.getExecuted() != null)
-							if (task.getExecuted().compareTo("") != 0)
-								ejecutada = task.getExecuted();
+						if (task.getLastExecuted() != null)
+							if (task.getLastExecuted().compareTo("") != 0)
+								ejecutada = task.getLastExecuted();
 						
 						listo = "No";
 						if (task.getDone())
 							listo = "Sí";
-						if (task.getRepeat() > 0)
+						if (task.getMinsToRepeat() > 0)
 							listo = "-";
 						
 						repetir = "-";
-						if (task.getRepeat() > 0)
-							repetir = task.getRepeat() + " min";
+						if (task.getMinsToRepeat() > 0)
+							repetir = task.getMinsToRepeat() + " min";
 
 						modeloMantenimiento.addRow(new Object[]{
 								id, accion, valor, nid, tiempo,
@@ -963,8 +963,8 @@ public class EventosInterfaz
 		try {
 			DateFormat formato = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date inicio = (Date)formato.parse(
-					servicioRed.obtenerTiempoMinimo());
-			Object res = servicioRed.obtenerTiempoMaximo();
+					servicioRed.getMinDateTime());
+			Object res = servicioRed.getMaxDateTime();
 			System.out.println(res);
 			Date fin = (Date)formato.parse(res.toString());
 			tiempoMinimo = inicio.getTime();
@@ -983,7 +983,7 @@ public class EventosInterfaz
 	 * Procesa los nodos de la red.
 	 **************************************************************************/
 	private void procesarNodos() {
-		Vector<Node> nodos = servicioRed.obtenerListadoNodos();
+		Vector<Node> nodos = servicioRed.getNodesList();
 		crearArbolNodos(nodos.toArray());
 		crearTabla(nodos.toArray());
 		crearTopologiaNodos(nodos.toArray());
@@ -994,7 +994,7 @@ public class EventosInterfaz
 	 * Procesa los parámetros de la red.
 	 **************************************************************************/
 	private void procesarParametros() {
-		Vector<Parameter> parameters = servicioRed.obtenerParametros();
+		Vector<Parameter> parameters = servicioRed.getSensorTypesList();
 		comboParsGraf.removeAllItems();
 		comboParsTopologia.removeAllItems();
 		for (int i = 0; i < parameters.size(); i++) {
@@ -1016,7 +1016,7 @@ public class EventosInterfaz
 	 **************************************************************************/
 	private void crearArbolNodos(Object[] nodos) {
 		RedNodoArbol top = new RedNodoArbol(
-				servicioRed.obtenerNombreRed(), iconoRed);
+				servicioRed.getNetName(), iconoRed);
 		((DefaultTreeModel)arbol.getModel()).setRoot(top);	
 		RedNodoArbol c = null;
 		for (int i = 0; i < nodos.length; i++) {
@@ -1033,7 +1033,7 @@ public class EventosInterfaz
 	 * @param nodos	Un arreglo con el ID de los nodos
 	 **************************************************************************/
 	private void crearTabla(Object[] nodos) {
-		Vector<Parameter> parameters = servicioRed.obtenerParametros();
+		Vector<Parameter> parameters = servicioRed.getSensorTypesList();
 		Object[] parametrosCols = new Object[parameters.size() + 2];
 		parametrosCols[0] = "ID";
 		parametrosCols[1] = "Tiempo";
@@ -1514,7 +1514,7 @@ public class EventosInterfaz
 						tablaEventos.getValueAt(i, 0).toString());
 				
 				actualizacionOcupada = true;
-				Event e = servicioRed.obtenerEventoPorId(id);
+				Event e = servicioRed.getEventByID(id);
 				actualizacionOcupada = false;
 				
 				dialogoEvento.setTitle("Modificar Evento");
@@ -1551,7 +1551,7 @@ public class EventosInterfaz
 				if (res == -1) return;
 				
 				actualizacionOcupada = true;
-				servicioRed.eliminarEvento(id);
+				servicioRed.removeEvent(id);
 				actualizacionOcupada = false;
 				actualizar();
 			}
@@ -1614,7 +1614,7 @@ public class EventosInterfaz
 				if (res == -1) return;
 				
 				actualizacionOcupada = true;
-				servicioRed.eliminarTarea(id);
+				servicioRed.removeTask(id);
 				actualizacionOcupada = false;
 				actualizar();
 			}

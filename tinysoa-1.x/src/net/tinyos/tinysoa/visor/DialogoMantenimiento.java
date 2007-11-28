@@ -44,7 +44,7 @@ import net.tinyos.tinysoa.server.*;
 public class DialogoMantenimiento extends JDialog {
 	private static final long serialVersionUID = -2649034852161564309L;
 
-	private RedServ servicioRed;
+	private NetServ servicioRed;
 	private JProgressBar progreso;
 	private Object[] eventos;
 	private int id = 0;
@@ -57,7 +57,7 @@ public class DialogoMantenimiento extends JDialog {
 	private JCheckBox ckb01;
 	private JLabel l01;
 	
-	public DialogoMantenimiento(JFrame ventana, RedServ servicioRed,
+	public DialogoMantenimiento(JFrame ventana, NetServ servicioRed,
 			JProgressBar progreso) {
 		super(ventana, "Agregar Task", false);
 		this.servicioRed = servicioRed;
@@ -324,14 +324,14 @@ public class DialogoMantenimiento extends JDialog {
 		
 		if (cb01.getItemCount() == 0) {
 			progreso.setVisible(true);
-			Vector<Node> nodos = servicioRed.obtenerListadoNodos();
+			Vector<Node> nodos = servicioRed.getNodesList();
 			defNodos(nodos.toArray());
 			progreso.setVisible(false);
 		}
 		
 		if (cb03.getItemCount() == 0) {
 			progreso.setVisible(true);
-			Vector<Event> eventos = servicioRed.obtenerListadoEventos(0);
+			Vector<Event> eventos = servicioRed.getEventsList(0);
 			defEventos(eventos.toArray());
 			progreso.setVisible(false);
 		}
@@ -354,19 +354,19 @@ public class DialogoMantenimiento extends JDialog {
 	
 	public void mostrarModificar(int id) {
 		progreso.setVisible(true);
-		Task task = servicioRed.obtenerTareaPorId(id);
+		Task task = servicioRed.getTaskByID(id);
 		progreso.setVisible(false);
 		
 		if (cb01.getItemCount() == 0) {
 			progreso.setVisible(true);
-			Vector<Node> nodos = servicioRed.obtenerListadoNodos();
+			Vector<Node> nodos = servicioRed.getNodesList();
 			defNodos(nodos.toArray());
 			progreso.setVisible(false);
 		}
 		
 		if (cb03.getItemCount() == 0) {
 			progreso.setVisible(true);
-			Vector<Event> eventos = servicioRed.obtenerListadoEventos(0);
+			Vector<Event> eventos = servicioRed.getEventsList(0);
 			defEventos(eventos.toArray());
 			progreso.setVisible(false);
 		}
@@ -405,26 +405,26 @@ public class DialogoMantenimiento extends JDialog {
 			else rb04.setSelected(true);
 		}
 		
-		if (task.getNid() == 0)
+		if (task.getTargetNodeID() == 0)
 			cb02.setSelectedIndex(0);
 		for (int i = 1; i < cb02.getModel().getSize(); i++)
 			if (Integer.parseInt(cb02.getModel().getElementAt(i).
-					toString().substring(5)) == task.getNid())
+					toString().substring(5)) == task.getTargetNodeID())
 				cb02.setSelectedIndex(i);
 		
-		if (task.getEvent() == 0) {
+		if (task.getWaitEventID() == 0) {
 			rb06.setSelected(true);
 			s02.setEnabled(true);
 			DateFormat formato = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			try {
-				s02.setValue(formato.parse(task.getTime()));
+				s02.setValue(formato.parse(task.getExecutionDateTime()));
 			} catch (ParseException e) {
-				System.out.println("Problema parseando: " + task.getTime());
+				System.out.println("Problema parseando: " + task.getExecutionDateTime());
 				s02.setValue(new Date());
 			}
-			if (task.getRepeat() > 0) {
+			if (task.getMinsToRepeat() > 0) {
 				ckb01.setSelected(true);
-				s03.setValue(task.getRepeat());
+				s03.setValue(task.getMinsToRepeat());
 			} else {
 				ckb01.setSelected(false);
 			}
@@ -432,7 +432,7 @@ public class DialogoMantenimiento extends JDialog {
 			rb07.setSelected(true);
 			String nes = "";
 			for (int i = 0; i < eventos.length; i++)
-				if (((Event)eventos[i]).getId() == task.getEvent())
+				if (((Event)eventos[i]).getId() == task.getWaitEventID())
 					nes = ((Event)eventos[i]).getName();
 			for (int i = 0; i < cb03.getModel().getSize(); i++)
 				if (cb03.getModel().getElementAt(i).
@@ -536,10 +536,10 @@ public class DialogoMantenimiento extends JDialog {
 					
 					boolean res = false;
 					if (getTitle().compareTo("Agregar Task") == 0)
-						res = servicioRed.agregarTarea(
+						res = servicioRed.addTask(
 								tipo, valor, destino, tiempo, repetir, evento);
 					if (getTitle().compareTo("Modificar Task") == 0)
-						res = servicioRed.modificarTarea(
+						res = servicioRed.updateTask(
 								id, tipo, valor, destino, tiempo,
 								repetir, evento);
 

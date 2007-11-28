@@ -1,22 +1,17 @@
 /*
- * "Copyright (c) 2005-2006 The Regents of the Centro de Investigación y de
- * Educación Superior de la ciudad de Ensenada, Baja California (CICESE).
- *
- * Permission to use, copy, modify, and distribute this software and its
- * documentation for any purpose, without fee, and without written agreement is
- * hereby granted, provided that the above copyright notice, the following
- * two paragraphs and the author appear in all copies of this software.
+ *  Copyright 2007 Edgardo Avilés López
  * 
- * IN NO EVENT SHALL CICESE BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
- * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OF THIS
- * SOFTWARE AND ITS DOCUMENTATION, EVEN IF CICESE HAS BEEN ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  * 
- * CICESE SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE.  THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND CICESE
- * HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS,
- * OR MODIFICATIONS."
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *    
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  * 
  ******************************************************************************/
 
@@ -31,7 +26,7 @@ import net.tinyos.tinysoa.common.*;
 import net.tinyos.tinysoa.util.*;
 
 /*******************************************************************************
- * Clase que implementa la funcionalidad del servicio de información.
+ * Class that implements the information service functionality.
  * 
  * @author		Edgardo Avilés López
  * @version	0.1, 07/24/2006
@@ -39,45 +34,46 @@ import net.tinyos.tinysoa.util.*;
 @WebService(name="InfoServ", targetNamespace="http://numenor.cicese.mx/TinySOA")
 public class InfoServImpl implements InfoServ {
 	
-	private Connection bd;
-	private String puerto;
+	private Connection db;
+	private String port;
 	
 	/***************************************************************************
-	 * Constructor de la clase.
+	 * Class constructor.
 	 * 
-	 * @param db		Conexión de la base de datos a utilizar
-	 * @param puerto	Puerto en el cual se ofrecen los servicios
+	 * @param db	Database connector object to use
+	 * @param port	Port from which the services are provided
 	 **************************************************************************/
-	public InfoServImpl(Connection bd, String puerto) {
-		this.bd = bd;
-		this.puerto = puerto;
+	public InfoServImpl(Connection db, String port) {
+		this.db = db;
+		this.port = port;
 	}
 	
 	/***************************************************************************
-	 * Devuelve un listado de los servicios de red ofrecidos por el servidor.
+	 * Returns a listing containing the services provided by the server.
 	 * 
-	 * @return	Un vector con la información de los servicios ofrecidos
+	 * @return	A vector with the services information
 	 * @see		Network
 	 **************************************************************************/
-	@WebMethod(operationName="obtenerListadoRedes", action="urn:obtenerListadoRedes")
-	@WebResult(name="listadoRedesResultado")
-	public Vector<Network> obtenerListadoRedes() {
-		Vector<Network> redes = new Vector<Network>();
+	@WebMethod(operationName="getNetworksList", action="urn:getNetworksList")
+	@WebResult(name="networksListResult")
+	public Vector<Network> getNetworksList() {
+		Vector<Network> networks = new Vector<Network>();
 		
 		Statement st = null;
 		ResultSet rs = null;
 		
 		try {
-			st = bd.createStatement();
-			rs = st.executeQuery("SELECT * FROM networks ORDER BY nombre");
+			st = db.createStatement();
+			rs = st.executeQuery("SELECT * FROM networks ORDER BY name");
 			
 			while (rs.next()) {
 				Network r = new Network();
 				r.setId(rs.getInt("id"));
-				r.setName(rs.getString("nombre"));
-				r.setDescription(rs.getString("descripcion"));
-				r.setWsdl("http://" + InetAddress.getLocalHost().getHostAddress() + ":" + puerto + "/RedServ" + r.getId() + "?wsdl");
-				redes.add(r);
+				r.setName(rs.getString("name"));
+				r.setDescription(rs.getString("description"));
+				r.setWsdl("http://" + InetAddress.getLocalHost().getHostAddress() +
+						":" + port + "/NetServ" + r.getId() + "?wsdl");
+				networks.add(r);
 			}
 			
 		} catch (SQLException ex) {
@@ -93,7 +89,7 @@ public class InfoServImpl implements InfoServ {
 			}
 		}
 		
-		return redes;
+		return networks;
 	}
 	
 }

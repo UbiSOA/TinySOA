@@ -55,7 +55,7 @@ public class PropertiesDialog extends JDialog {
 	 * @param processor	Message processor tu use
 	 * @param f			Frame in which the dialog will be show
 	 * @param p			Properties object to update
-	 * @param file		Propierties file name
+	 * @param file		Properties file name
 	 * @param c			Database connector
 	 **************************************************************************/
 	@SuppressWarnings("unchecked")
@@ -220,7 +220,7 @@ public class PropertiesDialog extends JDialog {
 		}
 		
 		/***********************************************************************
-		 * Controls the event of acceptation/selection of sensor network.
+		 * Controls the event of selection of sensor network.
 		 **********************************************************************/
 		private void accept() {
 			String name = cb01.getSelectedItem().toString();

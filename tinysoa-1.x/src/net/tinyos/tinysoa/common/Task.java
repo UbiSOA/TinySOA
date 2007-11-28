@@ -18,7 +18,10 @@
 package net.tinyos.tinysoa.common;
 
 /*******************************************************************************
- * Task class which instances are provided by the services.
+ * Task class which instances are provided by the services. It represents a
+ * maintenance task registered in the system. This tasks allow to send commands
+ * to the sensor network, this to change data rate, turn on or off an actuator,
+ * put a sensor in sleep mode, etc.
  * 
  * @author		Edgardo Avilés López
  * @version	0.1, 07/27/2006
@@ -28,26 +31,26 @@ public class Task {
 	private int id;
 	private int type;
 	private int value;
-	private int nid;
-	private int repeat;
-	private int event;
-	private String time;
-	private String executed;
+	private int targetNodeID;
+	private int minsToRepeat;
+	private int waitEventID;
+	private String executionDateTime;
+	private String lastExecuted;
 	private boolean done;
 	
 	/***************************************************************************
-	 * Defines the task ID.
+	 * Defines the ID of the maintenance task.
 	 * 
-	 * @param id	Task ID
+	 * @param id	The ID for the maintenance task
 	 **************************************************************************/
 	public void setId(int id) {
 		this.id = id;
 	}
 
 	/***************************************************************************
-	 * Returns the task ID.
+	 * Returns the ID of the maintenance task.
 	 * 
-	 * @return Task ID
+	 * @return The ID of the maintenance task
 	 **************************************************************************/
 	public int getId() {
 		return id;
@@ -56,7 +59,7 @@ public class Task {
 	/***************************************************************************
 	 * Defines the action type to realize in the task.
 	 * 
-	 * @param type	Action type
+	 * @param type	The action type
 	 **************************************************************************/
 	public void setType(int type) {
 		this.type = type;
@@ -65,14 +68,14 @@ public class Task {
 	/***************************************************************************
 	 * Returns the action type to realize in the task.
 	 * 
-	 * @return Action type
+	 * @return The action type
 	 **************************************************************************/
 	public int getType() {
 		return type;
 	}
 
 	/***************************************************************************
-	 * Defines the action value to realize in the task.
+	 * Defines the value of the action to realize in the task.
 	 * 
 	 * @param value	Action value
 	 **************************************************************************/
@@ -81,7 +84,7 @@ public class Task {
 	}
 
 	/***************************************************************************
-	 * Returns the action value to realize in the task.
+	 * Returns the value of the action to realize in the task.
 	 * 
 	 * @return Action value
 	 **************************************************************************/
@@ -93,104 +96,104 @@ public class Task {
 	 * Defines the task target node ID. If ID is <code>0</code> the target is
      * all the available nodes in the network.
 	 * 
-	 * @param nid	Target node ID
+	 * @param targetNodeID	The target sensor node ID
 	 **************************************************************************/
-	public void setNid(int nid) {
-		this.nid = nid;
+	public void setTargetNodeID(int nid) {
+		this.targetNodeID = nid;
 	}
 
 	/***************************************************************************
      * Returns the task target node ID. If ID is <code>0</code> the target is
      * all the available nodes in the network.
 	 * 
-	 * @return Target node ID
+	 * @return The target sensor node ID
 	 **************************************************************************/
-	public int getNid() {
-		return nid;
+	public int getTargetNodeID() {
+		return targetNodeID;
 	}
 
 	/***************************************************************************
      * Defines the amount of minutes in which the task will be repeating, if
-     * <code>repeat</code> is <code>0</code> there will be no repetitions.
+     * <code>minsToRepeat</code> is <code>0</code> there will be no repetitions.
 	 * 
-	 * @param repeat	Amount of minutes in which the task will be repeating
+	 * @param minsToRepeat	The amount of minutes to repeat the task
 	 **************************************************************************/
-	public void setRepeat(int repeat) {
-		this.repeat = repeat;
+	public void setMinsToRepeat(int minsToRepeat) {
+		this.minsToRepeat = minsToRepeat;
 	}
 
 	/***************************************************************************
 	 * Returns the amount of minutes in which the task will be repeating, if
-     * <code>repeat</code> is <code>0</code> there will be no repetitions.
+     * <code>minsToRepeat</code> is <code>0</code> there will be no repetitions.
 	 * 
-	 * @return Amount of minutes in which the task will be repeating
+	 * @return The amount of minutes to repeat the task
 	 **************************************************************************/
-	public int getRepeat() {
-		return repeat;
+	public int getMinsToRepeat() {
+		return minsToRepeat;
 	}
 
 	/***************************************************************************
-	 * Defines the event ID which must be detected in order to execute the
-     * task. If <code>event</code> is <code>0</code> the task will be executed
-     * without waiting for any event.
+	 * Defines the ID of the event which must be detected in order to execute
+	 * the task. If <code>waitEventID</code> is <code>0</code> the task will be
+	 * executed without waiting for any event.
  	 * 
-	 * @param event Event ID to wait
+	 * @param waitEventID The ID of the event to wait
 	 **************************************************************************/
-	public void setEvent(int event) {
-		this.event = event;
+	public void setWaitEventID(int eventID) {
+		this.waitEventID = eventID;
 	}
 
 	/***************************************************************************
-	 * Returns the event ID which must be detected in order to execute the
-     * task. If <code>event</code> is <code>0</code> the task will be executed
-     * without waiting for any event.
+	 * Returns the ID of the event which must be detected in order to execute
+	 * the task. If <code>event</code> is <code>0</code> the task will be
+	 * executed without waiting for any event.
 	 * 
-	 * @return Event ID to wait
+	 * @return The ID of the event to wait
 	 **************************************************************************/
-	public int getEvent() {
-		return event;
+	public int getWaitEventID() {
+		return waitEventID;
 	}
 
 	/***************************************************************************
-	 * Defines the time in which the task will be executed.
+	 * Defines the date and time in which the task will be executed.
 	 * 
-	 * @param time	Time of task execution
+	 * @param executionDateTime	The date and time of task execution
 	 **************************************************************************/
-	public void setTime(String time) {
-		this.time = time;
+	public void setExecutionDateTime(String dateTime) {
+		this.executionDateTime = dateTime;
 	}
 
 	/***************************************************************************
-	 * Returns the time in which the task will be executed.
+	 * Returns the date and time in which the task will be executed.
 	 * 
-	 * @return Time of task execution
+	 * @return The date and time of task execution
 	 **************************************************************************/
-	public String getTime() {
-		return time;
+	public String getExecutionDateTime() {
+		return executionDateTime;
 	}
 
 	/***************************************************************************
-	 * Defines the time in which the task was last executed.
+	 * Defines the date and time in which the task was last executed.
 	 * 
-	 * @param executed	Last execution time
+	 * @param lastExecuted	The date and time of last task execution
 	 **************************************************************************/
-	public void setExecuted(String executed) {
-		this.executed = executed;
+	public void setLastExecuted(String lastExecuted) {
+		this.lastExecuted = lastExecuted;
 	}
 
 	/***************************************************************************
-	 * Returns the time in which the task was last executed.
+	 * Returns the date and time in which the task was last executed.
 	 * 
-	 * @return Last execution time
+	 * @return The date and time of last task execution
 	 **************************************************************************/
-	public String getExecuted() {
-		return executed;
+	public String getLastExecuted() {
+		return lastExecuted;
 	}
 	
 	/***************************************************************************
 	 * Defines if the task was already executed.
 	 * 
-	 * @param done	True if task was executed
+	 * @param done	<code>True</code> if task was executed
 	 **************************************************************************/
 	public void setDone(boolean done) {
 		this.done = done;
@@ -199,7 +202,7 @@ public class Task {
 	/***************************************************************************
 	 * Returns if the task was already executed.
 	 * 
-	 * @return True if task was executed
+	 * @return <code>True</code> if task was executed
 	 **************************************************************************/
 	public boolean getDone() {
 		return done;
