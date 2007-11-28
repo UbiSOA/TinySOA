@@ -18,7 +18,8 @@
 package net.tinyos.tinysoa.common;
 
 /*******************************************************************************
- * Node class which instances are provided by the services.
+ * Node class which instances are provided by the services. It represents a
+ * sensor network node.
  * 
  * @author		Edgardo Avilés López
  * @version	0.1, 07/24/2006
@@ -28,27 +29,27 @@ public class Node {
 	private int id;
 	
 	/***************************************************************************
-	 * Defines the node ID.
+	 * Defines the ID of the sensor node.
 	 * 
-	 * @param id	Node ID
+	 * @param id	The ID for the sensor node
 	 **************************************************************************/
 	public void setId(int id) {
 		this.id = id;
 	}
 	
 	/***************************************************************************
-	 * Returns the node ID.
+	 * Returns the ID of the sensor node.
 	 * 
-	 * @return	Node ID
+	 * @return	The ID of the sensor node
 	 **************************************************************************/
 	public int getId() {
 		return id;
 	}
 	
 	/***************************************************************************
-	 * Returns a string with the instance information.
+	 * Returns a string with the sensor node object information.
 	 * 
-	 * @return	A string with the object values
+	 * @return	A string with the object information
 	 **************************************************************************/
 	public String toString() {
 		return id + "";

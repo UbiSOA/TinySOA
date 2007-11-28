@@ -18,7 +18,8 @@
 package net.tinyos.tinysoa.common;
 
 /*******************************************************************************
- * Actuator class from which instances are provided by the services.
+ * Actuator class from which instances are provided by the services. It
+ * represents an actuator in the sensor network.
  * 
  * @author		Edgardo Avilés López
  * @version	0.1, 07/24/2006
@@ -29,36 +30,36 @@ public class Actuator {
 	private String description;
 	
 	/***************************************************************************
-	 * Defines the actuator's name.
+	 * Defines the name of the actuator.
 	 * 
-	 * @param name	Actuator's name
+	 * @param name	The name for the actuator
 	 **************************************************************************/
 	public void setName(String name) {
 		this.name = name;
 	}
 	
 	/***************************************************************************
-	 * Returns the actuator's name.
+	 * Returns the name of the actuator.
 	 * 
-	 * @return	Actuator's name
+	 * @return	The name of the actuator
 	 **************************************************************************/
 	public String getName() {
 		return name;
 	}
 	
 	/***************************************************************************
-	 * Defines the actuator's description.
+	 * Defines the description of the actuator.
 	 * 
-	 * @param description	Actuator's description
+	 * @param description	The description for the actuator
 	 **************************************************************************/
 	public void setDescription(String description) {
 		this.description = description;
 	}
 	
 	/***************************************************************************
-	 * Returns the actuator's description.
+	 * Returns the description of the actuator.
 	 * 
-	 * @return	Actuator's description
+	 * @return	The description of the actuator
 	 **************************************************************************/
 	public String getDescription() {
 		return description;

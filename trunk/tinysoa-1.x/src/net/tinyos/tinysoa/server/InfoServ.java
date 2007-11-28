@@ -1,22 +1,17 @@
 /*
- * "Copyright (c) 2005-2006 The Regents of the Centro de Investigación y de
- * Educación Superior de la ciudad de Ensenada, Baja California (CICESE).
- *
- * Permission to use, copy, modify, and distribute this software and its
- * documentation for any purpose, without fee, and without written agreement is
- * hereby granted, provided that the above copyright notice, the following
- * two paragraphs and the author appear in all copies of this software.
+ *  Copyright 2007 Edgardo Avilés López
  * 
- * IN NO EVENT SHALL CICESE BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
- * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OF THIS
- * SOFTWARE AND ITS DOCUMENTATION, EVEN IF CICESE HAS BEEN ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  * 
- * CICESE SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE.  THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND CICESE
- * HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS,
- * OR MODIFICATIONS."
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *    
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  * 
  ******************************************************************************/
 
@@ -27,7 +22,7 @@ import java.util.*;
 import net.tinyos.tinysoa.common.*;
 
 /*******************************************************************************
- * Interfaz que define el servicio de información.
+ * Interface that defines the information service.
  * 
  * @author		Edgardo Avilés López
  * @version	0.1, 07/24/2006
@@ -35,10 +30,10 @@ import net.tinyos.tinysoa.common.*;
 public interface InfoServ {
 	
 	/***************************************************************************
-	 * Obtiene un listado de los servicios de red disponibles.
+	 * Returns a listing of the available network services.
 	 * 
-	 * @return Un vector con la información de los servicios disponibles
+	 * @return A vector with the available network services
 	 **************************************************************************/
-	public Vector<Network> obtenerListadoRedes();
+	public Vector<Network> getNetworksList();
 	
 }

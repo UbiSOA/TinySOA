@@ -4,7 +4,6 @@
 <entry key="mysql.password">tsoa_pwd</entry>
 <entry key="server.port">8080</entry>
 <entry key="mysql.user">tinysoa_user</entry>
-<entry key="visor.servidor">http://localhost:8080</entry>
 <entry key="mysql.database">tinysoadb</entry>
 <entry key="mysql.server">localhost</entry>
 </properties>

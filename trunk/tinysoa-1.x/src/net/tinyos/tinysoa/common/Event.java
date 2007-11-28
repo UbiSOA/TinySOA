@@ -18,7 +18,8 @@
 package net.tinyos.tinysoa.common;
 
 /*******************************************************************************
- * Event class which instances are provided by the services.
+ * Event class which instances are provided by the services. It represents an
+ * event which can be detected using the reading data of a sensor network.
  * 
  * @author		Edgardo Avilés López
  * @version	0.1, 07/24/2006
@@ -30,29 +31,29 @@ public class Event {
 	private String added;
 	private String name;
 	private String criteria;
-	private String time;
-	private boolean ready;
+	private String dateTime;
+	private boolean detected;
 	
 	/***************************************************************************
-	 * Defines the event ID.
+	 * Defines the ID of the event.
 	 * 
-	 * @param id Event ID
+	 * @param id The ID for the event
 	 **************************************************************************/
 	public void setId(int id) {
 		this.id = id;
 	}
 	
 	/***************************************************************************
-	 * Return the event ID.
+	 * Returns the ID of the event.
 	 * 
-	 * @return	Event ID
+	 * @return	The ID of the event
 	 **************************************************************************/
 	public int getId() {
 		return id;
 	}
 	
 	/***************************************************************************
-	 * Defines the time in which the event was added.
+	 * Defines the date and dateTime in which the event was added.
 	 * 
 	 * @param added	Time of event addition
 	 **************************************************************************/
@@ -61,7 +62,7 @@ public class Event {
 	}
 	
 	/***************************************************************************
-	 * Returns the time in which the event was added.
+	 * Returns the date and dateTime in which the event was added.
 	 * 
 	 * @return Time of event addition
 	 **************************************************************************/
@@ -70,93 +71,93 @@ public class Event {
 	}
 	
 	/***************************************************************************
-	 * Defines the node ID reponsable for the event generation.
+	 * Defines the ID of the node who detected the event.
 	 * 
-	 * @param nid	Node ID
+	 * @param nid	The ID of the responsible node
 	 **************************************************************************/
 	public void setNid(int nid) {
 		this.nid = nid;
 	}
 	
 	/***************************************************************************
-	 * Returns the node ID reponsable for the event generation.
+	 * Returns the ID of the node who detected the event.
 	 * 
-	 * @return	Node ID
+	 * @return	The ID of the responsible node
 	 **************************************************************************/
 	public int getNid() {
 		return nid;
 	}
 	
 	/***************************************************************************
-	 * Defines the event name.
+	 * Defines the name of the event.
 	 * 
-	 * @param name	Event name
+	 * @param name	The name for the event
 	 **************************************************************************/
 	public void setName(String name) {
 		this.name = name;
 	}
 	
 	/***************************************************************************
-	 * Returns the event name.
+	 * Returns the name of the event.
 	 * 
-	 * @return	Event name
+	 * @return	The name of the event
 	 **************************************************************************/
 	public String getName() {
 		return name;
 	}
 	
 	/***************************************************************************
-	 * Defines the event criteria.
+	 * Defines the criteria for the event.
 	 * 
-	 * @param criterio	Event criteria
+	 * @param criterio	The criteria for event detection
 	 **************************************************************************/
 	public void setCriteria(String criteria) {
 		this.criteria = criteria;
 	}
 
 	/***************************************************************************
-	 * Returns the event criteria.
+	 * Returns the criteria for the event.
 	 * 
-	 * @return	Event criteria
+	 * @return	The criteria for event detection
 	 **************************************************************************/
 	public String getCriteria() {
 		return criteria;
 	}
 	
 	/***************************************************************************
-	 * Defines the time in which the event was detected.
+	 * Defines the date and dateTime in which the event was detected.
 	 * 
-	 * @param tiempo	Event detection time
+	 * @param tiempo	Date and dateTime of event detection
 	 **************************************************************************/
-	public void setTime(String time) {
-		this.time = time;
+	public void setDateTime(String time) {
+		this.dateTime = time;
 	}
 	
 	/***************************************************************************
-	 * Returns the time in which the event was detected.
+	 * Returns the date and dateTime in which the event was detected.
 	 * 
-	 * @return	Event detection time
+	 * @return	Date and dateTime of event detection
 	 **************************************************************************/
-	public String getTime() {
-		return time;
+	public String getDateTime() {
+		return dateTime;
 	}
 	
 	/***************************************************************************
-	 * Defines if the event has been fulfilled or not.
+	 * Defines if the event has been detected or not.
 	 * 
-	 * @param listo	True if event is fulfilled
+	 * @param detected	<code>True</code> if the event has been detected
 	 **************************************************************************/
-	public void setReady(boolean ready) {
-		this.ready = ready;
+	public void setDetected(boolean detected) {
+		this.detected = detected;
 	}
 	
 	/***************************************************************************
-	 * Returns if the event has been fulfilled or not.
+	 * Returns if the event has been detected or not.
 	 * 
-	 * @return	True if event is fulfilled
+	 * @return	<code>True</code> if the event has been detected
 	 **************************************************************************/
-	public boolean getReady() {
-		return ready;
+	public boolean getDetected() {
+		return detected;
 	}
 
 }

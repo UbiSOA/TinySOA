@@ -37,7 +37,7 @@ import net.tinyos.tinysoa.server.*;
 public class DialogoEvento extends JDialog {
 	private static final long serialVersionUID = -378032218137841324L;
 	
-	private RedServ servicioRed;
+	private NetServ servicioRed;
 	private String nombre, criterio;
 	private int id;
 	
@@ -58,7 +58,7 @@ public class DialogoEvento extends JDialog {
 	 * @param arch			Nombre del archivo de propiedades.
 	 * @param c			Conexión a la base de datos.
 	 **************************************************************************/
-	public DialogoEvento(JFrame ventana, RedServ servicioRed,
+	public DialogoEvento(JFrame ventana, NetServ servicioRed,
 			JProgressBar progreso) {
 		super(ventana, "Agregar Evento", false);
 		this.servicioRed = servicioRed;
@@ -213,9 +213,9 @@ public class DialogoEvento extends JDialog {
 
 					boolean res = false;
 					if (getTitle().compareTo("Agregar Evento") == 0)
-						res = servicioRed.agregarEvento(nombre, criterio);
+						res = servicioRed.addEvent(nombre, criterio);
 					if (getTitle().compareTo("Modificar Evento") == 0)
-						res = servicioRed.modificarEvento(id, nombre, criterio);
+						res = servicioRed.updateEvent(id, nombre, criterio);
 
 					if (!res) {
 						JOptionPane.showMessageDialog(

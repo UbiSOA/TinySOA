@@ -18,7 +18,8 @@
 package net.tinyos.tinysoa.common;
 
 /*******************************************************************************
- * Network class which instances are provided by the services.
+ * Network class which instances are provided by the services. It represents a
+ * sensor network registered in the system.
  * 
  * @author		Edgardo Avilés López
  * @version	0.1, 07/24/2006
@@ -31,84 +32,86 @@ public class Network {
 	private String wsdl;
 	
 	/***************************************************************************
-	 * Defines the network ID.
+	 * Defines the ID of the sensor network.
 	 * 
-	 * @param id	Network ID
+	 * @param id	The ID for the sensor network
 	 **************************************************************************/
 	public void setId(int id) {
 		this.id = id;
 	}
 	
 	/***************************************************************************
-	 * Returns the network ID.
+	 * Returns the ID of the sensor network.
 	 * 
-	 * @return	Network ID
+	 * @return	The ID of the sensor network
 	 **************************************************************************/
 	public int getId() {
 		return id;
 	}
 	
 	/***************************************************************************
-	 * Defines the network name.
+	 * Defines the name of the sensor network.
 	 * 
-	 * @param name	Network name
+	 * @param name	The name for the sensor network
 	 **************************************************************************/
 	public void setName(String name) {
 		this.name = name;
 	}
 	
 	/***************************************************************************
-	 * Returns the network name.
+	 * Returns the name of the sensor network.
 	 * 
-	 * @return	Network name
+	 * @return	The name of the sensor network
 	 **************************************************************************/
 	public String getName() {
 		return name;
 	}
 	
 	/***************************************************************************
-	 * Defines the network description.
+	 * Defines the description of the sensor network.
 	 * 
-	 * @param description	Network description
+	 * @param description	The description for the sensor network
 	 **************************************************************************/
 	public void setDescription(String description) {
 		this.description = description;
 	}
 	
 	/***************************************************************************
-	 * Returns the network description.
+	 * Returns the description of the sensor network.
 	 * 
-	 * @return	Network description
+	 * @return	Network The description of the sensor network
 	 **************************************************************************/
 	public String getDescription() {
 		return description;
 	}
 	
 	/***************************************************************************
-	 * Defines the URL with the location of the service WSDL file.
+	 * Defines the URL of the WSDL description for the sensor network Web
+	 * service.
 	 * 
-	 * @param wsdl	URL of WSDL file
+	 * @param wsdl	The URL of the WSDL description
 	 **************************************************************************/
 	public void setWsdl(String wsdl) {
 		this.wsdl = wsdl;
 	}
 	
 	/***************************************************************************
-	 * Returns the URL with the location of the service WSDL file.
+	 * Returns the URL of the WSDL description for the sensor network Web
+	 * service.
 	 * 
-	 * @return	URL of WSDL file
+	 * @return	The URL of the WSDL description
 	 **************************************************************************/
 	public String getWsdl() {
 		return wsdl;
 	}
 	
 	/***************************************************************************
-	 * Returns a string with the instance information.
+	 * Returns a string with the network object information.
 	 * 
-	 * @return	A string with the object values
+	 * @return	A string with the object information
 	 **************************************************************************/
 	public String toString() {
 		return id + ": " + name + " (" + description + ")";
 	}
-	
+
 }

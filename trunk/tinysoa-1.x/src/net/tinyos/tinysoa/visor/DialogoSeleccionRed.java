@@ -121,7 +121,7 @@ public class DialogoSeleccionRed extends JDialog {
 	 * @param servicio	Servicio de información a utilizar
 	 **************************************************************************/
 	private void obtenerRedesDisponibles(InfoServ servicio) {
-		Vector<Network> redes = servicio.obtenerListadoRedes();
+		Vector<Network> redes = servicio.getNetworksList();
 		listaRedes.setListData(redes.toArray());
 	}
 	
