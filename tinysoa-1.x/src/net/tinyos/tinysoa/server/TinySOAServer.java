@@ -22,88 +22,96 @@ import java.net.*;
 import java.sql.*;
 import java.util.*;
 
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
-import net.tinyos.tinysoa.util.DatabaseDialog;
-import net.tinyos.tinysoa.util.Errors;
+import net.tinyos.tinysoa.util.*;
+import net.tinyos.tinysoa.util.dialogs.*;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.*;
 import org.codehaus.xfire.*;
 import org.codehaus.xfire.annotations.*;
 import org.codehaus.xfire.annotations.jsr181.*;
 import org.codehaus.xfire.server.http.*;
 import org.codehaus.xfire.service.*;
 import org.codehaus.xfire.service.invoker.*;
-import org.mortbay.util.MultiException;
+import org.mortbay.util.*;
 
 /*******************************************************************************
- * Clase que implementa la funcionalidad de TinySOA Servidor.
+ * Class that implements the functionality of the TinySOA Server component.
  * 
  * @author		Edgardo Avilés López
  * @version	1.1, 11/28/2007
  ******************************************************************************/
 
 public class TinySOAServer {
-	private static String TITULO_VENTANA = "TinySOA Servidor v0.1";
-	private static String ARCHIVO_CONFIGURACION = "config.xml";
+	private static String WINDOW_TITLE = "TinySOA Server v1.1";
+	private static String CONFIG_FILE = "config.xml";
 	private static String serv, user, passwd, dBase;
-	private static String puerto;
-	private static Connection bd;
+	private static String port;
+	private static Connection db;
 
-	private static XFireHttpServer servidor;
+	private static XFireHttpServer server;
 	
 	private static Logger logger = Logger.getLogger(TinySOAServer.class);
 	
 	/***************************************************************************
-	 * Carga las opciones del archivo de configuración.
+	 * Method to load configuration parameters from <code>CONFIG_FILE</code>.
 	 **************************************************************************/
-	private static void cargarOpciones() {
+	private static void loadConfig() {
 		serv = user = passwd = dBase = "";
 		
 		try {
-			Properties configuracion = new Properties();
-			configuracion.loadFromXML(
-					new FileInputStream(ARCHIVO_CONFIGURACION));
-			serv	= configuracion.getProperty("mysql.server");
-			user	= configuracion.getProperty("mysql.user");
-			passwd	= configuracion.getProperty("mysql.password");
-			dBase	= configuracion.getProperty("mysql.database");
-			puerto	= configuracion.getProperty("server.port");
+			Properties config = new Properties();
+			config.loadFromXML(new FileInputStream(CONFIG_FILE));
 			
-			if (serv == null)		serv = "localhost";
+			serv	= config.getProperty("mysql.server");
+			user	= config.getProperty("mysql.user");
+			passwd	= config.getProperty("mysql.password");
+			dBase	= config.getProperty("mysql.database");
+			port	= config.getProperty("server.port");
+			
+			if (serv == null)	serv = "localhost";
 			if (user == null)	user = "root";
-			if (passwd == null)		passwd = "";
-			if (dBase == null)		dBase = "tinysoadb";
-			if (puerto == null)		puerto = "8080";
+			if (passwd == null)	passwd = "";
+			if (dBase == null)	dBase = "tinysoadb";
+			if (port == null)	port = "8080";
 			
-			configuracion.setProperty("mysql.server", serv);
-			configuracion.setProperty("mysql.user", user);
-			configuracion.setProperty("mysql.password", passwd);
-			configuracion.setProperty("mysql.database", dBase);
-			configuracion.setProperty("server.port", puerto);
-			configuracion.storeToXML(
-					new FileOutputStream(ARCHIVO_CONFIGURACION), null);
-		} catch (IOException e) {}
+			config.setProperty("mysql.server", serv);
+			config.setProperty("mysql.user", user);
+			config.setProperty("mysql.password", passwd);
+			config.setProperty("mysql.database", dBase);
+			config.setProperty("server.port", port);
+			
+			config.storeToXML(new FileOutputStream(CONFIG_FILE), null);
+		} catch (IOException e) {
+			logger.error(e);
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Fatal Error",
+					JOptionPane.ERROR_MESSAGE);
+			System.exit(1);
+		}
 	}
 	
 	/***************************************************************************
-	 * Realiza la conexión con la base de datos.
+	 * Method to make a database connection.
 	 **************************************************************************/
-	private static void conectarBD() {
+	private static void connectDB() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			bd = DriverManager.getConnection("jdbc:mysql://" + serv + "/" +
+			db = DriverManager.getConnection("jdbc:mysql://" + serv + "/" +
 					dBase + "?user=" + user + "&password=" + passwd);
 		} catch (Exception ex) {
+			
+			// Show database connection dialog on access fail.
 			DatabaseDialog d;
 			d = new DatabaseDialog(logger, serv, user, passwd, dBase);
 			d.setVisible(true);
 			
 			try {
+				
+				// Save dialog new DB access configuration.
 				Properties configuracion = new Properties();
 				configuracion.loadFromXML(
-						new FileInputStream(ARCHIVO_CONFIGURACION));
+						new FileInputStream(CONFIG_FILE));
 			
 				serv	= d.server.getText();
 				user	= d.username.getText();
@@ -115,48 +123,71 @@ public class TinySOAServer {
 				configuracion.setProperty("mysql.password", passwd);
 				configuracion.setProperty("mysql.database", dBase);
 				configuracion.storeToXML(
-						new FileOutputStream(ARCHIVO_CONFIGURACION), null);
-			} catch (IOException e) { logger.error(e); System.exit(1); }
+						new FileOutputStream(CONFIG_FILE), null);
+				
+			} catch (IOException e) {
+				logger.error(e);
+				JOptionPane.showMessageDialog(null, e.getMessage(),
+						"Fatal Error", JOptionPane.ERROR_MESSAGE);
+				System.exit(1);
+			}
 		}
 		
 		try {
+			
+			// Try to connect once again. It should work now.
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			bd = DriverManager.getConnection("jdbc:mysql://" + serv + "/" +
+			db = DriverManager.getConnection("jdbc:mysql://" + serv + "/" +
 					dBase + "?user=" + user + "&password=" + passwd);
-		} catch (Exception e) { logger.error(e); System.exit(1); }
+			
+		} catch (Exception e) {
+			logger.error(e);
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Fatal Error",
+					JOptionPane.ERROR_MESSAGE);
+			System.exit(1);
+		}
 	}
 	
 	/***************************************************************************
-	 * Inicia el servidor y registra los servicios de información y de red.
+	 * Starts the server and registers the information and a network service for
+	 * each of the available sensor networks.
 	 **************************************************************************/
 	public static void start() {
-
 		XFire xfire = XFireFactory.newInstance().getXFire();
-		AnnotationServiceFactory fabrica = new AnnotationServiceFactory(
+		AnnotationServiceFactory factory = new AnnotationServiceFactory(
 				new Jsr181WebAnnotations(), xfire.getTransportManager());
 		
-		Service servicio = fabrica.create(InfoServImpl.class, "InfoServ",
+		// Information service registration.
+		Service service = factory.create(InfoServImpl.class, "InfoServ",
 				"http://numenor.cicese.mx/TinySOA", null);
-		servicio.setInvoker(new BeanInvoker(new InfoServImpl(bd, puerto)));
-		xfire.getServiceRegistry().register(servicio);
+		service.setInvoker(new BeanInvoker(new InfoServImpl(db, port)));
+		xfire.getServiceRegistry().register(service);
 		
 		Statement st = null;
 		ResultSet rs = null;
 
 		try {
-			st = bd.createStatement();
+			
+			// Query for available sensor networks.
+			st = db.createStatement();
 			rs = st.executeQuery("SELECT * FROM networks ORDER BY id");
+			
+			// Register each network service.
 			while (rs.next()) {
 				int rid = rs.getInt("id");
-				Service servicioRed = fabrica.create(
-						NetServImpl.class, "NetServ" + rid,
-						"http://numenor.cicese.mx/TinySOA", null);
-				servicioRed.setInvoker(
-						new BeanInvoker(new NetServImpl(bd, rid)));
-				xfire.getServiceRegistry().register(servicioRed);
+				Service netService = factory.create(NetServImpl.class,
+						"NetServ" + rid, "http://numenor.cicese.mx/TinySOA",
+						null);
+				netService.setInvoker(new BeanInvoker(
+						new NetServImpl(db, rid)));
+				xfire.getServiceRegistry().register(netService);
 			}
-		} catch (SQLException ex) {
-			Errors.errorBD(ex);
+			
+		} catch (SQLException e) {
+			logger.error(e);
+			JOptionPane.showMessageDialog(null, e.getMessage(),
+					"Fatal Error", JOptionPane.ERROR_MESSAGE);
+			System.exit(1);
 		} finally {
 			if ((rs != null) && (st != null)) {
 				try {
@@ -167,14 +198,14 @@ public class TinySOAServer {
 		}
 		
 		try {
-			servidor = new XFireHttpServer();
-			servidor.setPort(Integer.parseInt(puerto));
-			servidor.start();
+			server = new XFireHttpServer();
+			server.setPort(Integer.parseInt(port));
+			server.start();
 		} catch (Exception e) {
 			if (((MultiException)e).getException(0) instanceof BindException)
 				JOptionPane.showMessageDialog(null, "<html>" +
-						"The port <i>" + puerto + "</i> is already in use by another service. Please,<br>" +
-						"change the port for TinySOA Server in the " + ARCHIVO_CONFIGURACION + " file.</html>",
+						"The port <i>" + port + "</i> is already in use by another service. Please,<br>" +
+						"change the port for TinySOA Server in the " + CONFIG_FILE + " file.</html>",
 						"Server Initialization Error", JOptionPane.ERROR_MESSAGE);
 			logger.error(e);
 			System.exit(1);
@@ -182,13 +213,13 @@ public class TinySOAServer {
 	}
 	
 	/***************************************************************************
-	 * Detiene el servidor de servicios.
+	 * Detiene el server de servicios.
 	 **************************************************************************/
 	public static void stop() {
 		try {
-			servidor.stop();
+			server.stop();
 		} catch (Exception e) {
-			Errors.error(e, "Error al detener el servidor.");
+			Errors.error(e, "Error al detener el server.");
 		}
 	}
 	
@@ -201,11 +232,11 @@ public class TinySOAServer {
 		PropertyConfigurator.configure("log4j.properties");
 
 		try {
-			System.out.println("Iniciando " + TITULO_VENTANA + "...");
-			cargarOpciones();
-			conectarBD();
+			System.out.println("Iniciando " + WINDOW_TITLE + "...");
+			loadConfig();
+			connectDB();
 			System.out.println("Preparando " + InetAddress.getLocalHost() +
-					":" + puerto + "...");
+					":" + port + "...");
 			start();
 			System.out.println("Listo y esperando solicitudes...");
 		} catch(Exception ex) {

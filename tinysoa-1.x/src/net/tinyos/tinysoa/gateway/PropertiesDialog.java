@@ -27,7 +27,8 @@ import java.util.*;
 import net.tinyos.tinysoa.util.Errors;
 
 /*******************************************************************************
- * Initial network configuration dialog class. 
+ * Class that implements a dialog to ask for information such as the name and
+ * the description of the attached sensor network. 
  * 
  * @author		Edgardo Avilés López
  * @version	0.2, 07/24/2006

@@ -261,7 +261,7 @@ public class TinySOAGateway {
 	}
 	
 	/***************************************************************************
-	 * Sets current status in the user interface and optionaly in the console.
+	 * Sets current status in the user interface and optionally in the console.
 	 **************************************************************************/
 	private static void setStatus(String s, boolean justGUI) {
 		l01.setText(s);

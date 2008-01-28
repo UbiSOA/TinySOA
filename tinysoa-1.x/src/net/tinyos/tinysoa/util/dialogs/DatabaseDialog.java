@@ -15,26 +15,30 @@
  * 
  ******************************************************************************/
 
-package net.tinyos.tinysoa.util;
+package net.tinyos.tinysoa.util.dialogs;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.*;
 import java.sql.*;
 import java.sql.Statement;
-import java.util.Vector;
+import java.util.*;
 
 import javax.swing.*;
 
 import org.apache.log4j.*;
 
 /*******************************************************************************
- * Class for a dialog to configure general database access.
+ * Class that implements a dialog to configure TinySOA database access. It
+ * asks for database host, user and password and then tries to connect. After
+ * that, it shows a list of the available databases and validates the selection
+ * to be a TinySOA database.
  * 
  * @author		Edgardo Avilés López
  * @version	1.0, 11/28/2007
  ******************************************************************************/
-public class DatabaseDialog extends JDialog implements PropertyChangeListener {
+public class DatabaseDialog extends JDialog implements
+	PropertyChangeListener, FocusListener {
 
 	private static final long serialVersionUID = -8205378715276535251L;
 	
@@ -49,13 +53,16 @@ public class DatabaseDialog extends JDialog implements PropertyChangeListener {
 	
 	private Logger logger;
 	
-	private ImageIcon icoTSOALogo, icoDBError, icoDBSelect;
+	private ImageIcon icoTSOALogo, icoDBError, icoDBSelect, icoDBOK;
 	
 	private Font plainFont = new Font("Arial", Font.PLAIN, 12);
 	private Font boldFont = new Font("Arial", Font.BOLD, 14);
 	
 	private Connection db = null;
 	
+	/***************************************************************************
+	 * Loads the dialog icons
+	 **************************************************************************/
 	private void loadIcons() {
 		icoTSOALogo = new ImageIcon(getClass().getResource(
 				"/net/tinyos/tinysoa/img/ico.tinysoa.png"));
@@ -63,8 +70,17 @@ public class DatabaseDialog extends JDialog implements PropertyChangeListener {
 				"/net/tinyos/tinysoa/img/dlg.db.error.png"));
 		icoDBSelect = new ImageIcon(getClass().getResource(
 				"/net/tinyos/tinysoa/img/dlg.db.selection.png"));
+		icoDBOK = new ImageIcon(getClass().getResource(
+				"/net/tinyos/tinysoa/img/dlg.db.ok.png"));
 	}
 	
+	/***************************************************************************
+	 * Creates a JOptionPane object to select a TinySOA database.
+	 * 
+	 * @param	dbs	A vector containing a listing of the databases
+	 * @return	A JOptionPane object to select a database
+	 * @see		JOptionPane
+	 **************************************************************************/
 	private JOptionPane createDBSelectionPane(Vector<String> dbs) {
 		JLabel databaseL = new JLabel("Select a TinySOA database:");
 		databaseL.setFont(plainFont);
@@ -80,22 +96,30 @@ public class DatabaseDialog extends JDialog implements PropertyChangeListener {
         		icoDBSelect, options, options[0]);
 	}
 	
+	/***************************************************************************
+	 * Creates an JOptionPane object to ask for a database server and the user,
+	 * and password to access.
+	 * 
+	 * @return	A JOptionPane object to ask server access
+	 * @see		JOptionPane
+	 **************************************************************************/
 	private JOptionPane createDBServerPane() {
 		message = new JLabel(
-				"<html>Unable to connect to MySQL server <i>" + iniSrv +
-				"</i>. Using iniUsr <i>" + iniUsr + "</i> and " +
+				"<html><div width='260'>Unable to connect to MySQL server <i>" +
+				iniSrv + "</i>. Using user <i>" + iniUsr + "</i> and " +
 				((iniPwd.compareTo("") == 0)? "<i>no</i> ": "") +
 				"password in the <i>" + iniDB + "</i> database. " +
-				"Please provide an valid access and try to connect again.</html>");
+				"Please provide an valid access and try to connect " +
+				"again.</div></html>");
 		message.setBorder(BorderFactory.createEmptyBorder(0, 0, 8, 0));
-		message.setPreferredSize(new Dimension(260, 72));
 		
 		server = new JTextField();			server.setText(iniSrv);
 		username = new JTextField();		username.setText(iniUsr);
 		password = new JPasswordField();	password.setText(iniPwd);
 		
-		server.setFont(boldFont);
-		username.setFont(boldFont);
+		server.setFont(boldFont);	server.addFocusListener(this);
+		username.setFont(boldFont);	username.addFocusListener(this);
+		password.addFocusListener(this);
 		
 		JLabel serverL = new JLabel("MySQL Server:");
 		serverL.setFont(plainFont);
@@ -116,8 +140,12 @@ public class DatabaseDialog extends JDialog implements PropertyChangeListener {
         		icoDBError, options, options[0]);
 	}
 	
-	/** Creates the reusable dialog. */
-	public DatabaseDialog(Logger logger, String initialServer, String initialUsername, String initialPassword,
+	/***************************************************************************
+	 * Creates the main dialog object and takes the initial values for database
+	 * server, user and password.
+	 **************************************************************************/
+	public DatabaseDialog(Logger logger, String initialServer,
+			String initialUsername, String initialPassword,
 			String initialDatabase) {
 		super((Frame) null, true);
 		loadIcons();
@@ -127,15 +155,16 @@ public class DatabaseDialog extends JDialog implements PropertyChangeListener {
 		setLocationByPlatform(true);
 		setResizable(false);
 		
+		// Gets the initial database access
 		this.iniSrv = initialServer;
 		this.iniUsr = initialUsername;
 		this.iniPwd = initialPassword;
 		this.iniDB = initialDatabase;
 		
+		// The dialog initially shows the server access
 		optionPane = createDBServerPane();
         setContentPane(optionPane);
 
-        //Handle window closing correctly.
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
         	public void windowClosing(WindowEvent we) {
@@ -143,7 +172,6 @@ public class DatabaseDialog extends JDialog implements PropertyChangeListener {
         	}
         });
         
-        //Ensure the text field always gets the first focus.
         addComponentListener(new ComponentAdapter() {
         	public void componentShown(ComponentEvent ce) {
         		server.requestFocusInWindow();
@@ -151,11 +179,14 @@ public class DatabaseDialog extends JDialog implements PropertyChangeListener {
         	}
         });
         
-        //Register an event handler that reacts to option pane state changes.
         optionPane.addPropertyChangeListener(this);
         pack();
 	}
 	
+	/***************************************************************************
+	 * This methods validates the selected database by looking at the tables,
+	 * they must be the TinySOA tables.
+	 **************************************************************************/
 	private void tryDBSelect() {
 		try {
 			Statement st = db.createStatement();
@@ -174,9 +205,9 @@ public class DatabaseDialog extends JDialog implements PropertyChangeListener {
 			
 			if (tSOATabs < 7) {
 				JOptionPane.showMessageDialog(this, "<html>" +
-						"The selected database is not a TinySOA database, please select<br>" +
-						"another database or create a new TinySOA database." +
-						"</html>", "Connection Error",
+						"The selected database is not a TinySOA database, " +
+						"please<br>select another one or create a new " +
+						"TinySOA database.</html>", "Connection Error",
 						JOptionPane.ERROR_MESSAGE);
 				database.requestFocus();
 				return;
@@ -193,10 +224,14 @@ public class DatabaseDialog extends JDialog implements PropertyChangeListener {
 		JOptionPane.showMessageDialog(this,
     			"<html>Database connection is successfully complete.<br>" +
     			"TinySOA system is ready to start.<html>", "Connection Ready",
-    			JOptionPane.INFORMATION_MESSAGE);
+    			JOptionPane.INFORMATION_MESSAGE, icoDBOK);
 		setVisible(false);
 	}
 	
+	/***************************************************************************
+	 * This method validates the database access. If successful, it changes the
+	 * contents of the dialog to ask for a valid database.
+	 **************************************************************************/
 	private void tryConnection() {
 		Vector<String> dbs = null;
 		
@@ -229,10 +264,10 @@ public class DatabaseDialog extends JDialog implements PropertyChangeListener {
 			
 			if (dbs.isEmpty()) {
 				JOptionPane.showMessageDialog(this, "<html>" +
-						"The specified database server does not have any databases.<br>" +
-						"Please create a TinySOA database or specify another MySQL<br>" +
-						"server and try again.</html>", "Connection Error",
-						JOptionPane.ERROR_MESSAGE);
+						"The specified database server does not have any " +
+						"databases.<br>Please create a TinySOA database or " +
+						"specify another MySQL<br>server and try again.</html>",
+						"Connection Error", JOptionPane.ERROR_MESSAGE);
 				server.requestFocus();
 				server.selectAll();
 				return;
@@ -250,17 +285,26 @@ public class DatabaseDialog extends JDialog implements PropertyChangeListener {
 		optionPane = createDBSelectionPane(dbs);
 		optionPane.addPropertyChangeListener(this);
 		setContentPane(optionPane);
-		pack();
+		pack(); database.requestFocus();
 	}
 	
+	/***************************************************************************
+	 * This method handles the dialog events.
+	 **************************************************************************/
 	public void propertyChange(PropertyChangeEvent e) {
 		Object value = optionPane.getValue();
 		
 		if (isVisible() && (e.getSource() == optionPane) && 
 				(value != JOptionPane.UNINITIALIZED_VALUE)) {
-	        if (value.equals("Exit")) {
-	        	logger.info("Exiting without completing database connection.");
-	        	System.exit(0);
+	        if (value.equals("Exit") || (value.equals(-1) &&
+	        		optionPane.getOptions()[0].equals("Connect…"))) {
+	        	if (JOptionPane.showConfirmDialog(this,
+	        			"Do you really want to exit TinySOA?", "Confirm Exit",
+	        			JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+	        		logger.info("Exiting without completing database " +
+	        				"connection.");
+	        		System.exit(0);
+	        	}
 	        }
 	        else if (value.equals("Connect…")) {
 	        	tryConnection();
@@ -268,7 +312,8 @@ public class DatabaseDialog extends JDialog implements PropertyChangeListener {
 	        else if (value.equals("Select")) {
 	        	tryDBSelect();
 	        }
-	        else if (value.equals("Back")) {
+	        else if (value.equals("Back") || (value.equals(-1) &&
+	        		optionPane.getOptions()[0].equals("Select"))) {
 	        	iniSrv = server.getText();
 	        	iniUsr = username.getText();
 	        	iniPwd = new String(password.getPassword());
@@ -276,11 +321,23 @@ public class DatabaseDialog extends JDialog implements PropertyChangeListener {
 	        	optionPane = createDBServerPane();
 	    		optionPane.addPropertyChangeListener(this);
 	    		setContentPane(optionPane);
-	    		pack();
+	    		pack(); server.requestFocus();
 	        }
 	        else System.out.println(value);
 		}
 		optionPane.setValue(JOptionPane.UNINITIALIZED_VALUE);
 	}
+
+	/***************************************************************************
+	 * This method makes text on fields get selected on field focus.
+	 **************************************************************************/
+	public void focusGained(FocusEvent e) {
+		((JTextField) e.getSource()).selectAll();		
+	}
+
+	/***************************************************************************
+	 * Unused methods.
+	 **************************************************************************/
+	public void focusLost(FocusEvent e) {}
 
 }
