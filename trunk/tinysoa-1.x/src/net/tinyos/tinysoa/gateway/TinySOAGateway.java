@@ -228,7 +228,7 @@ public class TinySOAGateway {
 		p02.add(l01, BorderLayout.SOUTH);
 		
 		tm01 = new DefaultTableModel();
-		t01 = new Tabla(tm01);
+		t01 = new MonitorTable(tm01);
 		sp01 = new JScrollPane(t01, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);		
 		
