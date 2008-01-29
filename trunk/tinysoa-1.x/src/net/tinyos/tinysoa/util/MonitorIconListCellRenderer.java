@@ -26,27 +26,27 @@ import java.awt.*;
 import javax.swing.*;
 
 /*******************************************************************************
- * Clase que implementa un <i>renderer</i> de celda de una lista con un icono.
+ * Implements a list cell rendererer with an icon
  * 
  * @author		Edgardo Avilés López
  * @version	0.1, 07/25/2006
  ******************************************************************************/
-public class ListaCeldaRenderer extends JLabel implements ListCellRenderer {
+public class MonitorIconListCellRenderer extends JLabel implements ListCellRenderer {
 	private static final long serialVersionUID = -431382948314918856L;
 
-	private ImageIcon[] iconos;
+	private ImageIcon[] icons;
 	
 	/***************************************************************************
-	 * Constructor principal de la clase.
+	 * Class constructor
 	 * 
-	 * @param iconos	Iconos de los elementos de la lista
+	 * @param icons	Iconos de los elementos de la lista
 	 **************************************************************************/
-	public ListaCeldaRenderer(ImageIcon[] iconos) {
-		this.iconos = iconos;
+	public MonitorIconListCellRenderer(ImageIcon[] icons) {
+		this.icons = icons;
 	}
 	
 	/***************************************************************************
-	 * Método para preparar el elemento de la lista.
+	 * Prepares the list element
 	 **************************************************************************/
 	public Component getListCellRendererComponent(JList list, Object value,
 			int index, boolean isSelected, boolean cellHasFocus) {
@@ -61,7 +61,7 @@ public class ListaCeldaRenderer extends JLabel implements ListCellRenderer {
 		setOpaque(true);
 		setBorder(BorderFactory.createEmptyBorder(3,6,3,2));
 		setText(value.toString());
-		setIcon(iconos[index]);
+		setIcon(icons[index]);
 		setFont(list.getFont());
 		
 		return this;

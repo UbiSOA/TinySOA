@@ -64,7 +64,7 @@ public class GraficadorTopologia extends JPanel
 	
 	public static int ESCALA_CALOR = 0, ESCALA_LUZ = 1, ESCALA_ENERGIA = 2;
 	
-	private Vector<NodoGraficaTopologia> nodos;
+	private Vector<NodeTopologyChart> nodos;
 	
 	/***************************************************************************
 	 * Constructor principal de la clase.
@@ -72,7 +72,7 @@ public class GraficadorTopologia extends JPanel
 	public GraficadorTopologia() {
 		super();
 		setBackground(Color.WHITE);
-		nodos = new Vector<NodoGraficaTopologia>();		
+		nodos = new Vector<NodeTopologyChart>();		
 		fuenArr = new DragSource();
 		fuenArr.createDefaultDragGestureRecognizer(
 				this, DnDConstants.ACTION_COPY_OR_MOVE, this);
@@ -209,8 +209,8 @@ public class GraficadorTopologia extends JPanel
 		
 		x = movX;
 		y = movY;
-		id = nodos.get(movNod).obtId();
-		v = nodos.get(movNod).obtValor();
+		id = nodos.get(movNod).getId();
+		v = nodos.get(movNod).getValue();
 		
 		dibujarNodo(g2d, id, x, y, v, 0.35f);
 	}
@@ -256,12 +256,12 @@ public class GraficadorTopologia extends JPanel
 		g2d.setComposite(AlphaComposite.getInstance(
 				AlphaComposite.SRC_OVER, 0.75f));
 		
-		NodoGraficaTopologia nodo;
+		NodeTopologyChart nodo;
 		
 		valorPro = 0.0d;
 		for (int k = 0; k < nodos.size(); k++)
 			if (nodos.get(k) != null) {
-				valor = nodos.get(k).obtValor();
+				valor = nodos.get(k).getValue();
 				if (valor < valorMen) valorMen = valor;
 				if (valor > valorMay) valorMay = valor;
 				valorPro += valor;
@@ -276,8 +276,8 @@ public class GraficadorTopologia extends JPanel
 				for (int k = 0; k < nodos.size(); k++)
 					if (nodos.get(k) != null) {
 						nodo = nodos.get(k);
-						dist = distancia(i, j, nodo.obtPosicion().x,
-								nodo.obtPosicion().y);
+						dist = distancia(i, j, nodo.getPosition().x,
+								nodo.getPosition().y);
 						if (dist < distMen) distMen = dist;
 						if (dist > distMax) distMax = dist;
 					}
@@ -286,8 +286,8 @@ public class GraficadorTopologia extends JPanel
 				for (int k = 0; k < nodos.size(); k++)
 					if (nodos.get(k) != null) {
 						nodo = nodos.get(k);
-						dist = distancia(i, j, nodo.obtPosicion().x,
-								nodo.obtPosicion().y);
+						dist = distancia(i, j, nodo.getPosition().x,
+								nodo.getPosition().y);
 						sumFact += distMen / dist;
 					}
 					
@@ -295,10 +295,10 @@ public class GraficadorTopologia extends JPanel
 				for (int k = 0; k < nodos.size(); k++)
 					if (nodos.get(k) != null) {
 						nodo = nodos.get(k);
-						dist = distancia(i, j , nodo.obtPosicion().x,
-								nodo.obtPosicion().y);
+						dist = distancia(i, j , nodo.getPosition().x,
+								nodo.getPosition().y);
 						factor = (distMen / dist) / sumFact;
-						valor = nodo.obtValor();
+						valor = nodo.getValue();
 						valor = interpolar(valor, valorPro, 1, 0,
 								Math.cos(interpolar(
 										0, Math.PI / 2, 0, radio, dist)));
@@ -324,12 +324,12 @@ public class GraficadorTopologia extends JPanel
 		
 		for (int i = 0; i < nodos.size(); i++)
 			if (nodos.get(i) != null) {
-				NodoGraficaTopologia nodo = nodos.get(i);
+				NodeTopologyChart nodo = nodos.get(i);
 				
-				x = nodo.obtPosicion().x;
-				y = nodo.obtPosicion().y;
-				id = nodo.obtId();
-				v = nodo.obtValor();
+				x = nodo.getPosition().x;
+				y = nodo.getPosition().y;
+				id = nodo.getId();
+				v = nodo.getValue();
 				dibujarNodo(g2d, id, x, y, v, 1.0f);
 			}
 	}
@@ -537,9 +537,9 @@ public class GraficadorTopologia extends JPanel
 	 * Agrega un nodo al gráfico.
 	 * 
 	 * @param nodo	Nodo a agregar
-	 * @see			NodoGraficaTopologia
+	 * @see			NodeTopologyChart
 	 **************************************************************************/
-	public void agregarNodo(NodoGraficaTopologia nodo) {
+	public void agregarNodo(NodeTopologyChart nodo) {
 		nodos.add(nodo);
 	}
 
@@ -548,11 +548,11 @@ public class GraficadorTopologia extends JPanel
 	 * 
 	 * @param id			ID del nodo a reemplazar
 	 * @param nuevoValor	Nodo con el cual reemplazar
-	 * @see					NodoGraficaTopologia
+	 * @see					NodeTopologyChart
 	 **************************************************************************/
-	public void cambiarNodo(int id, NodoGraficaTopologia nuevoValor) {
+	public void cambiarNodo(int id, NodeTopologyChart nuevoValor) {
 		for (int i = 0; i < nodos.size(); i++)
-			if (nodos.get(i).obtId() == id) {
+			if (nodos.get(i).getId() == id) {
 				nodos.set(id, nuevoValor);
 				return;
 			}	
@@ -566,7 +566,7 @@ public class GraficadorTopologia extends JPanel
 	 **************************************************************************/
 	public boolean existeNodo(int id) {
 		for (int i = 0; i < nodos.size(); i++)
-			if (nodos.get(i).obtId() == id)
+			if (nodos.get(i).getId() == id)
 				return true;
 		return false;
 	}
@@ -578,7 +578,7 @@ public class GraficadorTopologia extends JPanel
 	 **************************************************************************/
 	public void eliminarNodo(int id) {
 		for (int i = 0; i < nodos.size(); i++)
-			if (nodos.get(i).obtId() == id) {
+			if (nodos.get(i).getId() == id) {
 				nodos.remove(i);
 				return;
 			}
@@ -607,8 +607,8 @@ public class GraficadorTopologia extends JPanel
 		
 		for (int k = 0; k < nodos.size(); k++)
 			if (nodos.get(k) != null) {
-				d = distancia(x, y, nodos.get(k).obtPosicion().x,
-						nodos.get(k).obtPosicion().y);
+				d = distancia(x, y, nodos.get(k).getPosition().x,
+						nodos.get(k).getPosition().y);
 				if (d < diaNod / 2.0d) movNod = k;
 			}
 		
@@ -631,10 +631,10 @@ public class GraficadorTopologia extends JPanel
 		if (movNod > -1) {
 			if ((nx >= 0) && (nx <= getWidth()) && (ny >= 0) &&
 					(ny <= getHeight())) {
-				NodoGraficaTopologia n = nodos.get(movNod);
-				n.defPosicion(nx, ny);
+				NodeTopologyChart n = nodos.get(movNod);
+				n.setPosition(nx, ny);
 				nodos.set(movNod, n);
-				posTopologiaNodos[n.obtId()] = new Point(nx, ny);
+				posTopologiaNodos[n.getId()] = new Point(nx, ny);
 			}
 			repaint();
 			movNod = -1;

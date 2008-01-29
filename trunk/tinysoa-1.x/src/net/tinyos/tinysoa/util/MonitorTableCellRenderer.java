@@ -27,45 +27,45 @@ import javax.swing.*;
 import javax.swing.table.*;
 
 /*******************************************************************************
- * Clase que implementa un <i>renderer</i> de celda de tabla personalizado.
+ * Implements a personalized table cell renderer
  * 
  * @author		Edgardo Avilés López
  * @version	0.1, 07/25/2006
  ******************************************************************************/
-public class TablaCeldaRenderer extends JLabel
+public class MonitorTableCellRenderer extends JLabel
 		implements TableCellRenderer {
 	private static final long serialVersionUID = 1170124836368156719L;
 	
-	private int alineacion;
-	private boolean esNegrita;
+	private int alignment;
+	private boolean isBold;
 	
 	/***************************************************************************
-	 * Constructor de la clase.
+	 * Class constructor
 	 * 
-	 * @param alineacion	Alineación del texto de la celda	
-	 * @param esNegrita	Verdadero si el texto es en negritas
+	 * @param alignment	Text alignment	
+	 * @param isBold	True if text is bold
 	 **************************************************************************/
-	public TablaCeldaRenderer(int alineacion, boolean esNegrita) {
+	public MonitorTableCellRenderer(int alignment, boolean isBold) {
 		super();
-		this.alineacion = alineacion;
-		this.esNegrita = esNegrita;
+		this.alignment = alignment;
+		this.isBold = isBold;
 	}
 
 	/***************************************************************************
-	 * Devuelve un componente que representa a la celda.
+	 * Gets the table cell renderer
 	 **************************************************************************/
     public Component getTableCellRendererComponent(
     		JTable table, Object value, boolean isSelected, boolean hasFocus,
     		int rowIndex, int vColIndex) {
 
-    	if (esNegrita) setFont(new Font(table.getFont().getFontName(),
+    	if (isBold) setFont(new Font(table.getFont().getFontName(),
     			Font.BOLD, table.getFont().getSize()));
     	else setFont(table.getFont());
     	setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
     	this.setOpaque(true);
     	
         if (value != null) setText(value.toString()); else setText(" ");
-        this.setHorizontalAlignment(alineacion);
+        this.setHorizontalAlignment(alignment);
         
         if ((vColIndex > 4) && (value instanceof SensedData))
         	setToolTipText(((SensedData)value).getTooltip());
@@ -79,7 +79,7 @@ public class TablaCeldaRenderer extends JLabel
     
     //--------------------------------------------------------------------------
     //
-    //   Métodos sobreescritos por motivos de optimización.
+    //   Overriden for optimization purposes
     //
     //==========================================================================
 

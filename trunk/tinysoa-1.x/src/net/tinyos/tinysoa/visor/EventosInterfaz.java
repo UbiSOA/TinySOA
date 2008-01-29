@@ -789,8 +789,8 @@ public class EventosInterfaz
 						if (par.compareTo(l.getParameter()) == 0)
 							if (!graficadorTopologia.existeNodo(l.getNid()))
 								if (nodoSel[l.getNid()]) {
-									NodoGraficaTopologia ngt =
-										new NodoGraficaTopologia(l.getNid(),
+									NodeTopologyChart ngt =
+										new NodeTopologyChart(l.getNid(),
 												Double.parseDouble(
 														l.getValue()),
 												posTopNodos[l.getNid()].x,
