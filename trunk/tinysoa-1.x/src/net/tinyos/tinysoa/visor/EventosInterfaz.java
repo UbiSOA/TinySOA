@@ -837,7 +837,7 @@ public class EventosInterfaz
 						else tiempo = evento.getDateTime();
 						
 						modeloEventos.addRow(new Object[]{id, nombre,
-								new CeldaTablaTooltip(criterio),
+								new CellTableTooltip(criterio),
 								listo, nid, tiempo});
 						
 						dialogoMantenimiento.defEventos(eventos.toArray());

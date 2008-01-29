@@ -68,7 +68,7 @@ public final class Converter {
 		Rthr = R1 * (ADC_FS - ADC) / ADC;
 		kelvin = 1 / (a + b * Math.log(Rthr) + c *
 				Math.pow(Math.log(Rthr), 3.0));
-		return redondear(kelvin - 273.15, precision) + " °C";
+		return rounding(kelvin - 273.15, precision) + " °C";
 	}
 	
 	/***************************************************************************
@@ -88,7 +88,7 @@ public final class Converter {
 		Rthr = R1 * (ADC_FS - ADC) / ADC;
 		kelvin = 1 / (a + b * Math.log(Rthr) + c *
 				Math.pow(Math.log(Rthr), 3.0));
-		return Double.parseDouble(redondear(kelvin - 273.15, 3));
+		return Double.parseDouble(rounding(kelvin - 273.15, 3));
 	}
 	
 	/***************************************************************************
@@ -99,7 +99,7 @@ public final class Converter {
 	 * @return		Una cadena con el voltaje equivalente
 	 **************************************************************************/
 	public static String adcToVolt(int ADC) {
-		return redondear(ADC / 1000.0, 2) + " v";
+		return rounding(ADC / 1000.0, 2) + " v";
 	}
 	
 	/***************************************************************************
@@ -109,7 +109,7 @@ public final class Converter {
 	 * @return		Un doble con el voltaje equivalente
 	 **************************************************************************/
 	public static double adcToVoltD(int ADC) {
-		return Double.parseDouble(redondear(ADC / 1000.0, 3));
+		return Double.parseDouble(rounding(ADC / 1000.0, 3));
 	}
 	
 	/***************************************************************************
@@ -118,11 +118,11 @@ public final class Converter {
 	 * una cadena en hexadecimal equivalente al número de ID.
 	 * 
 	 * @param i			ID del nodo
-	 * @param convertir	Verdadero si hay que convertir el número
+	 * @param convert	Verdadero si hay que convertir el número
 	 * @return				Una cadena con la identificación del nodo
 	 **************************************************************************/
-	public static String intToId(int i, boolean convertir) {
-		if (convertir) {
+	public static String intToId(int i, boolean convert) {
+		if (convert) {
 			if (i == 0x7e) return "-";
 			else return i + "";
 		} else return Converter.intToHex(i, 2);
@@ -150,14 +150,14 @@ public final class Converter {
 	 * Si convertir es falso esta devuelve el tipo en una cadena hexadecimal.
 	 * 
 	 * @param i			Tipo de mensaje
-	 * @param convertir	Verdadero si hay que convertir el número
+	 * @param convert	Verdadero si hay que convertir el número
 	 * @return				Una cadena con el tipo de mensaje
 	 * @see					Constants
 	 **************************************************************************/
-	public static String intToType(int i, boolean convertir) {
+	public static String intToType(int i, boolean convert) {
 		String[] TYPES = {"Read", "Reg", "Act. Act.", "Des. Act.", "Sleep",
 				"Wake Up", "Chg. Data Rate"};
-		if (convertir) return TYPES[i];
+		if (convert) return TYPES[i];
 		else return Converter.intToHex(i, 2);
 	}
 	
@@ -179,11 +179,11 @@ public final class Converter {
 	 * cadena hexadecimal.
 	 * 
 	 * @param i			Tipo de <i>sensor board</i>
-	 * @param convertir	Verdadero si hay que convertir el número
+	 * @param convert	Verdadero si hay que convertir el número
 	 * @return				Una cadena con el tipo de <i>sensor board</i>
 	 * @see					Constants
 	 **************************************************************************/
-	public static String intToSens(int i, boolean convertir) {
+	public static String intToSens(int i, boolean convert) {
 		String s = "-";
 		if (i == 0x01) s = "MDA500";
 		if (i == 0x02) s = "MTS510";
@@ -198,7 +198,7 @@ public final class Converter {
 		if (i == 0x87) s = "MEP401";
 		if (i == 0x90) s = "MDA320";
 		if (i == 0xA0) s = "MSP410";
-		if (convertir) return s;
+		if (convert) return s;
 		else return Converter.intToHex(i, 2);
 	}
 	
@@ -208,15 +208,15 @@ public final class Converter {
 	 * cadena "?". Si convertir es falso esta devuelve el número en una
 	 * cadena hexadecimal.
 	 * 
-	 * @param i			Tipo de parámetro
-	 * @param convertir	Verdadero si hay que convertir el número
-	 * @return				Una cadena con el parámetro de sensado
+	 * @param i			Type of parameter
+	 * @param convert	True if need convert the number
+	 * @return			A string with the parameter of sense
 	 * @see					Constants
 	 **************************************************************************/
-	public static String intToSensParam(int i, boolean convertir) {
+	public static String intToSensParam(int i, boolean convert) {
 		String s = sensorLabel(i, 0);
 		if (s.compareTo("v0") == 0) s = "?";
-		if (convertir) return s;
+		if (convert) return s;
 		else return Converter.intToHex(i, 4);
 	}
 
@@ -313,30 +313,30 @@ public final class Converter {
 	 * una cadena con el número indicado por <code>i</code> sin conversión.s
 	 * 
 	 * @param i			Número a convertir
-	 * @param longitud		Longitud deseada para la cadena resultado
-	 * @param convertir	Falso si se desea la representación en hexadecimal
+	 * @param length		Longitud deseada para la cadena resultado
+	 * @param convert	Falso si se desea la representación en hexadecimal
 	 * @return				Una cadena con la representación del número en
 	 * 						decimal o hexadecimal según sea el caso
 	 **************************************************************************/
-	public static String intToN(int i, int longitud, boolean convertir) {
-		if (convertir) return i + "";
-		else return Converter.intToHex(i, longitud);
+	public static String intToN(int i, int length, boolean convert) {
+		if (convert) return i + "";
+		else return Converter.intToHex(i, length);
 	}
 
 	/***************************************************************************
-	 * Devuelve una cadena con el valor indicado en <code>val</code> redondeado
-	 * al número de lugares decimales indicados.
+	 * Returns a string with the value <code>val</code> rounded
+	 * the number of decimals indicated.
 	 * 
-	 * @param val		Valor a redondear
-	 * @param lugares	Número de decimales a redondear
-	 * @return			Una cadena con el valor redondeado
-	 **************************************************************************/
-	public static String redondear(double val, int lugares) {
-		if (lugares == 1) return nf1d.format(val);
-		if (lugares == 2) return nf2d.format(val);
-		if (lugares == 3) return nf3d.format(val);
+	 * @param val		Value to rounding
+	 * @param places	Number of decimales to rounding
+	 * @return			A string with the value round
+	 *  **************************************************************************/
+	public static String rounding(double val, int places) {
+		if (places == 1) return nf1d.format(val);
+		if (places == 2) return nf2d.format(val);
+		if (places == 3) return nf3d.format(val);
 	
-		String p = ""; for (int i = 0; i < lugares; i++) p += "0";
+		String p = ""; for (int i = 0; i < places; i++) p += "0";
 		NumberFormat nf = new DecimalFormat("0." + p);
 		return nf.format(val);
 	}

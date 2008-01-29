@@ -1,5 +1,5 @@
 /*
- * "Copyright (c) 2005-2006 The Regents of the Centro de Investigación y de
+ * "Copyright (c) 2005-2006 The Regents of the Centro de Investigación Científica y de
  * Educación Superior de la ciudad de Ensenada, Baja California (CICESE).
  *
  * Permission to use, copy, modify, and distribute this software and its
@@ -25,7 +25,7 @@ package net.tinyos.tinysoa.util;
 import java.util.*;
 
 /*******************************************************************************
- * Clase utilería relacionadas con el calendario.
+ *Class utility related to the calendar.
  * 
  * @author		Edgardo Avilés López
  * @version	0.2, 07/24/2006
@@ -36,9 +36,9 @@ public final class Calendar {
 	private static String d, m, y, y2, h, mi, s, ms;
 	
 	/***************************************************************************
-	 * Actualiza la información al tiempo actual.
+	 * Update information Currently.
 	 **************************************************************************/
-	public static void leer() {
+	public static void read() {
 		cal = new GregorianCalendar();
 		d	= pad(cal.get(java.util.Calendar.DAY_OF_MONTH) + "", 2, "0");
 		m	= pad(cal.get(java.util.Calendar.MONTH) + "", 2, "0");
@@ -51,51 +51,51 @@ public final class Calendar {
 	}
 	
 	/***************************************************************************
-	 * Devuelve la fecha actual en el formato d/m/y.
+	 * Returns the current date in format d/m/y.
 	 * 
-	 * @return	Una cadena con la fecha en formato d/m/y.
+	 * @return Returns a string with the date in format d/m/y.
 	 **************************************************************************/
 	public static String currentDate() {
-		leer(); return m + "/" + d + "/" + y;
+		read(); return m + "/" + d + "/" + y;
 	}
 	
 	/***************************************************************************
-	 * Devuelve la fecha actual en el formato Y-m-d.
+	 * Returns the current date in format Y-m-d.
 	 * 
-	 * @return	Una cadena con la fecha en formato Y-m-d;
+	 * @return	Returns a string with the date in format Y-m-d;
 	 **************************************************************************/
-	public static String fechaActualBD() {
-		leer(); return y2 + "-" + m + "-" + d;
+	public static String currentDateBD() {
+		read(); return y2 + "-" + m + "-" + d;
 	}
 
 	/***************************************************************************
-	 * Devuelve la hora actual en el formato h:mi:s.ms.
+	 * Returns the current time in format h:mi:s.ms.
 	 * 
-	 * @return	Una cadena con la hora en formato h:mi:s.ms.
+	 * @return	Returns a string with the time in format h:mi:s.ms.
 	 **************************************************************************/
 	public static String currentTime() {
-		leer(); return h + ":" + mi + ":" + s + "." + ms;
+		read(); return h + ":" + mi + ":" + s + "." + ms;
 	}
 	
 	/***************************************************************************
-	 * Devuelve la hora actual en el formato h:mi:s
+	 * Returns the current time in format h:mi:s
 	 * 
-	 * @return	Una cadena con la hora en formato h:mi:s
+	 * @return	Returns a string with the time in format h:mi:s
 	 **************************************************************************/
-	public static String horaActualBD() {
-		leer(); return h + ":" + mi + ":" + s;
+	public static String currentTimeBD() {
+		read(); return h + ":" + mi + ":" + s;
 	}
 	
 	/***************************************************************************
-	 * Rellena una cadena con la longitud y cadena relleno dados.
+	 * Fills a string with the length and string filled data.
 	 * 
-	 * @param	s			Cadena a ajustar.
-	 * @param	longitud	Longitud deseada.
-	 * @param	padCad		Cadena relleno.
-	 * @return La cadena ajustada según las opciones.
+	 * @param	s			Desired string.
+	 * @param	length	Desired length.
+	 * @param	padCad		String filled.
+	 * @return The string adjusted according the options.
 	 **************************************************************************/
-	public static String pad(String s, int longitud, String padCad) {
-		while (s.length() < longitud)
+	public static String pad(String s, int length, String padCad) {
+		while (s.length() < length)
 			s = padCad + s;
 		return s;
 	}
