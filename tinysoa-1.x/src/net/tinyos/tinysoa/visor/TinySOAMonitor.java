@@ -215,8 +215,8 @@ public class TinySOAMonitor {
 			}
 		};
 		
-		arbol.setCellRenderer(new RedNodoArbolRenderer());
-		arbol.addMouseListener(new RedNodoArbolSeleccionListener(arbol));
+		arbol.setCellRenderer(new NetTreeNodeRenderer());
+		arbol.addMouseListener(new SelectedNetTreeNodeListener(arbol));
 		arbol.addMouseListener(eventosInterfaz);
 		arbol.getSelectionModel().setSelectionMode(
 				TreeSelectionModel.SINGLE_TREE_SELECTION);
@@ -309,7 +309,7 @@ public class TinySOAMonitor {
 		
 		DefaultTableModel modelo = new DefaultTableModel();
 		TableSorter ordenador = new TableSorter(modelo);
-		Tabla tabla = new Tabla(ordenador);
+		MonitorTable tabla = new MonitorTable(ordenador);
 		ordenador.setTableHeader(tabla.getTableHeader());
 		JScrollPane scrollTabla = new JScrollPane(tabla);
 		scrollTabla.setHorizontalScrollBarPolicy(
@@ -470,7 +470,7 @@ public class TinySOAMonitor {
 		
 		DefaultTableModel modelo = new DefaultTableModel();
 		TableSorter ordenador = new TableSorter(modelo);
-		Tabla tabla = new Tabla(ordenador);
+		MonitorTable tabla = new MonitorTable(ordenador);
 		ordenador.setTableHeader(tabla.getTableHeader());
 		JScrollPane scrollTabla = new JScrollPane(tabla);
 		scrollTabla.setHorizontalScrollBarPolicy(
@@ -532,7 +532,7 @@ public class TinySOAMonitor {
 		
 		DefaultTableModel modelo = new DefaultTableModel();
 		TableSorter ordenador = new TableSorter(modelo);
-		Tabla tabla = new Tabla(ordenador);
+		MonitorTable tabla = new MonitorTable(ordenador);
 		ordenador.setTableHeader(tabla.getTableHeader());
 		JScrollPane scrollTabla = new JScrollPane(tabla);
 		scrollTabla.setHorizontalScrollBarPolicy(
