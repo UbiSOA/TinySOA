@@ -27,8 +27,8 @@ import java.text.*;
 import net.tinyos.tinysoa.common.*;
 
 /*******************************************************************************
- * Clase convertidor de parámetros de lectura, y de números e identificadores de
- * parámetros, actuadores, y sensores.
+ * Class converter parameters reading, as well as numbers and identifiers  
+ * of parameters, actuators, and sensors.
  * 
  * @author		Edgardo Avilés López
  * @version	0.3, 07/24/2006 
@@ -40,23 +40,23 @@ public final class Converter {
 	private static NumberFormat nf3d = new DecimalFormat("0.000");
 	
 	/***************************************************************************
-	 * Convierte una lectura ADC a su equivalente de temperatura en grados
-	 * centígrados con precisión de un digito decimal.
+	 * Converts a reading ADC to the equivalent of temperature in degrees 
+	 * Celsius with precision of a decimal digit.
 	 * 
-	 * @param ADC	Lectura ADC del sensor
-	 * @return		Una cadena con la temperatura en grados centígrados
-	 **************************************************************************/
+	 * @param ADC	Reading ADC of sensor
+	 * @return		A string with the temperature in degree celsius 
+	 * 	 **************************************************************************/
 	public static String adcToTemp(int ADC) {
 		return adcToTemp(ADC, 1);
 	}
 	
 	/***************************************************************************
-	 * Convierte una lectura ADC a su equivalente de temperatura en grados
-	 * centígrados con la precisión indicada.
+	 * Converts a reading ADC to the equivalent of temperature in degrees 
+	 * Celsius with the precision indicated.
 	 * 
-	 * @param ADC			Lectura ADC del sensor
-	 * @param precision	Precisión deseada
-	 * @return				Una cadena con la temperatura en grados centígrados
+	 * @param ADC			Reading ADC of sensor
+	 * @param precision	    Desired precision
+	 * @return				A string with the temperature in degree celsius 
 	 **************************************************************************/
 	public static String adcToTemp(int ADC, int precision) {
 		double a , b, c, R1, Rthr, ADC_FS, kelvin;
@@ -72,11 +72,10 @@ public final class Converter {
 	}
 	
 	/***************************************************************************
-	 * Convierte una lectura ADC a su equivalente de temperatura grados
-	 * centígrados.
+	 * 	Converts a reading ADC to the equivalent temperature in degrees celsius .
 	 * 
-	 * @param ADC	Lectura ADC del sensor
-	 * @return		Un doble con la temperatura en grados centígrados
+	 * @param ADC	Reading ADC of sensor
+	 * @return		A double with the temperature in degree celsius 
 	 **************************************************************************/
 	public static double adcToTempD(int ADC) {
 		double a , b, c, R1, Rthr, ADC_FS, kelvin;
@@ -92,34 +91,34 @@ public final class Converter {
 	}
 	
 	/***************************************************************************
-	 * Convierte una lectura ADC a su equivalente en voltaje con precisión de
-	 * dos dígitos decimales.
+	 * Converts a reading your ADC voltage equivalent to an accuracy 
+	 * of two decimal digits.
 	 * 
-	 * @param ADC	Lectura ADC del sensor
-	 * @return		Una cadena con el voltaje equivalente
+	 * @param ADC	Reading ADC of sensor
+	 * @return		A string with the voltage equivalent
 	 **************************************************************************/
 	public static String adcToVolt(int ADC) {
 		return rounding(ADC / 1000.0, 2) + " v";
 	}
 	
 	/***************************************************************************
-	 * Convierte una lectura ADC a su equivalente en voltaje.
+	 * Convert a reading ADC to equivalent in voltage.
 	 * 
-	 * @param ADC	Lectura ADC del sensor
-	 * @return		Un doble con el voltaje equivalente
+	 * @param ADC	Reading ADC of sensor
+	 * @return		A double with the voltage equivalent
 	 **************************************************************************/
 	public static double adcToVoltD(int ADC) {
 		return Double.parseDouble(rounding(ADC / 1000.0, 3));
 	}
 	
 	/***************************************************************************
-	 * Convierte un número ID de un nodo a una representación en cadena del
-	 * número de identificación del nodo. Si convertir es falso esta regresa
-	 * una cadena en hexadecimal equivalente al número de ID.
+	 * Turn an ID number from a node to a string representation in the 
+	 * identification number of the node. If it is wrong to turn this returns 
+	 * a string hex equivalent to the number of ID.
 	 * 
-	 * @param i			ID del nodo
-	 * @param convert	Verdadero si hay que convertir el número
-	 * @return				Una cadena con la identificación del nodo
+	 * @param i			ID of node
+	 * @param convert	True if Whether to convert the numbers
+	 * @return		    A string with the identification of node
 	 **************************************************************************/
 	public static String intToId(int i, boolean convert) {
 		if (convert) {
@@ -129,10 +128,10 @@ public final class Converter {
 	}
 	
 	/***************************************************************************
-	 * Devuelve una cadena con el tipo de actuador indicado por <code>i</code>.
+	 * Returns a string with the type of actuator indicated by <code> i </ code>.
 	 * 
-	 * @param i	Tipo de actuador
-	 * @return		Una cadena con el nombre abreviado del actuador
+	 * @param i	Type of actuator
+	 * @return		A string with the name of actuator
 	 * @see			Constants
 	 **************************************************************************/
 	public static String intToActuator(int i) {
@@ -146,12 +145,12 @@ public final class Converter {
 	}
 
 	/***************************************************************************
-	 * Devuelve una cadena con el tipo de mensaje indicado por <code>i</code>.
-	 * Si convertir es falso esta devuelve el tipo en una cadena hexadecimal.
+	 * Returns a string with the type of message indicated by <code> i </ code>. 
+     * If it is wrong to turn this type returns in a hex string.
 	 * 
-	 * @param i			Tipo de mensaje
-	 * @param convert	Verdadero si hay que convertir el número
-	 * @return				Una cadena con el tipo de mensaje
+	 * @param i			Type of message
+	 * @param convert	True if need convert the number
+	 * @return				A string with the type of message
 	 * @see					Constants
 	 **************************************************************************/
 	public static String intToType(int i, boolean convert) {
@@ -162,11 +161,11 @@ public final class Converter {
 	}
 	
 	/***************************************************************************
-	 * Devuelve una cadena con el <i>sensor board</i> indicado por
+	 * Returns a string with the <i>sensor board</i> indicated for
 	 * <code>i</code>.
 	 * 
-	 * @param i	Tipo de <i>sensor board</i>
-	 * @return		Cadena con el tipo de <i>sensor board</i>
+	 * @param i	Type of <i>sensor board</i>
+	 * @return		String with the type of <i>sensor board</i>
 	 * @see			Constants
 	 **************************************************************************/
 	public static String intToSens(int i) {
@@ -174,14 +173,14 @@ public final class Converter {
 	}
 
 	/***************************************************************************
-	 * Devuelve una cadena con el <i>sensor board</i> indicado por
-	 * <code>i</code>. Si convertir es falso esta devuelve el número en una
-	 * cadena hexadecimal.
+	 * Returns a string with the <i>sensor board</i> indicated for
+	 * <code>i</code>. If convert is false, returns returns the number in a
+	 * string hex.
 	 * 
-	 * @param i			Tipo de <i>sensor board</i>
-	 * @param convert	Verdadero si hay que convertir el número
-	 * @return				Una cadena con el tipo de <i>sensor board</i>
-	 * @see					Constants
+	 * @param i			Type of <i>sensor board</i>
+	 * @param convert	True if need convert the number
+	 * @return			A string with the type of <i>sensor board</i>
+	 * @see				Constants
 	 **************************************************************************/
 	public static String intToSens(int i, boolean convert) {
 		String s = "-";
@@ -203,15 +202,14 @@ public final class Converter {
 	}
 	
 	/***************************************************************************
-	 * Devuelve una cadena con el tipo de parámetro de sensado indicado por
-	 * <code>i</code>, si no se encuentra un equivalente esta regresa la
-	 * cadena "?". Si convertir es falso esta devuelve el número en una
-	 * cadena hexadecimal.
+	 * Returns a string with the type parameter sensing indicated by 
+	 * <code> i </ code> because he is not an equivalent returns this chain? ". 
+	 * If this is false returns convert the number into a hex string.
 	 * 
 	 * @param i			Type of parameter
 	 * @param convert	True if need convert the number
 	 * @return			A string with the parameter of sense
-	 * @see					Constants
+	 * @see				Constants
 	 **************************************************************************/
 	public static String intToSensParam(int i, boolean convert) {
 		String s = sensorLabel(i, 0);
@@ -221,12 +219,11 @@ public final class Converter {
 	}
 
 	/***************************************************************************
-	 * Devuelve una cadena con el tipo de parámetro de sensado indicado por
-	 * <code>sensor</code>, si no se encuentra el tipo esta devuelve una
-	 * cadena nula.
+	 * Returns a string with the type parameter sensing sensor indicated by 
+	 * <code> </ code> because he is not the type that returns a null string.
 	 * 
-	 * @param sensor	Tipo de parámetro (sensor)
-	 * @return			Una cadena con el parámetro de sensado
+	 * @param sensor	Type of parameter (sensor)
+	 * @return			A string with the parameter of sensing
 	 * @see				Constants
 	 **************************************************************************/
 	public static String sensorLabel(int sensor) {
@@ -236,14 +233,14 @@ public final class Converter {
 	}
 
 	/***************************************************************************
-	 * Devuelve una cadena con el tipo de parámetro de sensado incicado por
-	 * <code>sensor</code>, si el tipo es <code>SENSOR_NULO</code> esta regresa
-	 * una cadena "vX" donde X es la posición de <i>slot</i> indicado por
-	 * <code>pos</code>.
+	 * Returns a string with the type parameter sensing indicated by 
+	 * <code> sensor </ code> if the type is <code> SENSOR_NULO </ code> 
+	 * this returns a string "vX" where X is the position of slot <i> </ i> 
+	 * indicated by <code> pos </ code>.
 	 * 
-	 * @param sensor	Tipo de parámetro (sensor)
-	 * @param pos		Posición en el <i>slot</i>
-	 * @return			Una cadena con el parámetro de sensado
+	 * @param sensor	Type of parameter (sensor)
+	 * @param pos		Position in the <i>slot</i>
+	 * @return			A string with the parameter of sensing
 	 * @see				Constants
 	 **************************************************************************/
 	public static String sensorLabel(int sensor, int pos) {
@@ -260,15 +257,15 @@ public final class Converter {
 	}
 	
 	/***************************************************************************
-	 * Devuelte el número de tipo de sensor correspondiente al nombre de
-	 * parámetro de sensado indicado por <code>sensor</code>, si no se encuentra
-	 * esta regresa <code>-1</code>.
+	 * Returns the number of sensor type for name of
+	 * parameter of sensing indicated for <code>sensor</code>, if this is not 
+	 * returned <code>-1</code>.
 	 * 
-	 * @param sensor	Nombre del parámetro de sensado
-	 * @return			El número de tipo de sensor
+	 * @param sensor	Name of parameter of sensing
+	 * @return			Number of sensor type 
 	 * @see				Constants
 	 **************************************************************************/
-	public static int sensorEtiquetaToId(String sensor) {
+	public static int sensorLabelToId(String sensor) {
 		if (sensor.compareTo("Temp") == 0) return Constants.SENSOR_TEMP;
 		else if (sensor.compareTo("Light") == 0) return Constants.SENSOR_LIGHT;
 		else if (sensor.compareTo("MagX") == 0) return Constants.SENSOR_MAGX;
@@ -281,42 +278,42 @@ public final class Converter {
 	}
 	
 	/***************************************************************************
-	 * Regresa una cadena con la representación hexadecimal del número indicado
-	 * en <code>i</code>.
+	 * Returns a string with the representation hex of number indicated
+	 * in <code>i</code>.
 	 * 
-	 * @param i	Número a convertir
-	 * @return		Una cadena con la representación hexadecimal
+	 * @param i	   Number to convert
+	 * @return	   A string with the representation hex
 	 **************************************************************************/
 	public static String intToHex(int i) {
 		return intToHex(i, 0);
 	}
 
 	/***************************************************************************
-	 * Regresa una cadena con la representación hexadecimal del número indicado
-	 * en <code>i</code> con la longitud deseada.
+	 * Return a string with the representation hex of number indicated
+	 * in <code>i</code> with the the desired length.
 	 * 
-	 * @param i		Número a convertir
-	 * @param longitud	Longitud deseada para la cadena resultado
-	 * @return			Una cadena con la representación hexadecimal
+	 * @param i		Number to convert
+	 * @param length	Desired length for string result
+	 * @return			A string with the representation hex
 	 **************************************************************************/
-	public static String intToHex(int i, int longitud) {
+	public static String intToHex(int i, int length) {
 		String h = Long.toHexString(i);
-		while (h.length() < longitud)
+		while (h.length() < length)
 			h = "0" + h;
 		return "0x" + h;
 	}
 	
 	/***************************************************************************
-	 * Si <code>convertir</code> es falso, esta regresa una cadena con la
-	 * representación en hexadecimal del número indicado en <code>i</code> con
-	 * la longitud deseada. Si <code>convertir</code> es verdadero esta regresa
-	 * una cadena con el número indicado por <code>i</code> sin conversión.s
+	 * If <code> convert </ code> is false, it returns a string representation 
+	 * of hex numbers shown in <code> i </ code> with the desired length. 
+	 * If <code> convert </ code> is true that returns a string with the number 
+	 * indicated by <code> i </ code> without converted.s
 	 * 
-	 * @param i			Número a convertir
-	 * @param length		Longitud deseada para la cadena resultado
-	 * @param convert	Falso si se desea la representación en hexadecimal
-	 * @return				Una cadena con la representación del número en
-	 * 						decimal o hexadecimal según sea el caso
+	 * @param i			Number to convert
+	 * @param length	Desired length for the string result
+	 * @param convert	False if need the representation hex
+	 * 	 * @return		A string with the representation of number in
+	 * 					decimal or hex
 	 **************************************************************************/
 	public static String intToN(int i, int length, boolean convert) {
 		if (convert) return i + "";
@@ -328,7 +325,7 @@ public final class Converter {
 	 * the number of decimals indicated.
 	 * 
 	 * @param val		Value to rounding
-	 * @param places	Number of decimales to rounding
+	 * @param places	Number of decimal to rounding
 	 * @return			A string with the value round
 	 *  **************************************************************************/
 	public static String rounding(double val, int places) {

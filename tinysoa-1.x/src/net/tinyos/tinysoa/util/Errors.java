@@ -26,7 +26,7 @@ import java.sql.*;
 import java.util.logging.*;
 
 /*******************************************************************************
- * Clase que proporciona soporte para el registro y control de errores.
+ * Class providing support for the registration and control of errors.
  * 
  * @author		Edgardo Avilés López
  * @version	0.2, 07/24/2006
@@ -34,8 +34,7 @@ import java.util.logging.*;
 public final class Errors {
 
 	/***************************************************************************
-	 * Cierra el programa, presenta y registra el error de SQL causante del
-	 * problema.
+	 * Close the program, show and records SQL error caused the problem
 	 * 
 	 * @param ex	Excepción capturada
 	 **************************************************************************/
@@ -46,26 +45,26 @@ public final class Errors {
 			Logger logger = Logger.getLogger("error");
 			logger.addHandler(fh);
 			
-			logger.severe("Error en la base de datos: " + ex.getMessage());
+			logger.severe("Database error: " + ex.getMessage());
 		} catch (Exception e) { e.printStackTrace(); }
 		
-		System.err.println("Error en la base de datos: " + ex.getMessage());
+		System.err.println("Database error: " + ex.getMessage());
 		ex.printStackTrace();
 		System.exit(1);
 	}
 	
 	/***************************************************************************
-	 * Cierra el programa y presenta el error causante así como también la
-	 * descripción indicada.
+	 * Close the program and show the error cause as well as 
+	 * the description indicated.
 	 * 
-	 * @param ex			Excepción capturada
-	 * @param descripcion	Descripción del error
+	 * @param ex			Exception
+	 * @param description	Description of Error
 	 **************************************************************************/
-	public static void error(Exception ex, String descripcion) {
+	public static void error(Exception ex, String description) {
 		String s = "";
 		for (int i = 0; i < 80; i++) s += "-";
 		System.err.println(s);
-		System.err.println(descripcion);
+		System.err.println(description);
 		System.err.println(s);
 		ex.printStackTrace();
 		System.exit(1);
