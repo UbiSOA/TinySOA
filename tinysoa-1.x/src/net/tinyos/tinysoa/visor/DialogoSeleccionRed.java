@@ -66,7 +66,7 @@ public class DialogoSeleccionRed extends JDialog {
 		panel.add(etiqueta, BorderLayout.NORTH);
 		
 		listaRedes = new JList();
-		listaRedes.setCellRenderer(new ListaRedesRenderer(icono));
+		listaRedes.setCellRenderer(new MonitorListCellRenderer(icono));
 		JScrollPane scrollLista = new JScrollPane(listaRedes);
 		scrollLista.setHorizontalScrollBarPolicy(
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);

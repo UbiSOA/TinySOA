@@ -26,122 +26,122 @@ import java.awt.*;
 import java.text.*;
 
 /*******************************************************************************
- * Clase para manejar la información de un nodo en la gráfica de topología.
+ * Handles node information in the topology chart
  * 
  * @author		Edgardo Avilés López
  * @version	0.1, 07/25/2006
  ******************************************************************************/
-public class NodoGraficaTopologia {
+public class NodeTopologyChart {
 	
 	private Point p;
 	private double v;
 	private int id;
 	
 	/***************************************************************************
-	 * Constructor básico de la clase.
+	 * Basic class constructor
 	 * 
 	 * @param id	ID del nodo
 	 **************************************************************************/
-	public NodoGraficaTopologia(int id) {
+	public NodeTopologyChart(int id) {
 		this.id = id;
 		this.v = 0.0d;
 		this.p = new Point(0, 0);
 	}
 	
 	/***************************************************************************
-	 * Constructor normal de la clase.
+	 * Regular class constructor
 	 * 
-	 * @param id	ID del nodo
-	 * @param v	Valor del nodo
+	 * @param id	Node ID
+	 * @param v	Node value
 	 **************************************************************************/
-	public NodoGraficaTopologia(int id, double v) {
+	public NodeTopologyChart(int id, double v) {
 		this.id = id;
 		this.v = v;
 		this.p = new Point(0, 0);
 	}
 	
 	/***************************************************************************
-	 * Constructor detallado de la clase.
+	 * Detailed class constructor
 	 * 
-	 * @param id	ID del nodo
-	 * @param v	Valor del nodo
-	 * @param x	Valor X de la posición del nodo
-	 * @param y	Valor Y de la posición del nodo
+	 * @param id	Node ID
+	 * @param v	Node value
+	 * @param x	Value of X in node position
+	 * @param y	Value of y in node position
 	 **************************************************************************/
-	public NodoGraficaTopologia(int id, double v, int x, int y) {
+	public NodeTopologyChart(int id, double v, int x, int y) {
 		this.id = id;
 		this.v = v;
 		this.p = new Point(x, y);
 	}
 	
 	/***************************************************************************
-	 * Define la posición del nodo en el gráfico.
+	 * Sets node position in the chart
 	 * 
-	 * @param x	Valor X de la posición del nodo
-	 * @param y	Valor Y de la posición del nodo
+	 * @param x	Value of X in node position
+	 * @param y	Value of y in node position
 	 **************************************************************************/
-	public void defPosicion(int x, int y) {
+	public void setPosition(int x, int y) {
 		p.x = x;
 		p.y = y;
 	}
 	
 	/***************************************************************************
-	 * Define la posición del nodo en el gráfico.
+	 * Sets node position
 	 * 
-	 * @param p	Posición del nodo
+	 * @param p	Point representing the node position in the chart
 	 **************************************************************************/
-	public void defPosicion(Point p) {
+	public void setPosition(Point p) {
 		this.p.x = p.x;
 		this.p.y = p.y;
 	}
 	
 	/***************************************************************************
-	 * Regresa la posición del nodo en el gráfico.
+	 * Gets node position in the chart
 	 * 
-	 * @return	Posición del nodo
+	 * @return	Node position
 	 **************************************************************************/
-	public Point obtPosicion() {
+	public Point getPosition() {
 		return p;
 	}
 
 	/***************************************************************************
-	 * Define el ID del nodo.
+	 * Sets the node ID
 	 * 
-	 * @param id	ID del nodo
+	 * @param id	Node ID
 	 **************************************************************************/
-	public void defId(int id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	
 	/***************************************************************************
-	 * Regresa el ID del nodo.
+	 * Gets the node ID
 	 * 
-	 * @return	ID del nodo
+	 * @return	Node ID
 	 **************************************************************************/
-	public int obtId() {
+	public int getId() {
 		return id;
 	}
 	
 	/***************************************************************************
-	 * Define el valor del nodo.
+	 * Sets the node value
 	 * 
-	 * @param v	Valor del nodo
+	 * @param v	Node value
 	 **************************************************************************/
-	public void defValor(double v) {
+	public void setValue(double v) {
 		this.v = v;
 	}
 	
 	/***************************************************************************
-	 * Regresa el valor del nodo.
+	 * Gets the node value
 	 * 
-	 * @return	Valor del nodo
+	 * @return Node value
 	 **************************************************************************/
-	public double obtValor() {
+	public double getValue() {
 		return v;
 	}
 	
 	/***************************************************************************
-	 * Regresa una cadena con la representación de los valores del nodo.
+	 * Returns a string representation of the node values
 	 **************************************************************************/
 	public String toString() {
 		NumberFormat f = new DecimalFormat("0.00");

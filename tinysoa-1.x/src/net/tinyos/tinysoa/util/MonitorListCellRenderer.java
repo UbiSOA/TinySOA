@@ -30,45 +30,45 @@ import java.text.BreakIterator;
 import net.tinyos.tinysoa.common.*;
 
 /*******************************************************************************
- * Clase <i>renderer</i> de la lista de redes a seleccionar.
+ * Renderer for the network selection list
  * 
  * @author		Edgardo Avilés López
  * @version	0.1
  ******************************************************************************/
-public class ListaRedesRenderer implements ListCellRenderer {
+public class MonitorListCellRenderer implements ListCellRenderer {
 	
-	private ImageIcon icono;
+	private ImageIcon icon;
 	
 	/***************************************************************************
-	 * Constructor del renderer.
+	 * Class constructor
 	 * 
-	 * @param icono	Icono de una red
+	 * @param icon	Icono de una red
 	 **************************************************************************/
-	public ListaRedesRenderer(ImageIcon icono) {
-		this.icono = icono;
+	public MonitorListCellRenderer(ImageIcon icon) {
+		this.icon = icon;
 	}
 	
 	/***************************************************************************
-	 * Hace una cadena multilínea introduciendo <pre><br></pre> en donde el
-	 * ancho de la línea excede la longitud en pixeles indicada.
+	 * Makes a multiline string inserting <pre><br></pre> where the line width
+	 * exceeds the indicated pixel longitude.
 	 * 
-	 * @param texto	Cadena a acomodar
-	 * @param fuente	Fuente a utilizar
-	 * @param ancho	Ancho en pixeles deseado
-	 * @return			Una cadena multilínea
+	 * @param text	String to adjust
+	 * @param font	Font to use
+	 * @param width	Desired width
+	 * @return			A multiline string
 	 **************************************************************************/
-	private String wrapLine(String texto, Font fuente, int ancho) {
+	private String wrapLine(String text, Font font, int width) {
 		BreakIterator iterator = BreakIterator.getWordInstance(
 				Locale.getDefault());
-		iterator.setText(texto);
+		iterator.setText(text);
 		int start = iterator.first();
 		int end = iterator.next();
-		FontMetrics fm = new Button().getFontMetrics(fuente);
+		FontMetrics fm = new Button().getFontMetrics(font);
 		String s = "";
 		int len = 0;
 		while (end != BreakIterator.DONE) {
-			String word = texto.substring(start,end);
-			if( len + fm.stringWidth(word) > ancho ) {
+			String word = text.substring(start,end);
+			if( len + fm.stringWidth(word) > width ) {
 				s += "<br>";
 				len = fm.stringWidth(word);
 			} else {
@@ -82,57 +82,56 @@ public class ListaRedesRenderer implements ListCellRenderer {
 	}
 	
 	/***************************************************************************
-	 * Función parte de la interfáz ListCellRenderer que implementa el diseño
-	 * del elemento de la lista de redes.
+	 * Implements the design of the network list element
 	 * 
-	 * @param lista		Lista padre
-	 * @param valor		Valor del elemento de la lista
-	 * @param index		Índice del elemento
-	 * @param seleccionado	Verdadero si el elemento está seleccionado
-	 * @param conEnfoque	Verdadero si el elemento tiene el enfoque
-	 * @return				Un Panel con el diseño deseado 
+	 * @param list		Parent list
+	 * @param value		Value of the list element
+	 * @param index		Element index
+	 * @param selected	True if its selected
+	 * @param hasFocus	True if has focus
+	 * @return				A panel with the desired design 
 	 **************************************************************************/
-	public Component getListCellRendererComponent(JList lista, Object valor,
-			int index, boolean seleccionado, boolean conEnfoque) {
+	public Component getListCellRendererComponent(JList list, Object value,
+			int index, boolean selected, boolean hasFocus) {
 		
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
 		panel.setOpaque(true);
 		
-		JLabel etiqueta = new JLabel(((Network)valor).getName());
-		etiqueta.setIcon(icono);
-		etiqueta.setFont(new Font("Arial", Font.BOLD, 12));
-		panel.add(etiqueta, BorderLayout.NORTH);
+		JLabel label = new JLabel(((Network)value).getName());
+		label.setIcon(icon);
+		label.setFont(new Font("Arial", Font.BOLD, 12));
+		panel.add(label, BorderLayout.NORTH);
 		
-		String descripcion = wrapLine(((Network)valor).getDescription(),
-				new Font("Arial", Font.PLAIN, 12), lista.getWidth() - 35);
+		String description = wrapLine(((Network)value).getDescription(),
+				new Font("Arial", Font.PLAIN, 12), list.getWidth() - 35);
 		
-		etiqueta = new JLabel("<html>" + descripcion +
-				"<br><font color=\"#6382BF\">" + ((Network)valor).getWsdl() +
+		label = new JLabel("<html>" + description +
+				"<br><font color=\"#6382BF\">" + ((Network)value).getWsdl() +
 				"</a></html>");
-		etiqueta.setFont(new Font(lista.getFont().getFamily(), Font.PLAIN,
-				lista.getFont().getSize()));
-		etiqueta.setBorder(BorderFactory.createEmptyBorder(0,
-				icono.getIconWidth() + etiqueta.getIconTextGap(),0,0));
-		panel.add(etiqueta, BorderLayout.CENTER);
+		label.setFont(new Font(list.getFont().getFamily(), Font.PLAIN,
+				list.getFont().getSize()));
+		label.setBorder(BorderFactory.createEmptyBorder(0,
+				icon.getIconWidth() + label.getIconTextGap(),0,0));
+		panel.add(label, BorderLayout.CENTER);
 		
-		if (seleccionado)
+		if (selected)
 			panel.setBackground(UIManager.getColor("List.selectionBackground"));
-		else panel.setBackground(UIManager.getColor(lista.getBackground()));
+		else panel.setBackground(UIManager.getColor(list.getBackground()));
 		
-		if (conEnfoque && seleccionado) {
+		if (hasFocus && selected) {
 			panel.setBorder(BorderFactory.createCompoundBorder(
 					BorderFactory.createLineBorder(
 							UIManager.getColor("Tree.selectionBorderColor")),
 					BorderFactory.createEmptyBorder(4,4,4,4)));
-		} else if (seleccionado) {
+		} else if (selected) {
 			panel.setBorder(BorderFactory.createCompoundBorder(
 					BorderFactory.createLineBorder(
 							UIManager.getColor("List.selectionBackground")),
 					BorderFactory.createEmptyBorder(4,4,4,4)));			
 		} else {
 			panel.setBorder(BorderFactory.createCompoundBorder(
-					BorderFactory.createLineBorder(lista.getBackground()),
+					BorderFactory.createLineBorder(list.getBackground()),
 					BorderFactory.createEmptyBorder(4,4,4,4)));
 		}
 		
