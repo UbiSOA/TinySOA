@@ -23,39 +23,39 @@
 package net.tinyos.tinysoa.util;
 
 /*******************************************************************************
- * Clase utilería que permite que el valor de la celda de una tabla tenga
- * un <i>tooltip</i> con el valor de la celda.
+ * ClassUtility that allows the value of the cell in a table has
+ * a <i>tooltip</i> with the cell value.
  * 
  * @author		Edgardo	Avilés López
  * @version	0.1, 07/25/2006
  ******************************************************************************/
-public class CeldaTablaTooltip {
+public class CellTableTooltip {
 
-	private String valor;
+	private String value;
 	
 	/***************************************************************************
-	 * Constructor principal de la clase.
+	 * Main constructor of the class.
 	 * 
-	 * @param valor	Valor de la celda
+	 * @param value	Value of cell
 	 **************************************************************************/
-	public CeldaTablaTooltip(String valor) {
-		this.valor = valor;
+	public CellTableTooltip(String value) {
+		this.value = value;
 	}
 	
 	/***************************************************************************
-	 * Devuelve la cadena a utilizarse como <i>tooltip</i>.
+	 * Returns the string to used with <i>tooltip</i>.
 	 * 
-	 * @return	Valor de la celda
+	 * @return	Returns the value of cell
 	 **************************************************************************/
 	public String getTooltip() {
-		return valor;
+		return value;
 	}
 	
 	/***************************************************************************
-	 * Devuelve el valor de la celda.
+	 * Returns the value of cell.
 	 **************************************************************************/
 	public String toString() {
-		return valor;
+		return value;
 	}
 	
 }

@@ -38,7 +38,7 @@ import net.tinyos.tinysoa.util.*;
  * @author		Edgardo Avilés López
  * @version	0.4, 07/28/2006
  ******************************************************************************/
-public class TinySOAVisor {
+public class TinySOAMonitor {
 
 	private static String ARCHIVO_CONFIGURACION = "config.xml";
 	
