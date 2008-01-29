@@ -56,7 +56,7 @@ import javax.swing.filechooser.*;
  * @author Jeff Dinkins
  * @author Edgardo Avilés López
  ******************************************************************************/
-public class FiltroArchivos extends FileFilter {
+public class FilterFile extends FileFilter {
 
     //private static String TYPE_UNKNOWN = "Type Unknown";
     //private static String HIDDEN_FILE = "Hidden File";
@@ -74,7 +74,7 @@ public class FiltroArchivos extends FileFilter {
      * @see #addExtension
      */
     @SuppressWarnings("unchecked")
-	public FiltroArchivos() {
+	public FilterFile() {
 	this.filters = new Hashtable();
     }
 
@@ -84,7 +84,7 @@ public class FiltroArchivos extends FileFilter {
      *
      * @see #addExtension
      */
-    public FiltroArchivos(String extension) {
+    public FilterFile(String extension) {
 	this(extension,null);
     }
 
@@ -97,7 +97,7 @@ public class FiltroArchivos extends FileFilter {
      *
      * @see #addExtension
      */
-    public FiltroArchivos(String extension, String description) {
+    public FilterFile(String extension, String description) {
 	this();
 	if(extension!=null) addExtension(extension);
  	if(description!=null) setDescription(description);
@@ -112,7 +112,7 @@ public class FiltroArchivos extends FileFilter {
      *
      * @see #addExtension
      */
-    public FiltroArchivos(String[] filters) {
+    public FilterFile(String[] filters) {
 	this(filters, null);
     }
 
@@ -124,7 +124,7 @@ public class FiltroArchivos extends FileFilter {
      *
      * @see #addExtension
      */
-    public FiltroArchivos(String[] filters, String description) {
+    public FilterFile(String[] filters, String description) {
 	this();
 	for (int i = 0; i < filters.length; i++) {
 	    // add filters one by one

@@ -337,7 +337,7 @@ public class TinySOAMonitor {
 		panel2.setBackground(Color.WHITE);
 		//panel2.setBorder(new JTextField().getBorder());
 		panel2.setLayout(new BorderLayout());
-		Graficador graficador = new Graficador();
+		Plotter graficador = new Plotter();
 		panel2.add(graficador, BorderLayout.CENTER);
 		eventosInterfaz.defGraficador(graficador);
 		
@@ -411,7 +411,7 @@ public class TinySOAMonitor {
 		panel2.setBackground(Color.WHITE);
 		//panel2.setBorder(new JTextField().getBorder());
 		panel2.setLayout(new BorderLayout());
-		GraficadorTopologia graficador = new GraficadorTopologia();
+		TopologyPlotter graficador = new TopologyPlotter();
 		panel2.add(graficador, BorderLayout.CENTER);
 		eventosInterfaz.defGrafTopologia(graficador);
 		

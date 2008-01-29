@@ -40,13 +40,13 @@ import javax.swing.*;
  * @author		Edgardo Avilés López
  * @version	0.5, 02/25/2006
  ******************************************************************************/
-public class GraficadorTopologia extends JPanel
+public class TopologyPlotter extends JPanel
 	implements DragGestureListener, DragSourceListener, DropTargetListener {
 	private static final long serialVersionUID = 9143159172653372529L;
 	
-	private double valorMin = -10.0d;	// Valor mínimo
-	private double valorMax = 40.0d;	// Valor máximo
-	private double valorPro = 0.0d;	// Valor promedio
+	private double valueMin = -10.0d;	// Valor mínimo
+	private double valueMax = 40.0d;	// Valor máximo
+	private double valuePro = 0.0d;	// Valor promedio
 	
 	private int tamPix	= 10;		// Tamaño del pixelado de la gráfica
 	private int radio	= 1000;		// Radio de alcance del valor de un nodo
@@ -64,15 +64,15 @@ public class GraficadorTopologia extends JPanel
 	
 	public static int ESCALA_CALOR = 0, ESCALA_LUZ = 1, ESCALA_ENERGIA = 2;
 	
-	private Vector<NodeTopologyChart> nodos;
+	private Vector<NodeTopologyChart> node;
 	
 	/***************************************************************************
 	 * Constructor principal de la clase.
 	 **************************************************************************/
-	public GraficadorTopologia() {
+	public TopologyPlotter() {
 		super();
 		setBackground(Color.WHITE);
-		nodos = new Vector<NodeTopologyChart>();		
+		node = new Vector<NodeTopologyChart>();		
 		fuenArr = new DragSource();
 		fuenArr.createDefaultDragGestureRecognizer(
 				this, DnDConstants.ACTION_COPY_OR_MOVE, this);
@@ -82,12 +82,12 @@ public class GraficadorTopologia extends JPanel
 	/***************************************************************************
 	 * Define los valores mínimo y máximo de la escala.
 	 * 
-	 * @param valorMin	Valor mínimo de la escala
-	 * @param valorMax	Valor máximo de la escala
+	 * @param valueMin	Valor mínimo de la escala
+	 * @param valueMax	Valor máximo de la escala
 	 **************************************************************************/
-	public void defEscala(double valorMin, double valorMax) {
-		this.valorMin = valorMin;
-		this.valorMax = valorMax;
+	public void defEscala(double valueMin, double valueMax) {
+		this.valueMin = valueMin;
+		this.valueMax = valueMax;
 	}
 
 	/***************************************************************************
@@ -95,8 +95,8 @@ public class GraficadorTopologia extends JPanel
 	 * 
 	 * @return	Valor mínimo de la escala
 	 **************************************************************************/
-	public double obtMinimo() {
-		return valorMin;
+	public double obtMinimum() {
+		return valueMin;
 	}
 	
 	/***************************************************************************
@@ -104,8 +104,8 @@ public class GraficadorTopologia extends JPanel
 	 * 
 	 * @return	Valor máximo de la escala
 	 **************************************************************************/
-	public double obtMaximo() {
-		return valorMax;
+	public double obtMaximum() {
+		return valueMax;
 	}
 	
 	/***************************************************************************
@@ -149,10 +149,10 @@ public class GraficadorTopologia extends JPanel
 	/***************************************************************************
 	 * Define la barra de progreso a utilizar.
 	 * 
-	 * @param progreso	Barra de progreso
+	 * @param progress	Barra de progreso
 	 **************************************************************************/
-	public void defProgreso(JProgressBar progreso) {
-		this.progreso = progreso;
+	public void defProgress(JProgressBar progress) {
+		this.progreso = progress;
 	}
 
 	/***************************************************************************
@@ -163,7 +163,7 @@ public class GraficadorTopologia extends JPanel
 	public void paint(Graphics g) {
 		Graphics2D g2 = (Graphics2D)g;
 	
-		if (nodos.size() == 0) {
+		if (node.size() == 0) {
 			g2.setColor(Color.WHITE);
 			g2.fillRect(0, 0, getWidth(), getHeight());
 			return;
@@ -172,7 +172,7 @@ public class GraficadorTopologia extends JPanel
 		if (movNod == -1) {
 			buffer = g2.getDeviceConfiguration().createCompatibleImage(
 					getWidth(), getHeight(), Transparency.TRANSLUCENT);
-			dibujarImagen();
+			drawImage();
 			g2.drawImage(buffer, null, 0, 0);
 		}
 		else dibujarArrastre(g2);
@@ -181,15 +181,15 @@ public class GraficadorTopologia extends JPanel
 	/***************************************************************************
 	 * Dibuja la imagen de la topología en el buffer.
 	 **************************************************************************/
-	private void dibujarImagen() {
+	private void drawImage() {
 		Graphics2D g2d = buffer.createGraphics();
 		g2d.setComposite(AlphaComposite.Src);
 		
-		dibujarFondo(g2d);
-		if (nodos != null) {
-			dibujarImgFondo(g2d);
-			dibujarGradiente(g2d);
-			dibujarNodos(g2d);
+		drawBackground(g2d);
+		if (node != null) {
+			drawImgBackground(g2d);
+			drawGradiente(g2d);
+			drawNodes(g2d);
 		}
 		
 		g2d.dispose();
@@ -209,10 +209,10 @@ public class GraficadorTopologia extends JPanel
 		
 		x = movX;
 		y = movY;
-		id = nodos.get(movNod).getId();
-		v = nodos.get(movNod).getValue();
+		id = node.get(movNod).getId();
+		v = node.get(movNod).getValue();
 		
-		dibujarNodo(g2d, id, x, y, v, 0.35f);
+		drawNode(g2d, id, x, y, v, 0.35f);
 	}
 	
 	/***************************************************************************
@@ -220,7 +220,7 @@ public class GraficadorTopologia extends JPanel
 	 * 
 	 * @param g2d	Gráfico a utilizar
 	 **************************************************************************/
-	private void dibujarImgFondo(Graphics2D g2d) {
+	private void drawImgBackground(Graphics2D g2d) {
 		if (fondo == null) return;
 		int x = (getWidth() - fondo.getWidth()) / 2;
 		int y = (getHeight() - fondo.getHeight()) / 2;
@@ -232,7 +232,7 @@ public class GraficadorTopologia extends JPanel
 	 * 
 	 * @param g2d	Gráfico a utilizar
 	 **************************************************************************/
-	private void dibujarFondo(Graphics2D g2d) {
+	private void drawBackground(Graphics2D g2d) {
 		g2d.setColor(Color.WHITE);
 		g2d.fillRect(0, 0, getWidth(), getHeight());
 	}
@@ -243,10 +243,10 @@ public class GraficadorTopologia extends JPanel
 	 * 
 	 * @param g2d	Gráfico a utilizar
 	 **************************************************************************/
-	private void dibujarGradiente(Graphics2D g2d) {
+	private void drawGradiente(Graphics2D g2d) {
 		
 		double color = 0.0d, distMax, distMen, dist, factor, valor,
-				valorMen = valorMax, valorMay = valorMin, sumFact;
+				valorMen = valueMax, valorMay = valueMin, sumFact;
 		
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_OFF);
@@ -258,55 +258,55 @@ public class GraficadorTopologia extends JPanel
 		
 		NodeTopologyChart nodo;
 		
-		valorPro = 0.0d;
-		for (int k = 0; k < nodos.size(); k++)
-			if (nodos.get(k) != null) {
-				valor = nodos.get(k).getValue();
+		valuePro = 0.0d;
+		for (int k = 0; k < node.size(); k++)
+			if (node.get(k) != null) {
+				valor = node.get(k).getValue();
 				if (valor < valorMen) valorMen = valor;
 				if (valor > valorMay) valorMay = valor;
-				valorPro += valor;
+				valuePro += valor;
 			}
-		valorPro /= nodos.size();
+		valuePro /= node.size();
 		
 		for (int i = 0; i < getWidth(); i = i + tamPix)
 			for (int j = 0; j < getHeight(); j = j + tamPix) {
 
 				distMen = 10000.0d;
 				distMax = 0.0d;
-				for (int k = 0; k < nodos.size(); k++)
-					if (nodos.get(k) != null) {
-						nodo = nodos.get(k);
-						dist = distancia(i, j, nodo.getPosition().x,
+				for (int k = 0; k < node.size(); k++)
+					if (node.get(k) != null) {
+						nodo = node.get(k);
+						dist = distance(i, j, nodo.getPosition().x,
 								nodo.getPosition().y);
 						if (dist < distMen) distMen = dist;
 						if (dist > distMax) distMax = dist;
 					}
 				
 				sumFact = 0.0d;
-				for (int k = 0; k < nodos.size(); k++)
-					if (nodos.get(k) != null) {
-						nodo = nodos.get(k);
-						dist = distancia(i, j, nodo.getPosition().x,
+				for (int k = 0; k < node.size(); k++)
+					if (node.get(k) != null) {
+						nodo = node.get(k);
+						dist = distance(i, j, nodo.getPosition().x,
 								nodo.getPosition().y);
 						sumFact += distMen / dist;
 					}
 					
 				color = 0.0d;
-				for (int k = 0; k < nodos.size(); k++)
-					if (nodos.get(k) != null) {
-						nodo = nodos.get(k);
-						dist = distancia(i, j , nodo.getPosition().x,
+				for (int k = 0; k < node.size(); k++)
+					if (node.get(k) != null) {
+						nodo = node.get(k);
+						dist = distance(i, j , nodo.getPosition().x,
 								nodo.getPosition().y);
 						factor = (distMen / dist) / sumFact;
 						valor = nodo.getValue();
-						valor = interpolar(valor, valorPro, 1, 0,
+						valor = interpolar(valor, valuePro, 1, 0,
 								Math.cos(interpolar(
 										0, Math.PI / 2, 0, radio, dist)));
 						valor = valor * factor;
 						color += valor;
 				}
 				
-				color = interpolar(0.0d, 1.0d, valorMin, valorMax, color);
+				color = interpolar(0.0d, 1.0d, valueMin, valueMax, color);
 				g2d.setColor(escalaColor(color));
 				g2d.fillRect(i, j, tamPix, tamPix);			
 			}
@@ -317,20 +317,20 @@ public class GraficadorTopologia extends JPanel
 	 * 
 	 * @param g2d	Gráfico a utilizar
 	 **************************************************************************/
-	private void dibujarNodos(Graphics2D g2d) {
+	private void drawNodes(Graphics2D g2d) {
 		
 		int x, y, id;
 		double v;
 		
-		for (int i = 0; i < nodos.size(); i++)
-			if (nodos.get(i) != null) {
-				NodeTopologyChart nodo = nodos.get(i);
+		for (int i = 0; i < node.size(); i++)
+			if (node.get(i) != null) {
+				NodeTopologyChart nodo = node.get(i);
 				
 				x = nodo.getPosition().x;
 				y = nodo.getPosition().y;
 				id = nodo.getId();
 				v = nodo.getValue();
-				dibujarNodo(g2d, id, x, y, v, 1.0f);
+				drawNode(g2d, id, x, y, v, 1.0f);
 			}
 	}
 	
@@ -344,7 +344,7 @@ public class GraficadorTopologia extends JPanel
 	 * @param v		Valor de la lectura
 	 * @param opacidad	Opacidad del dibujo del nodo
 	 **************************************************************************/
-	private void dibujarNodo(Graphics2D g2d, int id, int x, int y,
+	private void drawNode(Graphics2D g2d, int id, int x, int y,
 			double v, float opacidad) {
 
 		NumberFormat f = new DecimalFormat("0.0");
@@ -395,7 +395,7 @@ public class GraficadorTopologia extends JPanel
 	 * @param y1	Valor Y del punto final
 	 * @return		Un doble con la distancia entre los puntos
 	 **************************************************************************/
-	private double distancia(int x0, int y0, int x1, int y1) {
+	private double distance(int x0, int y0, int x1, int y1) {
 		return Math.sqrt(Math.pow(Math.abs(x1 - x0), 2) +
 				Math.pow(Math.abs(y1 - y0), 2));
 	}
@@ -485,8 +485,8 @@ public class GraficadorTopologia extends JPanel
 	 * @param archivo	URL del archivo a generar y guardar
 	 * @param tipo		Tipo de imagen deseada (jpg, gif, png ó bmp)
 	 **************************************************************************/
-	public void guardarImagen(String archivo, String tipo) {
-		if (nodos == null) return;
+	public void saveImage(String archivo, String tipo) {
+		if (node == null) return;
 			
 		this.archUrl = archivo;
 		this.archTipo = tipo;
@@ -508,10 +508,10 @@ public class GraficadorTopologia extends JPanel
 				Graphics2D g2db = buffer.createGraphics();
 				g2db.setComposite(AlphaComposite.Src);
 				
-				dibujarFondo(g2db);
-				dibujarImgFondo(g2db);
-				dibujarGradiente(g2db);
-				dibujarNodos(g2db);
+				drawBackground(g2db);
+				drawImgBackground(g2db);
+				drawGradiente(g2db);
+				drawNodes(g2db);
 				
 				g2db.dispose();
 	
@@ -539,8 +539,8 @@ public class GraficadorTopologia extends JPanel
 	 * @param nodo	Nodo a agregar
 	 * @see			NodeTopologyChart
 	 **************************************************************************/
-	public void agregarNodo(NodeTopologyChart nodo) {
-		nodos.add(nodo);
+	public void addNode(NodeTopologyChart nodo) {
+		node.add(nodo);
 	}
 
 	/***************************************************************************
@@ -550,10 +550,10 @@ public class GraficadorTopologia extends JPanel
 	 * @param nuevoValor	Nodo con el cual reemplazar
 	 * @see					NodeTopologyChart
 	 **************************************************************************/
-	public void cambiarNodo(int id, NodeTopologyChart nuevoValor) {
-		for (int i = 0; i < nodos.size(); i++)
-			if (nodos.get(i).getId() == id) {
-				nodos.set(id, nuevoValor);
+	public void changeNode(int id, NodeTopologyChart nuevoValor) {
+		for (int i = 0; i < node.size(); i++)
+			if (node.get(i).getId() == id) {
+				node.set(id, nuevoValor);
 				return;
 			}	
 	}
@@ -564,9 +564,9 @@ public class GraficadorTopologia extends JPanel
 	 * @param id	ID del nodo a buscar
 	 * @return		Verdadero si el nodo existe en el gráfico
 	 **************************************************************************/
-	public boolean existeNodo(int id) {
-		for (int i = 0; i < nodos.size(); i++)
-			if (nodos.get(i).getId() == id)
+	public boolean existNode(int id) {
+		for (int i = 0; i < node.size(); i++)
+			if (node.get(i).getId() == id)
 				return true;
 		return false;
 	}
@@ -576,10 +576,10 @@ public class GraficadorTopologia extends JPanel
 	 * 
 	 * @param id	ID del nodo a eliminar
 	 **************************************************************************/
-	public void eliminarNodo(int id) {
-		for (int i = 0; i < nodos.size(); i++)
-			if (nodos.get(i).getId() == id) {
-				nodos.remove(i);
+	public void deleteNode(int id) {
+		for (int i = 0; i < node.size(); i++)
+			if (node.get(i).getId() == id) {
+				node.remove(i);
 				return;
 			}
 	}
@@ -587,8 +587,8 @@ public class GraficadorTopologia extends JPanel
 	/***************************************************************************
 	 * Elimina todos los nodos del gráfico.
 	 **************************************************************************/
-	public void eliminarTodosNodos() {
-		nodos.removeAllElements();
+	public void deleteAllNodes() {
+		node.removeAllElements();
 	}
 
 	/***************************************************************************
@@ -605,10 +605,10 @@ public class GraficadorTopologia extends JPanel
 		
 		movNod = -1;
 		
-		for (int k = 0; k < nodos.size(); k++)
-			if (nodos.get(k) != null) {
-				d = distancia(x, y, nodos.get(k).getPosition().x,
-						nodos.get(k).getPosition().y);
+		for (int k = 0; k < node.size(); k++)
+			if (node.get(k) != null) {
+				d = distance(x, y, node.get(k).getPosition().x,
+						node.get(k).getPosition().y);
 				if (d < diaNod / 2.0d) movNod = k;
 			}
 		
@@ -631,9 +631,9 @@ public class GraficadorTopologia extends JPanel
 		if (movNod > -1) {
 			if ((nx >= 0) && (nx <= getWidth()) && (ny >= 0) &&
 					(ny <= getHeight())) {
-				NodeTopologyChart n = nodos.get(movNod);
+				NodeTopologyChart n = node.get(movNod);
 				n.setPosition(nx, ny);
-				nodos.set(movNod, n);
+				node.set(movNod, n);
 				posTopologiaNodos[n.getId()] = new Point(nx, ny);
 			}
 			repaint();
