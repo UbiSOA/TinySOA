@@ -76,7 +76,7 @@ public class EventosInterfaz
 			botonExportarTopologia, botonImportarFondo;
 	private JMenuItem menuInicio, menuReproducir, menuFinal, menuActualizar;
 	private JProgressBar barraProgreso;
-	private Tabla tablaDatos, tablaEventos, tablaMantenimiento;
+	private MonitorTable tablaDatos, tablaEventos, tablaMantenimiento;
 	private DefaultTableModel modeloDatos, modeloEventos, modeloMantenimiento;
 	private boolean actualizacionOcupada = false;
 	private Date tiempo;
@@ -260,7 +260,7 @@ public class EventosInterfaz
 	 * @param tabla
 	 * @param modelo
 	 **************************************************************************/
-	public void defTablaDatos(Tabla tabla, DefaultTableModel modelo) {
+	public void defTablaDatos(MonitorTable tabla, DefaultTableModel modelo) {
 		tablaDatos = tabla;
 		modeloDatos = modelo;
 	}
@@ -340,7 +340,7 @@ public class EventosInterfaz
 	 * @param tabla
 	 * @param modelo
 	 **************************************************************************/
-	public void defTablaEventos(Tabla tabla, DefaultTableModel modelo) {
+	public void defTablaEventos(MonitorTable tabla, DefaultTableModel modelo) {
 		tablaEventos = tabla;
 		modeloEventos = modelo;
 		
@@ -360,12 +360,12 @@ public class EventosInterfaz
 		tablaEventos.getTableHeader().setReorderingAllowed(false);
 		
 		tablaEventos.getColumnModel().getColumn(0).setCellRenderer(
-				new TablaCeldaRenderer(SwingConstants.CENTER, true));
+				new MonitorCellRenderer(SwingConstants.CENTER, true));
 		for (int i = 1; i < tablaEventos.getColumnCount(); i++)
 			tablaEventos.getColumnModel().getColumn(i).setCellRenderer(
-					new TablaCeldaRenderer(SwingConstants.CENTER, false));
+					new MonitorCellRenderer(SwingConstants.CENTER, false));
 		tablaEventos.getColumnModel().getColumn(3).setCellRenderer(
-				new TablaCeldaRenderer(SwingConstants.CENTER, true));
+				new MonitorCellRenderer(SwingConstants.CENTER, true));
 		
 		tablaEventos.getColumnModel().getColumn(0).setPreferredWidth(42);
 		tablaEventos.getColumnModel().getColumn(0).setMinWidth(42);
@@ -389,7 +389,7 @@ public class EventosInterfaz
 	 * @param tabla
 	 * @param modelo
 	 **************************************************************************/
-	public void defTablaMantenimiento(Tabla tabla, DefaultTableModel modelo) {
+	public void defTablaMantenimiento(MonitorTable tabla, DefaultTableModel modelo) {
 		tablaMantenimiento = tabla;
 		modeloMantenimiento = modelo;
 		
@@ -411,12 +411,12 @@ public class EventosInterfaz
 		tablaMantenimiento.getTableHeader().setReorderingAllowed(false);
 		
 		tablaMantenimiento.getColumnModel().getColumn(0).setCellRenderer(
-				new TablaCeldaRenderer(SwingConstants.CENTER, true));
+				new MonitorCellRenderer(SwingConstants.CENTER, true));
 		for (int i = 1; i < tablaMantenimiento.getColumnCount(); i++)
 			tablaMantenimiento.getColumnModel().getColumn(i).setCellRenderer(
-					new TablaCeldaRenderer(SwingConstants.CENTER, false));
+					new MonitorCellRenderer(SwingConstants.CENTER, false));
 		tablaMantenimiento.getColumnModel().getColumn(6).setCellRenderer(
-				new TablaCeldaRenderer(SwingConstants.CENTER, true));
+				new MonitorCellRenderer(SwingConstants.CENTER, true));
 		
 		int[] anchos = {42, 0, 0, 42, 130, 130, 42, 84};
 		
@@ -570,7 +570,7 @@ public class EventosInterfaz
 							"yyyy-MM-dd HH:mm:ss");
 					Vector<Reading> lecturas = servicioRed.
 							getReadingsUntil(formato4.format(tiempo),
-									((RedNodoArbol)arbol.getModel().getRoot()).
+									((NetTreeNode)arbol.getModel().getRoot()).
 									getChildCount() * 
 									modeloDatos.getColumnCount() * 3);
 	
@@ -631,9 +631,9 @@ public class EventosInterfaz
 	
 		if (arbol.getModel().getRoot() == null) return;
 		
-		Enumeration e = ((RedNodoArbol)arbol.getModel().getRoot()).children();
+		Enumeration e = ((NetTreeNode)arbol.getModel().getRoot()).children();
 		while (e.hasMoreElements()) {
-			RedNodoArbol el = (RedNodoArbol)e.nextElement();
+			NetTreeNode el = (NetTreeNode)e.nextElement();
 			String id = el.toString().substring(5);
 			boolean seleccionado = el.isSelected();
 	
@@ -684,18 +684,18 @@ public class EventosInterfaz
 						nid = lecturas.get(0).getNid();
 							
 					int max = 0;
-					Enumeration e = ((RedNodoArbol)arbol.
+					Enumeration e = ((NetTreeNode)arbol.
 							getModel().getRoot()).children();
 					while (e.hasMoreElements()) {
-						RedNodoArbol n = (RedNodoArbol)e.nextElement();
+						NetTreeNode n = (NetTreeNode)e.nextElement();
 						int i = Integer.parseInt(n.toString().substring(5));
 						if (i > max) max = i;
 					}
 					boolean[] nodoSel = new boolean[max + 1];
-					e = ((RedNodoArbol)arbol.
+					e = ((NetTreeNode)arbol.
 							getModel().getRoot()).children();
 					while (e.hasMoreElements()) {
-						RedNodoArbol n = (RedNodoArbol)e.nextElement();
+						NetTreeNode n = (NetTreeNode)e.nextElement();
 						nodoSel[Integer.parseInt(n.toString().substring(5))] =
 							n.isSelected();
 					}
@@ -738,25 +738,25 @@ public class EventosInterfaz
 							"yyyy-MM-dd HH:mm:ss");
 					Vector<Reading> lecturas = servicioRed.
 							getReadingsUntil(formato4.format(tiempo),
-									((RedNodoArbol)arbol.getModel().getRoot()).
+									((NetTreeNode)arbol.getModel().getRoot()).
 									getChildCount() * 
 									modeloDatos.getColumnCount() * 3);
 					
 					graficadorTopologia.eliminarTodosNodos();
 					
 					int max = 0;
-					Enumeration e = ((RedNodoArbol)arbol.
+					Enumeration e = ((NetTreeNode)arbol.
 							getModel().getRoot()).children();
 					while (e.hasMoreElements()) {
-						RedNodoArbol n = (RedNodoArbol)e.nextElement();
+						NetTreeNode n = (NetTreeNode)e.nextElement();
 						int nid = Integer.parseInt(n.toString().substring(5));
 						if (nid > max) max = nid;
 					}
 					boolean[] nodoSel = new boolean[max + 1];
-					e = ((RedNodoArbol)arbol.
+					e = ((NetTreeNode)arbol.
 							getModel().getRoot()).children();
 					while (e.hasMoreElements()) {
-						RedNodoArbol n = (RedNodoArbol)e.nextElement();
+						NetTreeNode n = (NetTreeNode)e.nextElement();
 						nodoSel[Integer.parseInt(n.toString().substring(5))] =
 							n.isSelected();
 					}
@@ -1015,12 +1015,12 @@ public class EventosInterfaz
 	 * @param nodos	Un arreglo con el nombre de los nodos
 	 **************************************************************************/
 	private void crearArbolNodos(Object[] nodos) {
-		RedNodoArbol top = new RedNodoArbol(
+		NetTreeNode top = new NetTreeNode(
 				servicioRed.getNetName(), iconoRed);
 		((DefaultTreeModel)arbol.getModel()).setRoot(top);	
-		RedNodoArbol c = null;
+		NetTreeNode c = null;
 		for (int i = 0; i < nodos.length; i++) {
-			c = new RedNodoArbol("Nodo " + ((Node)nodos[i]).getId(),
+			c = new NetTreeNode("Nodo " + ((Node)nodos[i]).getId(),
 					iconoEstadoNormal);
 			top.add(c);
 		}
@@ -1052,10 +1052,10 @@ public class EventosInterfaz
 		tablaDatos.getTableHeader().setReorderingAllowed(false);
 		
 		tablaDatos.getColumnModel().getColumn(0).setCellRenderer(
-				new TablaCeldaRenderer(SwingConstants.CENTER, true));
+				new MonitorCellRenderer(SwingConstants.CENTER, true));
 		for (int i = 1; i < tablaDatos.getColumnCount(); i++)
 			tablaDatos.getColumnModel().getColumn(i).setCellRenderer(
-					new TablaCeldaRenderer(SwingConstants.CENTER, false));
+					new MonitorCellRenderer(SwingConstants.CENTER, false));
 				
 		for (int i = 0; i < nodos.length; i++)
 			modeloDatos.addRow(new Object[]{((Node)nodos[i]).getId()});
