@@ -108,11 +108,11 @@ public class MessageProcessor {
 		for (i = 0; i < columns.length; i++)
 			tableModel.addColumn(columns[i]);
 		
-		TablaCeldaRenderer tcr01, tcr02, tcr03;
+		MonitorCellRenderer tcr01, tcr02, tcr03;
 		
-		tcr01	= new TablaCeldaRenderer(SwingConstants.CENTER, true);
-		tcr02	= new TablaCeldaRenderer(SwingConstants.CENTER, false);
-		tcr03	= new TablaCeldaRenderer(SwingConstants.RIGHT, false);
+		tcr01	= new MonitorCellRenderer(SwingConstants.CENTER, true);
+		tcr02	= new MonitorCellRenderer(SwingConstants.CENTER, false);
+		tcr03	= new MonitorCellRenderer(SwingConstants.RIGHT, false);
 				
 		table.getColumnModel().getColumn(0).setCellRenderer(tcr01);
 		for (i = 1; i <= 4; i++)
