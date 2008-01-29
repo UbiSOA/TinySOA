@@ -81,8 +81,8 @@ public class EventosInterfaz
 	private boolean actualizacionOcupada = false;
 	private Date tiempo;
 	private JTabbedPane panelTabs;
-	private Graficador graficador;
-	private GraficadorTopologia graficadorTopologia;
+	private Plotter graficador;
+	private TopologyPlotter graficadorTopologia;
 	private JComboBox comboParsGraf, comboParsTopologia;
 	private static Point[] posTopNodos;
 	private JFrame ventana;
@@ -270,7 +270,7 @@ public class EventosInterfaz
 	 * 
 	 * @param graficador	Graficador a utilizar
 	 **************************************************************************/
-	public void defGraficador(Graficador graficador) {
+	public void defGraficador(Plotter graficador) {
 		this.graficador = graficador;
 	}
 	
@@ -300,7 +300,7 @@ public class EventosInterfaz
 	 * 
 	 * @param graficadorTopologia	Graficador de topología a utilizar
 	 **************************************************************************/
-	public void defGrafTopologia(GraficadorTopologia graficadorTopologia) {
+	public void defGrafTopologia(TopologyPlotter graficadorTopologia) {
 		this.graficadorTopologia = graficadorTopologia;
 	}
 	
@@ -717,8 +717,8 @@ public class EventosInterfaz
 					}
 					datos.add(datosNodo);
 					
-					graficador.defTiempo(tiempo.getTime());
-					graficador.defDatos(datos);
+					graficador.defTime(tiempo.getTime());
+					graficador.defData(datos);
 				}
 			});
 			
@@ -742,7 +742,7 @@ public class EventosInterfaz
 									getChildCount() * 
 									modeloDatos.getColumnCount() * 3);
 					
-					graficadorTopologia.eliminarTodosNodos();
+					graficadorTopologia.deleteAllNodes();
 					
 					int max = 0;
 					Enumeration e = ((NetTreeNode)arbol.
@@ -768,26 +768,26 @@ public class EventosInterfaz
 					if (par.compareTo("Temp") == 0) {
 						graficadorTopologia.defEscala(0.0d, 35.0d);
 						graficadorTopologia.defTipoEscala(
-								GraficadorTopologia.ESCALA_CALOR);
+								TopologyPlotter.ESCALA_CALOR);
 					} else if (par.compareTo("Luz") == 0) {
 						graficadorTopologia.defEscala(300.0d, 900.0d);
 						graficadorTopologia.defTipoEscala(
-								GraficadorTopologia.ESCALA_LUZ);
+								TopologyPlotter.ESCALA_LUZ);
 					} else if (par.compareTo("Volt") == 0) {
 						graficadorTopologia.defEscala(1.5d, 3.0d);
 						graficadorTopologia.defTipoEscala(
-								GraficadorTopologia.ESCALA_ENERGIA);
+								TopologyPlotter.ESCALA_ENERGIA);
 					} else {
 						graficadorTopologia.defEscala(300.0d, 1024.0d);
 						graficadorTopologia.defTipoEscala(
-								GraficadorTopologia.ESCALA_CALOR);
+								TopologyPlotter.ESCALA_CALOR);
 					}
 					
 					
 					while (e.hasMoreElements()) {
 						Reading l = (Reading)e.nextElement();
 						if (par.compareTo(l.getParameter()) == 0)
-							if (!graficadorTopologia.existeNodo(l.getNid()))
+							if (!graficadorTopologia.existNode(l.getNid()))
 								if (nodoSel[l.getNid()]) {
 									NodeTopologyChart ngt =
 										new NodeTopologyChart(l.getNid(),
@@ -795,7 +795,7 @@ public class EventosInterfaz
 														l.getValue()),
 												posTopNodos[l.getNid()].x,
 												posTopNodos[l.getNid()].y);
-									graficadorTopologia.agregarNodo(ngt);
+									graficadorTopologia.addNode(ngt);
 								}
 					}
 					
@@ -1323,17 +1323,17 @@ public class EventosInterfaz
 		JFileChooser dialogo = new JFileChooser();
 		
 		dialogo.addChoosableFileFilter(
-				new FiltroArchivos(new String[]{"png"}, "Imagen PNG"));
+				new FilterFile(new String[]{"png"}, "Imagen PNG"));
 		dialogo.addChoosableFileFilter(
-				new FiltroArchivos(new String[]{"bmp"}, "Imagen BMP"));
+				new FilterFile(new String[]{"bmp"}, "Imagen BMP"));
 		//dialogo.addChoosableFileFilter(
 		//		new FiltroArchivos(new String[]{"gif"}, "Imagen GIF"));
 		dialogo.addChoosableFileFilter(
-				new FiltroArchivos(new String[]{"jpg", "jpeg", "jpe"},
+				new FilterFile(new String[]{"jpg", "jpeg", "jpe"},
 						"Imagen JPG"));
 		dialogo.setAcceptAllFileFilterUsed(false);
 		
-		graficador.defProgreso(barraProgreso);
+		graficador.defProgress(barraProgreso);
 		
 		int res = dialogo.showSaveDialog(null);
 		if (res == JFileChooser.APPROVE_OPTION) {
@@ -1357,13 +1357,13 @@ public class EventosInterfaz
 				JFileChooser dialogo = new JFileChooser();
 		
 				dialogo.addChoosableFileFilter(
-						new FiltroArchivos(new String[]{"png"}, "Imagen PNG"));
+						new FilterFile(new String[]{"png"}, "Imagen PNG"));
 				dialogo.addChoosableFileFilter(
-						new FiltroArchivos(new String[]{"bmp"}, "Imagen BMP"));
+						new FilterFile(new String[]{"bmp"}, "Imagen BMP"));
 				//dialogo.addChoosableFileFilter(
 				//		new FiltroArchivos(new String[]{"gif"}, "Imagen GIF"));
 				dialogo.addChoosableFileFilter(
-						new FiltroArchivos(new String[]{"jpg", "jpeg", "jpe"},
+						new FilterFile(new String[]{"jpg", "jpeg", "jpe"},
 								"Imagen JPG"));
 				dialogo.setAcceptAllFileFilterUsed(false);
 		
@@ -1392,17 +1392,17 @@ public class EventosInterfaz
 		JFileChooser dialogo = new JFileChooser();
 		
 		dialogo.addChoosableFileFilter(
-				new FiltroArchivos(new String[]{"png"}, "Imagen PNG"));
+				new FilterFile(new String[]{"png"}, "Imagen PNG"));
 		dialogo.addChoosableFileFilter(
-				new FiltroArchivos(new String[]{"bmp"}, "Imagen BMP"));
+				new FilterFile(new String[]{"bmp"}, "Imagen BMP"));
 		//dialogo.addChoosableFileFilter(
 		//		new FiltroArchivos(new String[]{"gif"}, "Imagen GIF"));
 		dialogo.addChoosableFileFilter(
-				new FiltroArchivos(new String[]{"jpg", "jpeg", "jpe"},
+				new FilterFile(new String[]{"jpg", "jpeg", "jpe"},
 						"Imagen JPG"));
 		dialogo.setAcceptAllFileFilterUsed(false);
 		
-		graficador.defProgreso(barraProgreso);
+		graficador.defProgress(barraProgreso);
 		
 		int res = dialogo.showSaveDialog(null);
 		if (res == JFileChooser.APPROVE_OPTION) {
@@ -1411,7 +1411,7 @@ public class EventosInterfaz
 					substring(7, 10).toLowerCase();
 			if (a.substring(a.length() - 4, a.length() -3).compareTo(".") != 0)
 				a += "." + f;
-			graficadorTopologia.guardarImagen(a, f);
+			graficadorTopologia.saveImage(a, f);
 		}
 		
 	}
