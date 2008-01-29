@@ -70,8 +70,8 @@ public class MonitorCellRenderer extends JLabel
         if ((vColIndex > 4) && (value instanceof SensedData))
         	setToolTipText(((SensedData)value).getTooltip());
         
-       if (value instanceof CeldaTablaTooltip) {
-    	   setToolTipText(((CeldaTablaTooltip)value).getTooltip());
+       if (value instanceof CellTableTooltip) {
+    	   setToolTipText(((CellTableTooltip)value).getTooltip());
        }
         
         return this;
