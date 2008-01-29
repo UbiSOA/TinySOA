@@ -27,118 +27,118 @@ import java.util.*;
 import net.tinyos.tinysoa.common.Constants;
 
 /*******************************************************************************
- * Clase para almacenar los datos de una lectura en una tabla.
+ * Stores readings results in a table
  * 
  * @author		Edgardo Avilés López
  * @version	0.1, 07/24/2006
  ******************************************************************************/
 public class SensedData {
 	
-	private int tipo, dato, nid;
-	private boolean convertir;
-	private long tiempo;
-	private double valor;
+	private int paramType, paramData, nodeId;
+	private boolean onlyCookedValues;
+	private long readingTime;
+	private double readingValue;
 	
 	/***************************************************************************
-	 * Constructor de la clase que define todos los valores del objeto.
+	 * Class constructor that defines all of the object's values
 	 * 
-	 * @param nid			ID del nodo al que pertenece la lectura
-	 * @param tipo			Tipo de parámetro de sensado
-	 * @param dato			Valor ADC del parámetro
-	 * @param tiempo		Tiempo de la lectura
-	 * @param convertir	Falso si se desea sólo valores en hexadecimal
+	 * @param nodeId			Node ID of whom this lecture comes from
+	 * @param paramType			Sensed parameter type
+	 * @param paramData			ADC value of the parameter
+	 * @param readingTime		Reading time
+	 * @param onlyCookedValues	False if you want raw data 
 	 **************************************************************************/
-	public SensedData(int nid, int tipo, int dato,
-			long tiempo, boolean convertir) {
-		this.nid = nid;
-		this.tipo = tipo;
-		this.dato = dato;
-		this.tiempo = tiempo;
-		this.convertir = convertir;
+	public SensedData(int nodeId, int paramType, int paramData,
+			long readingTime, boolean onlyCookedValues) {
+		this.nodeId = nodeId;
+		this.paramType = paramType;
+		this.paramData = paramData;
+		this.readingTime = readingTime;
+		this.onlyCookedValues = onlyCookedValues;
 		
-		if (tipo == Constants.SENSOR_TEMP)
-			valor = Converter.adcToTempD(dato);
-		else if (tipo == Constants.SENSOR_VOLT)
-			valor = Converter.adcToVoltD(dato);
-		else valor = dato;
+		if (paramType == Constants.SENSOR_TEMP)
+			readingValue = Converter.adcToTempD(paramData);
+		else if (paramType == Constants.SENSOR_VOLT)
+			readingValue = Converter.adcToVoltD(paramData);
+		else readingValue = paramData;
 	}
 	
 	/***************************************************************************
-	 * Constructor de la clase que define los valores principales del objeto.
+	 * Class constructor that defines the main values of the object.
 	 * 
-	 * @param tipo			Tipo de parámetro de sensado
-	 * @param dato			Valor ADC del parámetro
-	 * @param convertir	Falso si se desea sólo valores en hexadecimal
+	 * @param paramType			Sensed parameter type
+	 * @param paramData			ADC value of the parameter
+	 * @param onlyCookedValues	False if you want raw data
 	 **************************************************************************/
-	public SensedData(int tipo, int dato, boolean convertir) {
-		this(0, tipo, dato, new Date().getTime(), convertir);
+	public SensedData(int paramType, int paramData, boolean onlyCookedValues) {
+		this(0, paramType, paramData, new Date().getTime(), onlyCookedValues);
 	}
 
 	/***************************************************************************
-	 * Define el ID del nodo al que pertenece la lectura.
+	 * Sets the node ID of this reading.
 	 * 
-	 * @param nid	ID del nodo
+	 * @param nodeId	Node ID
 	 **************************************************************************/
-	public void defNid(int nid) {
-		this.nid = nid;
+	public void setNodeId(int nodeId) {
+		this.nodeId = nodeId;
 	}
 	
 	/***************************************************************************
-	 * Regresa el ID del nodo al que pertenece la lectura.
+	 * Gets the node ID of this reading.
 	 * 
-	 * @return	El número ID del nodo
+	 * @return	The node ID
 	 **************************************************************************/
-	public int obtNid() {
-		return nid;
+	public int getNodeId() {
+		return nodeId;
 	}
 
 	/***************************************************************************
-	 * Regresa el tiempo de la lectura
+	 * Gets the time of this reading.
 	 * 
-	 * @return	Tiempo de la lectura
+	 * @return	Time of this reading
 	 **************************************************************************/
-	public long obtTiempo() {
-		return tiempo;
+	public long getReadingTime() {
+		return readingTime;
 	}
 	
 	/***************************************************************************
-	 * Regresa el valor del parámetro.
+	 * Gets this reading's value.
 	 * 
-	 * @return	Un doble con el valor del parámetro
+	 * @return	A double with this readings value
 	 **************************************************************************/
-	public double obtValor() {
-		return valor;
+	public double getReadingValue() {
+		return readingValue;
 	}
 	
 	/***************************************************************************
-	 * Regresa una cadena a ser utilizada como <i>tooltip</i> de la celda de la
-	 * tabla. Esta incluye la información de la instancia.
+	 * Gets a string that is used as <i>tooltip</i> of the cell's table. This 
+	 * includes instance information.
 	 * 
-	 * @return	Una cadena con la información del objeto
+	 * @return	A string with the objects information
 	 **************************************************************************/
 	public String getTooltip() {
 		String tip = "<html><table cellspacing=\"0\" cellpadding=\"1\" " +
 				"border=\"0\">";
-		String t = Converter.sensorLabel(tipo, 0);
+		String t = Converter.sensorLabel(paramType, 0);
 		if (t.compareTo("v0") == 0) t = "Nulo";
 		tip += r("Tipo:", t);
 		
-		if (tipo == Constants.SENSOR_TEMP)
-			tip += r("Valor:", Converter.adcToTemp(dato));
-		if (tipo == Constants.SENSOR_VOLT)
-			tip += r("Valor:", Converter.adcToVolt(dato));
+		if (paramType == Constants.SENSOR_TEMP)
+			tip += r("Valor:", Converter.adcToTemp(paramData));
+		if (paramType == Constants.SENSOR_VOLT)
+			tip += r("Valor:", Converter.adcToVolt(paramData));
 		
-		tip += r("Dec:", dato + "");
-		tip += r("Hex:", Converter.intToHex(dato));
+		tip += r("Dec:", paramData + "");
+		tip += r("Hex:", Converter.intToHex(paramData));
 		return tip + "</table></html>";
 	}
 
 	/***************************************************************************
-	 * Crea un renglón de la tabla HTML devuelta por <code>getTooltip()</code>.
+	 * Creates a row of the HTML table returned by <code>getTooltip()</code>.
 	 * 
-	 * @param k	Llave del renglón
-	 * @param v	Valor del renglón
-	 * @return		Una cadena con información de un renglón
+	 * @param k	Row key
+	 * @param v	Row value
+	 * @return	A string with a rows information
 	 **************************************************************************/
 	private String r(String k, String v) {
 		return "<tr><td align=\"right\">&nbsp;" + k +
@@ -146,20 +146,19 @@ public class SensedData {
 	}
 
 	/***************************************************************************
-	 * Convierte la instancia actual a una cadena la cual incluye la
-	 * información del objeto.
+	 * Turns the current instance into a string with information about the instance.
 	 * 
-	 * @return	Una cadena con la información de la instancia
+	 * @return	A string with information of this instance
 	 **************************************************************************/
 	public String toString() {
-		if (convertir) {
-			if (tipo == Constants.SENSOR_TEMP)
-				return Converter.adcToTemp(dato);
-			else if (tipo == Constants.SENSOR_VOLT)
-				return Converter.adcToVolt(dato);
-			else return dato + "";
+		if (onlyCookedValues) {
+			if (paramType == Constants.SENSOR_TEMP)
+				return Converter.adcToTemp(paramData);
+			else if (paramType == Constants.SENSOR_VOLT)
+				return Converter.adcToVolt(paramData);
+			else return paramData + "";
 		}
-		else return Converter.intToHex(dato, 4);
+		else return Converter.intToHex(paramData, 4);
 	}
 	
 }
