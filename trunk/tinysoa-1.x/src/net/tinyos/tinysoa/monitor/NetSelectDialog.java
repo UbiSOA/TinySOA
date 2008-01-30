@@ -20,7 +20,7 @@
  * 
  ******************************************************************************/
 
-package net.tinyos.tinysoa.visor;
+package net.tinyos.tinysoa.monitor;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -32,7 +32,7 @@ import net.tinyos.tinysoa.server.*;
 import net.tinyos.tinysoa.util.*;
 
 /*******************************************************************************
- * Clase que implementa el diálogo para la selección de red.
+ * Class that implement the dialog for network selection .
  * 
  * @author		Edgardo Avilés López
  * @version	0.1, 07/25/2006
@@ -40,34 +40,34 @@ import net.tinyos.tinysoa.util.*;
 public class NetSelectDialog extends JDialog {
 	private static final long serialVersionUID = -522846215043252060L;
 
-	private JList listaRedes;
-	private final InterfaceEvents eventosInterfaz;
+	private JList netList;
+	private final InterfaceEvents interfaceEvents;
 	
 	/***************************************************************************
-	 * Constructor de la clase.
+	 * Constructor class.
 	 * 
-	 * @param window	Ventana padre del diálogo
-	 * @param icono	Icono de una red
-	 * @param eventos	Controlador de eventos para llamar al seleccionar
+	 * @param window	Window father of dialogue
+	 * @param icon	    Icon of a network
+	 * @param event	    Controller of events to call when selecting
 	 **************************************************************************/
-	public NetSelectDialog(JFrame ventana, ImageIcon icono,
-			InterfaceEvents eventos) {
-		super(ventana, "Seleccionar red", false);
-		this.eventosInterfaz = eventos;
+	public NetSelectDialog(JFrame window, ImageIcon icon,
+			InterfaceEvents event) {
+		super(window, "Select network", false);
+		this.interfaceEvents = event;
 		
 		JPanel panel = new JPanel();
 		getContentPane().add(panel);
 		panel.setLayout(new BorderLayout());
 		panel.setBorder(BorderFactory.createEmptyBorder(8,8,8,8));
 		
-		JLabel etiqueta = new JLabel("Redes de sensores disponibles:");
-		etiqueta.setBorder(BorderFactory.createEmptyBorder(0,0,4,0));
+		JLabel label = new JLabel("Networks of sensors available:");
+		label.setBorder(BorderFactory.createEmptyBorder(0,0,4,0));
 		
-		panel.add(etiqueta, BorderLayout.NORTH);
+		panel.add(label, BorderLayout.NORTH);
 		
-		listaRedes = new JList();
-		listaRedes.setCellRenderer(new MonitorListCellRenderer(icono));
-		JScrollPane scrollLista = new JScrollPane(listaRedes);
+		netList = new JList();
+		netList.setCellRenderer(new MonitorListCellRenderer(icon));
+		JScrollPane scrollLista = new JScrollPane(netList);
 		scrollLista.setHorizontalScrollBarPolicy(
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollLista.setPreferredSize(new Dimension(320,250));
@@ -77,35 +77,35 @@ public class NetSelectDialog extends JDialog {
 		panel2.setBorder(BorderFactory.createEmptyBorder(4,0,0,0));
 		panel2.setLayout(new FlowLayout(FlowLayout.CENTER));
 
-		ActionListener accion = new ActionListener(){
+		ActionListener action = new ActionListener(){
 			private static final long serialVersionUID =
 				-4115615620227275613L;
 			public void actionPerformed(ActionEvent ev) {
-				if (ev.getActionCommand().compareTo("Aceptar") == 0) {
-					if (listaRedes.getSelectedValue() == null) {
+				if (ev.getActionCommand().compareTo("Accept") == 0) {
+					if (netList.getSelectedValue() == null) {
 						JOptionPane.showMessageDialog(
-								null, "Debe seleccionar una red.",
-								"Seleccionar red", JOptionPane.WARNING_MESSAGE);
+								null, "You must select a network.",
+								"Select a network", JOptionPane.WARNING_MESSAGE);
 						return;
 					}
 					setVisible(false);
-					String wsdl = ((Network)listaRedes.
+					String wsdl = ((Network)netList.
 							getSelectedValue()).getWsdl(); 
-					eventosInterfaz.createNetworkService(
+					interfaceEvents.createNetworkService(
 							wsdl.substring(0, wsdl.length() - 5));
 				}
-				if (ev.getActionCommand().compareTo("Cancelar") == 0) {
+				if (ev.getActionCommand().compareTo("Cancel") == 0) {
 					setVisible(false);
 				}
 			}};
 		
-		JButton boton = new JButton("Aceptar");
-		boton.addActionListener(accion);
-		panel2.add(boton);
+		JButton button = new JButton("Accept");
+		button.addActionListener(action);
+		panel2.add(button);
 		
-		boton = new JButton("Cancelar");
-		boton.addActionListener(accion);
-		panel2.add(boton);
+		button = new JButton("Cancel");
+		button.addActionListener(action);
+		panel2.add(button);
 
 		panel.add(panel2, BorderLayout.SOUTH);
 		
@@ -116,38 +116,38 @@ public class NetSelectDialog extends JDialog {
 	}
 	
 	/***************************************************************************
-	 * Obtiene el listado de las redes disponibles en el servidor.
+	 * Get the list of networks available on the server.
 	 * 
-	 * @param servicio	Servicio de información a utilizar
+	 * @param service	Service of information to use
 	 **************************************************************************/
-	private void obtenerRedesDisponibles(InfoServ servicio) {
-		Vector<Network> redes = servicio.getNetworksList();
-		listaRedes.setListData(redes.toArray());
+	private void getAvailableNetworks(InfoServ service) {
+		Vector<Network> networks = service.getNetworksList();
+		netList.setListData(networks.toArray());
 	}
 	
 	/***************************************************************************
-	 * Muestra el diálogo de selección de red.
+	 * Sample dialogue selection network.
 	 * 
-	 * @param servicio			Servicio de información a utilizar
-	 * @param barraProgreso	Barra de progreso a mostrar
+	 * @param service		Information service to use
+	 * @param progressBar	Progress Bar show
 	 **************************************************************************/
-	public void mostrar(InfoServ servicio, JProgressBar barraProgreso) {
-		if (servicio == null) {
+	public void show(InfoServ service, JProgressBar progressBar) {
+		if (service == null) {
 			JOptionPane.showMessageDialog(
-					null, "Aún se ha conectado al servidor.",
-					"Problema de conexión", JOptionPane.INFORMATION_MESSAGE);
+					null, "Still has been connected to the server.",
+					"Connection problem", JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
-		obtenerRedesDisponibles(servicio);
-		if (listaRedes.getModel().getSize() == 0) {
+		getAvailableNetworks(service);
+		if (netList.getModel().getSize() == 0) {
 			JOptionPane.showMessageDialog(null,
-					"No hay redes de sensores disponibles en el servidor.",
-					"No hay redes disponibles",
+					"No sensor networks available on the server.",
+					"No networks available",
 					JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
 		
-		barraProgreso.setVisible(false);
+		progressBar.setVisible(false);
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		setLocation((dim.width - getSize().width) / 2,
 				(dim.height - getSize().height) / 2);

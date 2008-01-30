@@ -20,7 +20,7 @@
  * 
  ******************************************************************************/
 
-package net.tinyos.tinysoa.visor;
+package net.tinyos.tinysoa.monitor;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -451,7 +451,7 @@ public class InterfaceEvents
 							create(InfoServ.class);
 					infoServ = (InfoServ)new XFireProxyFactory().
 							create(serviceModel, serverUrl + "/InfoServ");	
-					netSelectionDialog.mostrar(infoServ,
+					netSelectionDialog.show(infoServ,
 							progressBar);
 				} catch (Exception e) {
 					progressBar.setVisible(false);
@@ -832,7 +832,7 @@ public class InterfaceEvents
 								new CellTableTooltip(criteria),
 								done, nid, time});
 						
-						eventMaintenance.defEventos(events.toArray());
+						eventMaintenance.defEvents(events.toArray());
 					}
 				}
 			});
@@ -979,7 +979,7 @@ public class InterfaceEvents
 		createTreeNodes(nodes.toArray());
 		createTable(nodes.toArray());
 		createNodeTopology(nodes.toArray());
-		eventMaintenance.defNodos(nodes.toArray());
+		eventMaintenance.defNodes(nodes.toArray());
 	}
 
 	/***************************************************************************
@@ -1550,7 +1550,7 @@ public class InterfaceEvents
 	 * Prepares and shows the add maintenance task dialog
 	 **************************************************************************/
 	private void agregarTareaMantenimiento() {
-		eventMaintenance.mostrarAgregar();
+		eventMaintenance.showAdd();
 		refresh();
 	}
 	
@@ -1571,7 +1571,7 @@ public class InterfaceEvents
 				int id = Integer.parseInt(
 						maintenanceTable.getValueAt(i, 0).toString());
 				
-				eventMaintenance.mostrarModificar(id);
+				eventMaintenance.showChange(id);
 				refresh();
 			}
 		}.start();
@@ -1681,7 +1681,7 @@ public class InterfaceEvents
 		} else if (cmd.compareTo("Connect to server...") == 0) {
 			connectServer();
 		} else if (cmd.compareTo("Select network...") == 0) {
-			netSelectionDialog.mostrar(infoServ, progressBar);
+			netSelectionDialog.show(infoServ, progressBar);
 		} else if (cmd.compareTo("Go to start") == 0) {
 			slider.setValue(0);
 			System.out.println("act Go to start");
