@@ -51,7 +51,7 @@ import org.codehaus.xfire.service.binding.*;
  * @author		Edgardo Avilés López
  * @version	0.5, 07/28/2006
  ******************************************************************************/
-public class EventosInterfaz
+public class InterfaceEvents
 	implements ActionListener, ChangeListener, MouseListener {
 
 	private String archivoConfiguracion;
@@ -99,7 +99,7 @@ public class EventosInterfaz
 	 * @param iconoEstadoEspera	Icono de nodo con estado de espera
 	 * @param iconoEstadoProblema	Icono de nodo con estado problema
 	 **************************************************************************/
-	public EventosInterfaz(String archivoConfiguracion, JFrame ventana,
+	public InterfaceEvents(String archivoConfiguracion, JFrame ventana,
 			ImageIcon iconoRed, ImageIcon iconoEstadoNormal,
 			ImageIcon iconoEstadoEspera, ImageIcon iconoEstadoProblema) {
 		this.archivoConfiguracion = archivoConfiguracion;

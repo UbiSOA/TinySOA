@@ -45,7 +45,7 @@ public class TinySOAMonitor {
 	private static JFrame ventana;
 	
 	private static ImageIcon[] iconos;
-	private static EventosInterfaz eventosInterfaz;
+	private static InterfaceEvents eventosInterfaz;
 	private static JTree arbol;
 	private static JPopupMenu popMenuEventos, popMenuMantenimiento;
 
@@ -605,7 +605,7 @@ public class TinySOAMonitor {
 		ventana = new JFrame("TinySOA Visor 1.0");
 		ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		eventosInterfaz = new EventosInterfaz(ARCHIVO_CONFIGURACION, ventana,
+		eventosInterfaz = new InterfaceEvents(ARCHIVO_CONFIGURACION, ventana,
 				iconos[2], iconos[15], iconos[14], iconos[16]);
 		crearMenu();
 		crearBarraHerramientas();
