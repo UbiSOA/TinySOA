@@ -81,7 +81,7 @@ public class TinySOAMonitor {
 		item.addActionListener(eventosInterfaz);
 		menu.add(item);
 		
-		eventosInterfaz.defBotonMenuActualizarTodo(item);
+		eventosInterfaz.setRefreshEverythingMenuButton(item);
 		
 		menu.addSeparator();
 		
@@ -117,7 +117,7 @@ public class TinySOAMonitor {
 		itemFinal.addActionListener(eventosInterfaz);
 		menu.add(itemFinal);
 		
-		eventosInterfaz.defControlesReproduccion2(itemInicio, itemReproduccion,
+		eventosInterfaz.setPlayControls2(itemInicio, itemReproduccion,
 				itemFinal, iconos[12], iconos[11]);
 		
 		ventana.setJMenuBar(menuBar);	
@@ -150,7 +150,7 @@ public class TinySOAMonitor {
 		boton.setFocusPainted(false);
 		barra.add(boton);
 		
-		eventosInterfaz.defBotonActualizarTodo(boton);
+		eventosInterfaz.setRefreshEverythingButton(boton);
 		
 		barra.addSeparator();
 		
@@ -172,7 +172,7 @@ public class TinySOAMonitor {
 		botonAdelantar.setFocusPainted(false);
 		barra.add(botonAdelantar);
 		
-		eventosInterfaz.defControlesReproduccion(botonAtrasar, botonReproducir,
+		eventosInterfaz.setPlayControls(botonAtrasar, botonReproducir,
 				botonAdelantar, iconos[7], iconos[6]);
 		
 		barra.addSeparator();
@@ -181,7 +181,7 @@ public class TinySOAMonitor {
 		cb.setOpaque(false);
 		cb.setFocusPainted(false);
 		cb.addActionListener(eventosInterfaz);
-		eventosInterfaz.defActualizarCheck(cb);
+		eventosInterfaz.setRefreshCheckbox(cb);
 		barra.add(cb);
 		
 		JProgressBar barraProgreso = new JProgressBar();
@@ -196,7 +196,7 @@ public class TinySOAMonitor {
 		barra.add(barraProgreso);
 		barra.addSeparator();
 		
-		eventosInterfaz.defBarraProgreso(barraProgreso);
+		eventosInterfaz.setProgressBar(barraProgreso);
 		
 		Container cont = ventana.getContentPane();
 		cont.setLayout(new BorderLayout());
@@ -223,7 +223,7 @@ public class TinySOAMonitor {
 		arbol.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
 		
 		((DefaultTreeModel)arbol.getModel()).setRoot(null);
-		eventosInterfaz.defArbol(arbol);
+		eventosInterfaz.setTree(arbol);
 				
 		ToolTipManager.sharedInstance().registerComponent(arbol);
 		JScrollPane vistaArbol = new JScrollPane(arbol);
@@ -257,7 +257,7 @@ public class TinySOAMonitor {
 		label.setBorder(BorderFactory.createEmptyBorder(4,2,4,8));
 		panelSlider.add(label, BorderLayout.EAST);
 		
-		eventosInterfaz.defSlider(slider, label);
+		eventosInterfaz.setSlider(slider, label);
 		
 		return panelSlider;
 	}
@@ -292,7 +292,7 @@ public class TinySOAMonitor {
 		tab.setOpaque(false);
 		tabbedPane.add(tab, "Mantenimiento");
 		
-		eventosInterfaz.defPanelTabs(tabbedPane);
+		eventosInterfaz.setTabPanel(tabbedPane);
 		tabbedPane.addChangeListener(eventosInterfaz);
 		
 		panel.add(tabbedPane, BorderLayout.CENTER);		
@@ -315,7 +315,7 @@ public class TinySOAMonitor {
 		scrollTabla.setHorizontalScrollBarPolicy(
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		panel.add(scrollTabla, BorderLayout.CENTER);
-		eventosInterfaz.defTablaDatos(tabla, modelo);
+		eventosInterfaz.setDataTable(tabla, modelo);
 		
 		return panel;
 	}
@@ -339,7 +339,7 @@ public class TinySOAMonitor {
 		panel2.setLayout(new BorderLayout());
 		Plotter graficador = new Plotter();
 		panel2.add(graficador, BorderLayout.CENTER);
-		eventosInterfaz.defGraficador(graficador);
+		eventosInterfaz.setGrapher(graficador);
 		
 		JToolBar barra = new JToolBar();
 		
@@ -353,7 +353,7 @@ public class TinySOAMonitor {
 		combo.setFocusable(false);
 		combo.setMaximumSize(new Dimension(120, 25));
 		combo.setToolTipText("Parámetro a graficar");
-		eventosInterfaz.defComboParsGraf(combo);
+		eventosInterfaz.setComboParsGraf(combo);
 		combo.addActionListener(eventosInterfaz);
 		
 		barra.add(label);
@@ -366,7 +366,7 @@ public class TinySOAMonitor {
 		boton.addActionListener(eventosInterfaz);
 		boton.setFocusPainted(false);
 		barra.add(boton);
-		eventosInterfaz.defBotonExportarGrafica(boton);
+		eventosInterfaz.setExportGraphButton(boton);
 
 		barra.addSeparator();
 
@@ -413,7 +413,7 @@ public class TinySOAMonitor {
 		panel2.setLayout(new BorderLayout());
 		TopologyPlotter graficador = new TopologyPlotter();
 		panel2.add(graficador, BorderLayout.CENTER);
-		eventosInterfaz.defGrafTopologia(graficador);
+		eventosInterfaz.setGraphTopology(graficador);
 		
 		JToolBar barra = new JToolBar();
 		
@@ -427,7 +427,7 @@ public class TinySOAMonitor {
 		combo.setFocusable(false);
 		combo.setMaximumSize(new Dimension(120, 25));
 		combo.setToolTipText("Parámetro a graficar");
-		eventosInterfaz.defComboParsTopologia(combo);
+		eventosInterfaz.setTopologyComboParams(combo);
 		combo.addActionListener(eventosInterfaz);
 		
 		barra.add(label);
@@ -440,14 +440,14 @@ public class TinySOAMonitor {
 		boton.addActionListener(eventosInterfaz);
 		boton.setFocusPainted(false);
 		barra.add(boton);
-		eventosInterfaz.defBotonImportarFondo(boton);
+		eventosInterfaz.setImportBackgroundButton(boton);
 
 		boton = new JButton(iconos[17]);
 		boton.setToolTipText("Exportar imagen de topología...");
 		boton.addActionListener(eventosInterfaz);
 		boton.setFocusPainted(false);
 		barra.add(boton);
-		eventosInterfaz.defBotonExportarTopologia(boton);
+		eventosInterfaz.setExportTopologyButton(boton);
 		
 		barra.add(Box.createGlue());
 		
@@ -476,19 +476,19 @@ public class TinySOAMonitor {
 		scrollTabla.setHorizontalScrollBarPolicy(
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		panel.add(scrollTabla, BorderLayout.CENTER);
-		eventosInterfaz.defTablaEventos(tabla, modelo);
+		eventosInterfaz.setEventTable(tabla, modelo);
 		
 		popMenuEventos = new JPopupMenu();
 		
-		JMenuItem item = new JMenuItem("Agregar evento...");
+		JMenuItem item = new JMenuItem("Add event...");
 		item.addActionListener(eventosInterfaz);
 		popMenuEventos.add(item);
 		
-		item = new JMenuItem("Modificar evento...");
+		item = new JMenuItem("Modify event...");
 		item.addActionListener(eventosInterfaz);
 		popMenuEventos.add(item);
 		
-		item = new JMenuItem("Eliminar evento...");
+		item = new JMenuItem("Delete event...");
 		item.addActionListener(eventosInterfaz);
 		popMenuEventos.add(item);
 		
@@ -538,19 +538,19 @@ public class TinySOAMonitor {
 		scrollTabla.setHorizontalScrollBarPolicy(
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		panel.add(scrollTabla, BorderLayout.CENTER);
-		eventosInterfaz.defTablaMantenimiento(tabla, modelo);
+		eventosInterfaz.setMaintenanceTable(tabla, modelo);
 		
 		popMenuMantenimiento = new JPopupMenu();
 		
-		JMenuItem item = new JMenuItem("Agregar tarea...");
+		JMenuItem item = new JMenuItem("Add task...");
 		item.addActionListener(eventosInterfaz);
 		popMenuMantenimiento.add(item);
 		
-		item = new JMenuItem("Modificar tarea...");
+		item = new JMenuItem("Modify task...");
 		item.addActionListener(eventosInterfaz);
 		popMenuMantenimiento.add(item);
 		
-		item = new JMenuItem("Eliminar tarea...");
+		item = new JMenuItem("Delete task...");
 		item.addActionListener(eventosInterfaz);
 		popMenuMantenimiento.add(item);
 		
@@ -679,8 +679,8 @@ public class TinySOAMonitor {
 				Locale.setDefault(new Locale("us", "US"));
 				
 				crearVentana();
-				eventosInterfaz.desactivarControles();
-				eventosInterfaz.conectarServidor();
+				eventosInterfaz.deactivateControls();
+				eventosInterfaz.connectServer();
 			}
 		});
 	}
