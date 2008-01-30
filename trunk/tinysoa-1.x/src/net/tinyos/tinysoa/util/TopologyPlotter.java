@@ -34,8 +34,7 @@ import javax.imageio.*;
 import javax.swing.*;
 
 /*******************************************************************************
- * Clase utilería para generar gráficas de topología con la información de
- * sensado. 
+ * Class utility for generating graphical topology with information sensing.
  * 
  * @author		Edgardo Avilés López
  * @version	0.5, 02/25/2006
@@ -44,46 +43,46 @@ public class TopologyPlotter extends JPanel
 	implements DragGestureListener, DragSourceListener, DropTargetListener {
 	private static final long serialVersionUID = 9143159172653372529L;
 	
-	private double valueMin = -10.0d;	// Valor mínimo
-	private double valueMax = 40.0d;	// Valor máximo
-	private double valuePro = 0.0d;	// Valor promedio
+	private double valueMin = -10.0d;	// Value minimum
+	private double valueMax = 40.0d;	// Valor maximum
+	private double valuePro = 0.0d;	// Value average
 	
-	private int tamPix	= 10;		// Tamaño del pixelado de la gráfica
-	private int radio	= 1000;		// Radio de alcance del valor de un nodo
-	private int movNod	= -1;		// Índice del nodo en arrastre
-	private int diaNod = 20;		// Diámetro del ícono del nodo
+	private int tamPix	= 10;		// Pixel size of the graph
+	private int radio	= 1000;		// Radio coverage of the value of a node
+	private int movNod	= -1;		// Index of node in drag
+	private int diaNod = 20;		// Diameter of icon of node
 	
-	private BufferedImage buffer, fondo = null;		// Buffer de la imagen
-	private int movX, movY;		// Posición del nodo en arrastre
-	private DragSource fuenArr;	// Fuente de arrastre
-	private DropTarget destArr;	// Destino de arrastre
-	private int tipoEscala = ESCALA_CALOR;
-	private Point[] posTopologiaNodos;
-	private JProgressBar progreso = null;
-	private String archUrl, archTipo;
+	private BufferedImage buffer, backgr = null;		// Buffer of image
+	private int movX, movY;		// Position of node in drag
+	private DragSource sourceDrag;	// Source of drag
+	private DropTarget destinyDrag;	// Destiny of drag
+	private int typeScale = SCALE_HEAT;
+	private Point[] posTopologyNodes;
+	private JProgressBar progress = null;
+	private String fileUrl, fileType;
 	
-	public static int ESCALA_CALOR = 0, ESCALA_LUZ = 1, ESCALA_ENERGIA = 2;
+	public static int SCALE_HEAT = 0, SCALE_LIGHT = 1, SCALE_ENERGY = 2;
 	
 	private Vector<NodeTopologyChart> node;
 	
 	/***************************************************************************
-	 * Constructor principal de la clase.
+	 * Constructor main of the class.
 	 **************************************************************************/
 	public TopologyPlotter() {
 		super();
 		setBackground(Color.WHITE);
 		node = new Vector<NodeTopologyChart>();		
-		fuenArr = new DragSource();
-		fuenArr.createDefaultDragGestureRecognizer(
+		sourceDrag = new DragSource();
+		sourceDrag.createDefaultDragGestureRecognizer(
 				this, DnDConstants.ACTION_COPY_OR_MOVE, this);
-		destArr = new DropTarget(this, this);
+		destinyDrag = new DropTarget(this, this);
 	}
 
 	/***************************************************************************
-	 * Define los valores mínimo y máximo de la escala.
+	 * Define the value minimum and maximum of the scale.
 	 * 
-	 * @param valueMin	Valor mínimo de la escala
-	 * @param valueMax	Valor máximo de la escala
+	 * @param valueMin	Value minimum of scale
+	 * @param valueMax	Value maximum of scale
 	 **************************************************************************/
 	public void defEscala(double valueMin, double valueMax) {
 		this.valueMin = valueMin;
@@ -91,74 +90,74 @@ public class TopologyPlotter extends JPanel
 	}
 
 	/***************************************************************************
-	 * Devuelve el valor mínimo de la escala utilizada.
+	 * Returns the minimum value of scale.
 	 * 
-	 * @return	Valor mínimo de la escala
+	 * @return	Minimun value of scale
 	 **************************************************************************/
 	public double obtMinimum() {
 		return valueMin;
 	}
 	
 	/***************************************************************************
-	 * Devuelve el valor máximo de la escala utilizada.
+	 * Returns the maximum value of scale.
 	 * 
-	 * @return	Valor máximo de la escala
+	 * @return	Maximum value of scale
 	 **************************************************************************/
 	public double obtMaximum() {
 		return valueMax;
 	}
 	
 	/***************************************************************************
-	 * Define el tipo de escala a utilizar.
+	 * Define type of scale to use.
 	 * 
-	 * @param tipoEscala	Tipo de escala
+	 * @param typeScale	Type of scale
 	 **************************************************************************/
-	public void defTipoEscala(int tipoEscala) {
-		this.tipoEscala = tipoEscala;
+	public void defTypeScale(int typeScale) {
+		this.typeScale = typeScale;
 	}
 
 	/***************************************************************************
-	 * Define el arreglo de puntos donde se especifica la coordenada de cada
-	 * uno de los nodos en el gráfico.
+	 * Define the settlement points which specifies the coordinates 
+	 * of each of the nodes in the graph.
 	 * 
-	 * @param posTopologiaNodos	Posición de los nodos en el gráfico
+	 * @param posTopologyNodes	Position of nodes in the chart
 	 **************************************************************************/
-	public void defPosNodos(Point[] posTopologiaNodos) {
-		this.posTopologiaNodos = posTopologiaNodos;
+	public void defPosNodes(Point[] posTopologyNodes) {
+		this.posTopologyNodes = posTopologyNodes;
 	}
 	
 	/***************************************************************************
-	 * Define la imagen de fondo a utilizar en el gráfico. La imagen es
-	 * redimensionada al tamaño del gráfico.
+	 * Set the background image to be used in the graph. The image is resized 
+	 * to the size of the graph.
 	 * 
-	 * @param fondo	Imágen de fondo
+	 * @param backgr	Image of background
 	 **************************************************************************/
-	public void defFondo(BufferedImage fondo) {
+	public void defBackgr(BufferedImage backgr) {
 		AffineTransform tx = new AffineTransform();
 		double s;
 		if (getWidth() >= getHeight())
-			s = (double)getWidth() / fondo.getWidth();
-		else s = (double)getHeight() / fondo.getHeight();
+			s = (double)getWidth() / backgr.getWidth();
+		else s = (double)getHeight() / backgr.getHeight();
 		System.out.println(s);
 	    tx.scale(s, s);
 	    AffineTransformOp op = new AffineTransformOp(
 	    		tx, AffineTransformOp.TYPE_BILINEAR);
-		this.fondo = op.filter(fondo, null);
+		this.backgr = op.filter(backgr, null);
 	}
 	
 	/***************************************************************************
-	 * Define la barra de progreso a utilizar.
+	 * Define the progress bar to use.
 	 * 
-	 * @param progress	Barra de progreso
+	 * @param progress	Progress bar
 	 **************************************************************************/
 	public void defProgress(JProgressBar progress) {
-		this.progreso = progress;
+		this.progress = progress;
 	}
 
 	/***************************************************************************
-	 * Método principal de dibujo del componente.
+	 * Method main of draw of component.
 	 * 
-	 * @param g	Gráfico a utilizar
+	 * @param g	 Chart to use
 	 **************************************************************************/
 	public void paint(Graphics g) {
 		Graphics2D g2 = (Graphics2D)g;
@@ -175,11 +174,11 @@ public class TopologyPlotter extends JPanel
 			drawImage();
 			g2.drawImage(buffer, null, 0, 0);
 		}
-		else dibujarArrastre(g2);
+		else drawDrag(g2);
 	}
 
 	/***************************************************************************
-	 * Dibuja la imagen de la topología en el buffer.
+	 * Draw the image of the topology in the buffer.
 	 **************************************************************************/
 	private void drawImage() {
 		Graphics2D g2d = buffer.createGraphics();
@@ -196,12 +195,12 @@ public class TopologyPlotter extends JPanel
 	}
 	
 	/***************************************************************************
-	 * Si se está arrastrando un nodo esta grafica una sombra del nodo en
-	 * cuestión con su posición actual.
+	 * If this is dragging a node graph a shadow node in question with their 
+	 * current position.
 	 * 
-	 * @param g2d	Gráfico a utilizar
+	 * @param g2d	Chart to use
 	 **************************************************************************/
-	private void dibujarArrastre(Graphics2D g2d) {
+	private void drawDrag(Graphics2D g2d) {
 		int x, y, id;
 		double v;
 		
@@ -216,21 +215,21 @@ public class TopologyPlotter extends JPanel
 	}
 	
 	/***************************************************************************
-	 * Dibuja la imagen de fondo en el centro del gráfico.
+	 * Draw the background image in the center of the graph.
 	 * 
-	 * @param g2d	Gráfico a utilizar
+	 * @param g2d	Chart to use
 	 **************************************************************************/
 	private void drawImgBackground(Graphics2D g2d) {
-		if (fondo == null) return;
-		int x = (getWidth() - fondo.getWidth()) / 2;
-		int y = (getHeight() - fondo.getHeight()) / 2;
-		g2d.drawImage(fondo, null, x, y);
+		if (backgr == null) return;
+		int x = (getWidth() - backgr.getWidth()) / 2;
+		int y = (getHeight() - backgr.getHeight()) / 2;
+		g2d.drawImage(backgr, null, x, y);
 	}
 	
 	/***************************************************************************
-	 * Dibuja el fondo de la imagen.
+	 * Draw the bottom of the image.
 	 * 
-	 * @param g2d	Gráfico a utilizar
+	 * @param g2d	Chart to use
 	 **************************************************************************/
 	private void drawBackground(Graphics2D g2d) {
 		g2d.setColor(Color.WHITE);
@@ -238,15 +237,14 @@ public class TopologyPlotter extends JPanel
 	}
 
 	/***************************************************************************
-	 * Dibuja la capa de color gradiente correspondiente a interpolaciones de
-	 * la información de sensado.
+	 * Draw layer color gradient for interpolations of the information sensing.
 	 * 
-	 * @param g2d	Gráfico a utilizar
+	 * @param g2d	Chart to use
 	 **************************************************************************/
 	private void drawGradiente(Graphics2D g2d) {
 		
-		double color = 0.0d, distMax, distMen, dist, factor, valor,
-				valorMen = valueMax, valorMay = valueMin, sumFact;
+		double color = 0.0d, distMax, distMen, dist, factor, value,
+				valueMen = valueMax, valueMay = valueMin, sumFact;
 		
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_OFF);
@@ -261,10 +259,10 @@ public class TopologyPlotter extends JPanel
 		valuePro = 0.0d;
 		for (int k = 0; k < node.size(); k++)
 			if (node.get(k) != null) {
-				valor = node.get(k).getValue();
-				if (valor < valorMen) valorMen = valor;
-				if (valor > valorMay) valorMay = valor;
-				valuePro += valor;
+				value = node.get(k).getValue();
+				if (value < valueMen) valueMen = value;
+				if (value > valueMay) valueMay = value;
+				valuePro += value;
 			}
 		valuePro /= node.size();
 		
@@ -298,24 +296,24 @@ public class TopologyPlotter extends JPanel
 						dist = distance(i, j , nodo.getPosition().x,
 								nodo.getPosition().y);
 						factor = (distMen / dist) / sumFact;
-						valor = nodo.getValue();
-						valor = interpolar(valor, valuePro, 1, 0,
-								Math.cos(interpolar(
+						value = nodo.getValue();
+						value = interpolate(value, valuePro, 1, 0,
+								Math.cos(interpolate(
 										0, Math.PI / 2, 0, radio, dist)));
-						valor = valor * factor;
-						color += valor;
+						value = value * factor;
+						color += value;
 				}
 				
-				color = interpolar(0.0d, 1.0d, valueMin, valueMax, color);
-				g2d.setColor(escalaColor(color));
+				color = interpolate(0.0d, 1.0d, valueMin, valueMax, color);
+				g2d.setColor(scaleColor(color));
 				g2d.fillRect(i, j, tamPix, tamPix);			
 			}
 	}
 	
 	/***************************************************************************
-	 * Dibuja los nodos en el gráfico.
+	 * Draw the nodes in the chart.
 	 * 
-	 * @param g2d	Gráfico a utilizar
+	 * @param g2d	Chart to use
 	 **************************************************************************/
 	private void drawNodes(Graphics2D g2d) {
 		
@@ -335,14 +333,14 @@ public class TopologyPlotter extends JPanel
 	}
 	
 	/***************************************************************************
-	 * Dibuja un nodo con las posiciones y el valor datos.
+	 * Draw a node with the positions and data.
 	 * 
-	 * @param g2d		Gráfico a utlizar
-	 * @param id		ID del nodo
-	 * @param x		Valor X de la posición
-	 * @param y		Valor Y de la posición
-	 * @param v		Valor de la lectura
-	 * @param opacidad	Opacidad del dibujo del nodo
+	 * @param g2d		Chart to use
+	 * @param id		ID node
+	 * @param x		Value X of position
+	 * @param y		Value Y of position
+	 * @param v		Value of reading
+	 * @param opacity	Opacity of node draw
 	 **************************************************************************/
 	private void drawNode(Graphics2D g2d, int id, int x, int y,
 			double v, float opacidad) {
@@ -387,13 +385,13 @@ public class TopologyPlotter extends JPanel
 	}
 	
 	/***************************************************************************
-	 * Calcula la distancia entre las dos coordenadas dadas.
+	 * It calculates the distance between the two coordinates given.
 	 * 
-	 * @param x0	Valor X del punto inicial
-	 * @param y0	Valor Y del punto inicial
-	 * @param x1	Valor X del punto final	
-	 * @param y1	Valor Y del punto final
-	 * @return		Un doble con la distancia entre los puntos
+	 * @param x0	Value X of initial point
+	 * @param y0	Value Y of initial point
+	 * @param x1	Value X of final point
+	 * @param y1	Value Y of final point
+	 * @return		A double with the distance between the points
 	 **************************************************************************/
 	private double distance(int x0, int y0, int x1, int y1) {
 		return Math.sqrt(Math.pow(Math.abs(x1 - x0), 2) +
@@ -401,19 +399,18 @@ public class TopologyPlotter extends JPanel
 	}
 
 	/***************************************************************************
-	 * Teniendo <i>y0</i>=<i>f</i>(<i>x0</i>) y <i>y1</i>=<i>f</i>(<i>x1</i>)
-	 * esta devuelve el valor correspondiente a la interpolación de <i>x</i>
-	 * con la línea creada por las coordenadas (<i>x0</i>,<i>y0</i>) y
-	 * (<i>x1</i>,<i>y1</i>).
+	 * Taking <i> y0 </ i> = <i> f </ i> (x0 <i> </ i>) and <i> y1 </ i> = <i> f </ i> (<i> x1 </ i>) 
+	 * that returns the value at the interpolation <i> x </ i> with the line created by the coordinates 
+	 * (<i> x0 </ i> <i> y0 </ i>) and (x1 <i> </ i> <i> y1 </ i>).
 	 * 
-	 * @param y0	Resultado inicial
-	 * @param y1	Resultado final
-	 * @param x0	Valor inicial
-	 * @param x1	Valor final
-	 * @param x	Valor a interpolar
-	 * @return		El resultado de la interpolación
+	 * @param y0	Initial result
+	 * @param y1	Final result
+	 * @param x0	Initial value
+	 * @param x1	Final value
+	 * @param x	    Value to interpolation
+	 * @return		Interpolation result
 	 **************************************************************************/
-	private double interpolar(double y0, double y1, double x0,
+	private double interpolate(double y0, double y1, double x0,
 			double x1, double x) {
 		double m = (y0 - y1) / (x0 - x1);
 		double b = (x1 * y0 - x0 * y1) / (x1 - x0);
@@ -421,17 +418,17 @@ public class TopologyPlotter extends JPanel
 	}
 
 	/***************************************************************************
-	 * Siendo <code>i</code> un valor entre <code>0.0</code> y <code>1.0</code>
-	 * esta regresa el color correspondiente a la escala utilizada.
+	 * Being <code> i </ code> a value between 0.0 <code> </ code> and <code> 1.0 </ code> 
+	 * This returns the color corresponding to the scale used.
 	 * 
-	 * @param i	Valor a buscar en la escala
-	 * @return		Un color correspondiente al valor en la escala
+	 * @param i	    Value to search in the scale
+	 * @return		A color corresponding to the value in the scale
 	 **************************************************************************/
-	private Color escalaColor(double i) {	
+	private Color scaleColor(double i) {	
 		float f = 0.0f;		
 		try {
 			
-			if (tipoEscala == ESCALA_CALOR) {
+			if (typeScale == SCALE_HEAT) {
 			
 				if (i < 0.0) return new Color(0.0f, 0.0f, 0.0f);
 				if (i > 1.0) return new Color(1.0f, 0.0f, 0.0f);
@@ -452,7 +449,7 @@ public class TopologyPlotter extends JPanel
 					return new Color(1.0f, 1.0f - f, 0.0f);
 				}
 			
-			} else if (tipoEscala == ESCALA_ENERGIA) {
+			} else if (typeScale == SCALE_ENERGY) {
 				
 				if (i < 0.0) return new Color(1.0f, 0.0f, 0.0f);
 				if (i > 1.0) return new Color(0.0f, 1.0f, 0.0f);
@@ -465,7 +462,7 @@ public class TopologyPlotter extends JPanel
 				}
 				
 				
-			} else if (tipoEscala == ESCALA_LUZ) {
+			} else if (typeScale == SCALE_LIGHT) {
 				
 				if (i < 0.0) return new Color(0.0f, 0.0f, 0.0f);
 				if (i > 1.0) return new Color(1.0f, 1.0f, 1.0f);
@@ -480,29 +477,29 @@ public class TopologyPlotter extends JPanel
 	}
 
 	/***************************************************************************
-	 * Genera y guarda una imagen del estado actual del graficador.
+	 * It generates and saves a picture of the current status of plotter.
 	 * 
-	 * @param archivo	URL del archivo a generar y guardar
-	 * @param tipo		Tipo de imagen deseada (jpg, gif, png ó bmp)
+	 * @param file	URL file to generate and save
+	 * @param type	Type desired image (jpg, gif, png ó bmp)
 	 **************************************************************************/
-	public void saveImage(String archivo, String tipo) {
+	public void saveImage(String file, String type) {
 		if (node == null) return;
 			
-		this.archUrl = archivo;
-		this.archTipo = tipo;
+		this.fileUrl = file;
+		this.fileType = type;
 			
 		new Thread() {
 			public void run() {
-				int ancho = getWidth();
-				int alto = getHeight();
+				int width = getWidth();
+				int height = getHeight();
 				
-				if (progreso != null) {
-					progreso.setString("Exportando...");
-					progreso.setVisible(true);
+				if (progress != null) {
+					progress.setString("Exporting...");
+					progress.setVisible(true);
 				}
 	
 				BufferedImage buffer = new BufferedImage(
-						(int)Math.round(ancho), (int)Math.round(alto),
+						(int)Math.round(width), (int)Math.round(height),
 						BufferedImage.TYPE_INT_RGB);
 	
 				Graphics2D g2db = buffer.createGraphics();
@@ -516,27 +513,27 @@ public class TopologyPlotter extends JPanel
 				g2db.dispose();
 	
 				try {
-					File arch = new File(archUrl);
-					ImageIO.write(buffer, archTipo, arch);
+					File arch = new File(fileUrl);
+					ImageIO.write(buffer, fileType, arch);
 				} catch (IOException e) {
 					JOptionPane.showMessageDialog(null,
-							"Error al guardar la imagen " + archUrl,
-							"Error al guardar", JOptionPane.ERROR_MESSAGE);
+							"Error saving the image " + fileUrl,
+							"Error saving", JOptionPane.ERROR_MESSAGE);
 					e.printStackTrace();
 				}
 				
-				if (progreso != null) {
-					progreso.setString("Cargando...");
-					progreso.setVisible(false);
+				if (progress != null) {
+					progress.setString("Loading...");
+					progress.setVisible(false);
 				}
 			}
 		}.start();
 	}
 
 	/***************************************************************************
-	 * Agrega un nodo al gráfico.
+	 * Add a node in the chart
 	 * 
-	 * @param nodo	Nodo a agregar
+	 * @param nodo	Node to add
 	 * @see			NodeTopologyChart
 	 **************************************************************************/
 	public void addNode(NodeTopologyChart nodo) {
@@ -544,25 +541,25 @@ public class TopologyPlotter extends JPanel
 	}
 
 	/***************************************************************************
-	 * Modifica el nodo con el ID especificado.
+	 * 	Amendment to the node with the specified ID.
 	 * 
-	 * @param id			ID del nodo a reemplazar
-	 * @param nuevoValor	Nodo con el cual reemplazar
+	 * @param id			ID del nodo a reemplazar	 	
+	 * @param newValue	    Node with which to replace
 	 * @see					NodeTopologyChart
 	 **************************************************************************/
-	public void changeNode(int id, NodeTopologyChart nuevoValor) {
+	public void changeNode(int id, NodeTopologyChart newValue) {
 		for (int i = 0; i < node.size(); i++)
 			if (node.get(i).getId() == id) {
-				node.set(id, nuevoValor);
+				node.set(id, newValue);
 				return;
 			}	
 	}
 
 	/***************************************************************************
-	 * Busca el ID de nodo en los nodos actuales.
+	 * Find the ID node in the current nodes.
 	 * 
-	 * @param id	ID del nodo a buscar
-	 * @return		Verdadero si el nodo existe en el gráfico
+	 * @param id	Node ID searching
+	 * @return		True if the node exists in figure
 	 **************************************************************************/
 	public boolean existNode(int id) {
 		for (int i = 0; i < node.size(); i++)
@@ -572,7 +569,7 @@ public class TopologyPlotter extends JPanel
 	}
 
 	/***************************************************************************
-	 * Elimina el nodo con el ID especificado.
+	 * It removes the node with the specified ID.
 	 * 
 	 * @param id	ID del nodo a eliminar
 	 **************************************************************************/
@@ -585,16 +582,16 @@ public class TopologyPlotter extends JPanel
 	}
 
 	/***************************************************************************
-	 * Elimina todos los nodos del gráfico.
+	 * Removes all nodes in the graph.
 	 **************************************************************************/
 	public void deleteAllNodes() {
 		node.removeAllElements();
 	}
 
 	/***************************************************************************
-	 * Procedimiento para reconocer e inicializar el arrastre.
+	 * Proceedings to recognize and initialize the drag.
 	 * 
-	 * @param evt	Evento de arrastre
+	 * @param evt	Event of drag
 	 **************************************************************************/
 	public void dragGestureRecognized(DragGestureEvent evt) {
 		int x = evt.getDragOrigin().x;
@@ -613,16 +610,16 @@ public class TopologyPlotter extends JPanel
 			}
 		
 		if (movNod > -1) {
-			Transferable t = new StringSelection(destArr.toString());
-			fuenArr.startDrag(evt, DragSource.DefaultMoveDrop, t, this);
+			Transferable t = new StringSelection(destinyDrag.toString());
+			sourceDrag.startDrag(evt, DragSource.DefaultMoveDrop, t, this);
 		}
 	}
 
 	/***************************************************************************
-	 * Procedimiento para finalizar el arrastre y definir la nueva posición del
-	 * nodo, antes de eso la posición es validada.
+	 * Procedures to complete the drag and define the new position of the node, 
+	 * before that the position is validated.
 	 * 
-	 * @param evt	Evento de arrastre
+	 * @param evt	Event of drag
 	 **************************************************************************/
 	public void dragDropEnd(DragSourceDropEvent evt) {
 		int nx = evt.getLocation().x - getLocationOnScreen().x;
@@ -634,7 +631,7 @@ public class TopologyPlotter extends JPanel
 				NodeTopologyChart n = node.get(movNod);
 				n.setPosition(nx, ny);
 				node.set(movNod, n);
-				posTopologiaNodos[n.getId()] = new Point(nx, ny);
+				posTopologyNodes[n.getId()] = new Point(nx, ny);
 			}
 			repaint();
 			movNod = -1;
@@ -642,9 +639,9 @@ public class TopologyPlotter extends JPanel
 	}
 
 	/***************************************************************************
-	 * Identifica la posición actual del arrastre y redibuja la pantalla.
+	 * Identifies the current position of the drag and redraws the screen.
 	 * 
-	 * @param evt	Evento de arrastre
+	 * @param evt	Event of drag
 	 **************************************************************************/
 	public void dragOver(DropTargetDragEvent evt) {
 		movX = evt.getLocation().x;
@@ -654,7 +651,7 @@ public class TopologyPlotter extends JPanel
 
 	//--------------------------------------------------------------------------
 	//
-	//   Procedimientos de interfaces no utilizados.
+	// Procedures interfaces unused.
 	//
 	//==========================================================================
 	

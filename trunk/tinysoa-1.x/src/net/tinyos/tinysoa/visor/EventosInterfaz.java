@@ -767,20 +767,20 @@ public class EventosInterfaz
 					
 					if (par.compareTo("Temp") == 0) {
 						graficadorTopologia.defEscala(0.0d, 35.0d);
-						graficadorTopologia.defTipoEscala(
-								TopologyPlotter.ESCALA_CALOR);
+						graficadorTopologia.defTypeScale(
+								TopologyPlotter.SCALE_HEAT);
 					} else if (par.compareTo("Luz") == 0) {
 						graficadorTopologia.defEscala(300.0d, 900.0d);
-						graficadorTopologia.defTipoEscala(
-								TopologyPlotter.ESCALA_LUZ);
+						graficadorTopologia.defTypeScale(
+								TopologyPlotter.SCALE_LIGHT);
 					} else if (par.compareTo("Volt") == 0) {
 						graficadorTopologia.defEscala(1.5d, 3.0d);
-						graficadorTopologia.defTipoEscala(
-								TopologyPlotter.ESCALA_ENERGIA);
+						graficadorTopologia.defTypeScale(
+								TopologyPlotter.SCALE_ENERGY);
 					} else {
 						graficadorTopologia.defEscala(300.0d, 1024.0d);
-						graficadorTopologia.defTipoEscala(
-								TopologyPlotter.ESCALA_CALOR);
+						graficadorTopologia.defTypeScale(
+								TopologyPlotter.SCALE_HEAT);
 					}
 					
 					
@@ -1090,7 +1090,7 @@ public class EventosInterfaz
 			posTopNodos[((Node)nodos[i]).getId()] = new Point(x, y);
 		}
 		
-		graficadorTopologia.defPosNodos(posTopNodos);
+		graficadorTopologia.defPosNodes(posTopNodos);
 	}
 
 	//--------------------------------------------------------------------------
@@ -1376,7 +1376,7 @@ public class EventosInterfaz
 							createImage(archivo);
 					if (image != null) {
 						BufferedImage bImage = toBufferedImage(image);
-						graficadorTopologia.defFondo(bImage);
+						graficadorTopologia.defBackgr(bImage);
 						graficadorTopologia.repaint();
 					}
 				}
