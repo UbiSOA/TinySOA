@@ -41,7 +41,7 @@ public class DialogoSeleccionRed extends JDialog {
 	private static final long serialVersionUID = -522846215043252060L;
 
 	private JList listaRedes;
-	private final EventosInterfaz eventosInterfaz;
+	private final InterfaceEvents eventosInterfaz;
 	
 	/***************************************************************************
 	 * Constructor de la clase.
@@ -51,7 +51,7 @@ public class DialogoSeleccionRed extends JDialog {
 	 * @param eventos	Controlador de eventos para llamar al seleccionar
 	 **************************************************************************/
 	public DialogoSeleccionRed(JFrame ventana, ImageIcon icono,
-			EventosInterfaz eventos) {
+			InterfaceEvents eventos) {
 		super(ventana, "Seleccionar red", false);
 		this.eventosInterfaz = eventos;
 		
