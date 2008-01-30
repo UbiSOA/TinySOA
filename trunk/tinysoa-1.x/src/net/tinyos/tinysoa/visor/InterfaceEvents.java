@@ -44,9 +44,9 @@ import org.codehaus.xfire.service.*;
 import org.codehaus.xfire.service.binding.*;
 
 /*******************************************************************************
- * Clase que maneja y administra el comportamiento dinámico del visor.
- * Incluídos el manejo de eventos, las actualizaciones de la información de
- * los componentes y la comunicación con los servicios del servidor.
+ * Handles and manages the monitor's dynamic behavior.
+ * Included are event handling, component information refreshing and communication
+ * with the server services.
  * 
  * @author		Edgardo Avilés López
  * @version	0.5, 07/28/2006
@@ -54,732 +54,724 @@ import org.codehaus.xfire.service.binding.*;
 public class InterfaceEvents
 	implements ActionListener, ChangeListener, MouseListener {
 
-	private String archivoConfiguracion;
-	private String urlServidor;
-	private InfoServ servicioInformacion;
-	private NetServ servicioRed;
-	private DialogoSeleccionRed dialogoSeleccionRed;
-	private JTree arbol;
+	private String configurationArchive;
+	private String serverUrl;
+	private InfoServ infoServ;
+	private NetServ netServ;
+	private NetSelectDialog netSelectionDialog;
+	private JTree tree;
 	private JSlider slider;
-	private JLabel etiquetaSlider;
+	private JLabel labelSlider;
 	@SuppressWarnings("unused")
-	private ImageIcon iconoRed, iconoEstadoNormal, iconoEstadoEspera,
-			iconoEstadoProblema, iconoReproduccion, iconoPausa,
-			iconoReproduccion2, iconoPausa2;
-	private long tiempoMinimo, tiempoMaximo;
-	private Timer rebobinarTimer, adelantarTimer, reproduccionTimer,
-			actualizarVivo;
-	private String urlServicioRed;
-	private JCheckBox actualizarCheck;
-	private JButton botonBarraAtrasar, botonBarraAdelantar,
-			botonBarraReproducir, botonBarraActualizar, botonExportarGrafica,
-			botonExportarTopologia, botonImportarFondo;
-	private JMenuItem menuInicio, menuReproducir, menuFinal, menuActualizar;
-	private JProgressBar barraProgreso;
-	private MonitorTable tablaDatos, tablaEventos, tablaMantenimiento;
-	private DefaultTableModel modeloDatos, modeloEventos, modeloMantenimiento;
-	private boolean actualizacionOcupada = false;
-	private Date tiempo;
+	private ImageIcon netIcon, normalStateIcon, specialStateIcon,
+			problemStateIcon, playIcon, pauseIcon,
+			play2Icon, pause2Icon;
+	private long minTime, maxTime;
+	private Timer rewindTimer, forwardTimer, playTimer,
+			refreshLive;
+	private String netServUrl;
+	private JCheckBox refreshCheck;
+	private JButton dragBarButton, forwardBarButton,
+			playBarButton, refreshBarButton, exportGraphButton,
+			exportTopologyButton, importBackgroundButton;
+	private JMenuItem startMenu, playMenu, finalMenu, refreshMenu;
+	private JProgressBar progressBar;
+	private MonitorTable dataTable, eventTable, maintenanceTable;
+	private DefaultTableModel dataModel, eventModel, maintenanceModel;
+	private boolean refreshBusy = false;
+	private Date time;
 	private JTabbedPane panelTabs;
-	private Plotter graficador;
-	private TopologyPlotter graficadorTopologia;
-	private JComboBox comboParsGraf, comboParsTopologia;
-	private static Point[] posTopNodos;
-	private JFrame ventana;
-	private DialogoEvento dialogoEvento;
-	private DialogoMantenimiento dialogoMantenimiento;
+	private Plotter grapher;
+	private TopologyPlotter topologyGrapher;
+	private JComboBox comboParsGraph, comboParsTopology;
+	private static Point[] posTopNodes;
+	private JFrame mainWindow;
+	private EventDialog eventDialog;
+	private MaintenanceDialog eventMaintenance;
 	
 	/***************************************************************************
-	 * Constructor principal de la clase.
+	 * Class constructor
 	 * 
-	 * @param archivoConfiguracion	Archivo con los valores de configuración
-	 * @param window				Ventana padre de la clase
-	 * @param iconoRed				Icono de una red
-	 * @param iconoEstadoNormal	Icono de nodo con estado normal
-	 * @param iconoEstadoEspera	Icono de nodo con estado de espera
-	 * @param iconoEstadoProblema	Icono de nodo con estado problema
+	 * @param configurationArchive	Configuration values archive
+	 * @param window				Parent window
+	 * @param netIcon				Network icon
+	 * @param normalStateIcon		Normal state icon
+	 * @param specialStateIcon		Special state icon
+	 * @param problemStateIcon		Problem state icon
 	 **************************************************************************/
-	public InterfaceEvents(String archivoConfiguracion, JFrame ventana,
-			ImageIcon iconoRed, ImageIcon iconoEstadoNormal,
-			ImageIcon iconoEstadoEspera, ImageIcon iconoEstadoProblema) {
-		this.archivoConfiguracion = archivoConfiguracion;
-		this.ventana = ventana;
-		this.iconoRed = iconoRed;
-		this.iconoEstadoNormal = iconoEstadoNormal;
-		this.iconoEstadoEspera = iconoEstadoEspera;
-		this.iconoEstadoProblema = iconoEstadoProblema;
-		dialogoSeleccionRed = new DialogoSeleccionRed(ventana, iconoRed, this);
-		cargarConfiguracion();
+	public InterfaceEvents(String configurationArchive, JFrame window,
+			ImageIcon netIcon, ImageIcon normalStateIcon,
+			ImageIcon specialStateIcon, ImageIcon problemStateIcon) {
+		this.configurationArchive = configurationArchive;
+		this.mainWindow = window;
+		this.netIcon = netIcon;
+		this.normalStateIcon = normalStateIcon;
+		this.specialStateIcon = specialStateIcon;
+		this.problemStateIcon = problemStateIcon;
+		netSelectionDialog = new NetSelectDialog(window, netIcon, this);
+		loadConfiguration();
 		
-		rebobinarTimer = new Timer(250, new ActionListener() {
+		rewindTimer = new Timer(250, new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				int nuevoValor = slider.getValue() - 50;
-				if (nuevoValor < 0) nuevoValor = 0;
-				slider.setValue(nuevoValor);
-				System.out.println("act rebobinarTimer");
-				actualizar();
+				int newValue = slider.getValue() - 50;
+				if (newValue < 0) newValue = 0;
+				slider.setValue(newValue);
+				System.out.println("act rewindTimer");
+				refresh();
 			}});
-		adelantarTimer = new Timer(250, new ActionListener() {
+		forwardTimer = new Timer(250, new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				int nuevoValor = slider.getValue() + 50;
-				if (nuevoValor > 10000) nuevoValor = 10000;
-				slider.setValue(nuevoValor);
-				System.out.println("act adelantarTimer");
-				actualizar();
+				int newValue = slider.getValue() + 50;
+				if (newValue > 10000) newValue = 10000;
+				slider.setValue(newValue);
+				System.out.println("act forwardTimer");
+				refresh();
 			}});
-		reproduccionTimer = new Timer(1000, new ActionListener() {
+		playTimer = new Timer(1000, new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				int nuevoValor = slider.getValue() + 25;
-				if (nuevoValor > 10000) nuevoValor = 10000;
-				slider.setValue(nuevoValor);
-				System.out.println("act reproduccionTimer");
-				actualizar();
-				if (nuevoValor == 10000)
-					reproducirPausar();
+				int newValue = slider.getValue() + 25;
+				if (newValue > 10000) newValue = 10000;
+				slider.setValue(newValue);
+				System.out.println("act playTimer");
+				refresh();
+				if (newValue == 10000)
+					playPause();
 			}});
-		actualizarVivo = new Timer(1000, new ActionListener() {
+		refreshLive = new Timer(1000, new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				actualizarTodo();				
+				refreshEverything();				
 			}});
-		rebobinarTimer.setInitialDelay(0);
-		adelantarTimer.setInitialDelay(0);
-		reproduccionTimer.setInitialDelay(0);
+		rewindTimer.setInitialDelay(0);
+		forwardTimer.setInitialDelay(0);
+		playTimer.setInitialDelay(0);
 	}
 	
 	//--------------------------------------------------------------------------
 	//
-	//   INDICACIÓN DE COMPONENTES A SER MANIPULADOS POR LOS EVENTOS.
+	//	Components to be manipulated by events
 	//
 	//==========================================================================
 	
 	/***************************************************************************
-	 * Define el arbol de nodos.
+	 * Sets the node tree
 	 * 
-	 * @param arbol	Arbol de nodos
+	 * @param tree	Node tree
 	 **************************************************************************/
-	public void defArbol(JTree arbol) {
-		this.arbol = arbol;
+	public void setTree(JTree tree) {
+		this.tree = tree;
 	}
 	
 	/***************************************************************************
-	 * Define el <i>slider</i> de selección de tiempos y su etiqueta.
+	 * Sets the time selection slider and its label
 	 * 
-	 * @param slider			<i>Slider</i> de selección
-	 * @param etiquetaSlider	Etiqueta del <i>slider</i>
+	 * @param slider		Selection slider
+	 * @param labelSlider	Slider label
 	 **************************************************************************/
-	public void defSlider(JSlider slider, JLabel etiquetaSlider) {
+	public void setSlider(JSlider slider, JLabel labelSlider) {
 		this.slider = slider;
-		this.etiquetaSlider = etiquetaSlider;
+		this.labelSlider = labelSlider;
 	}
 
 	/***************************************************************************
-	 * Define el <i>checkbox</i> de actualización.
+	 * Sets the refresh checkbox
 	 * 
-	 * @param actualizar	<i>Checkbox</i> de actualización
+	 * @param refresh	Refresh checkbox
 	 **************************************************************************/
-	public void defActualizarCheck(JCheckBox actualizar) {
-		this.actualizarCheck = actualizar;
+	public void setRefreshCheckbox(JCheckBox refresh) {
+		this.refreshCheck = refresh;
 	}
 	
 	/***************************************************************************
-	 * Define los controles de reproducción.
+	 * Set play controls
 	 * 
-	 * @param botonBarraAtrasar	Botón para atrasar
-	 * @param botonBarraReproducir	Botón para reproducir
-	 * @param botonBarraAdelantar	Botón para adelantar
-	 * @param iconoReproduccion	Icono de reproducción
-	 * @param iconoPausa			Icono de pausa
+	 * @param dragBarButton	Button to go Back
+	 * @param playBarButton	Button to play
+	 * @param forwardBarButton	Button to go forward
+	 * @param playIcon	Play icon
+	 * @param pauseIcon			Pause icon
 	 **************************************************************************/
-	public void defControlesReproduccion(JButton botonBarraAtrasar,
-			JButton botonBarraReproducir, JButton botonBarraAdelantar,
-			ImageIcon iconoReproduccion, ImageIcon iconoPausa) {
-		this.botonBarraAtrasar = botonBarraAtrasar;
-		this.botonBarraReproducir = botonBarraReproducir;
-		this.botonBarraAdelantar = botonBarraAdelantar;
-		this.iconoReproduccion = iconoReproduccion;
-		this.iconoPausa = iconoPausa;
+	public void setPlayControls(JButton dragBarButton,
+			JButton playBarButton, JButton forwardBarButton,
+			ImageIcon playIcon, ImageIcon pauseIcon) {
+		this.dragBarButton = dragBarButton;
+		this.playBarButton = playBarButton;
+		this.forwardBarButton = forwardBarButton;
+		this.playIcon = playIcon;
+		this.pauseIcon = pauseIcon;
 	}
 	
 	/***************************************************************************
-	 * Define los controles de reproducción de la barra de herramientas.
+	 * Set the play controls for the toolbar
 	 * 
-	 * @param menuInicio			Botón para regresar al inicio
-	 * @param menuReproducir		Botón para reproducir
-	 * @param menuFinal			Botón para ir al final
-	 * @param iconoReproduccion2	Icono de reproducción
-	 * @param iconoPausa2			Icono de pausa
+	 * @param startMenu			Button to go back to start
+	 * @param playMenu		Button to play
+	 * @param finalMenu			Button to go to the end
+	 * @param play2Icon		Play icon
+	 * @param pause2Icon			Pause icon
 	 **************************************************************************/
-	public void defControlesReproduccion2(JMenuItem menuInicio,
-			JMenuItem menuReproducir, JMenuItem menuFinal,
-			ImageIcon iconoReproduccion2, ImageIcon iconoPausa2) {
-		this.menuInicio = menuInicio;
-		this.menuReproducir = menuReproducir;
-		this.menuFinal = menuFinal;
-		this.iconoReproduccion2 = iconoReproduccion2;
-		this.iconoPausa2 = iconoPausa2;
+	public void setPlayControls2(JMenuItem startMenu,
+			JMenuItem playMenu, JMenuItem finalMenu,
+			ImageIcon play2Icon, ImageIcon pause2Icon) {
+		this.startMenu = startMenu;
+		this.playMenu = playMenu;
+		this.finalMenu = finalMenu;
+		this.play2Icon = play2Icon;
+		this.pause2Icon = pause2Icon;
 	}
 	
 	/***************************************************************************
-	 * Define el botón para actualizar todo.
+	 * Sets the refresh everything button
 	 * 
-	 * @param botonBarraActualizar	Botón para actualizar todo
+	 * @param refreshBarButton	Button to refresh everything
 	 **************************************************************************/
-	public void defBotonActualizarTodo(JButton botonBarraActualizar) {
-		this.botonBarraActualizar = botonBarraActualizar;
+	public void setRefreshEverythingButton(JButton refreshBarButton) {
+		this.refreshBarButton = refreshBarButton;
 	}
 	
 	/***************************************************************************
-	 * Define el botón de la barra de herramientas para actualizar todo.
+	 * Sets the refresh everything toolbar button
 	 * 
-	 * @param menuActualizar	Botón para actualizar todo
+	 * @param refreshMenu	Button to refresh everything
 	 **************************************************************************/
-	public void defBotonMenuActualizarTodo(JMenuItem menuActualizar) {
-		this.menuActualizar = menuActualizar;
+	public void setRefreshEverythingMenuButton(JMenuItem refreshMenu) {
+		this.refreshMenu = refreshMenu;
 	}
 	
 	/***************************************************************************
-	 * Define la barra de progreso.
+	 * Sets the progress bar
 	 * 
-	 * @param barraProgreso	Barra de progreso
+	 * @param progressBar	Progress Bar
 	 **************************************************************************/
-	public void defBarraProgreso(JProgressBar barraProgreso) {
-		this.barraProgreso = barraProgreso;
+	public void setProgressBar(JProgressBar progressBar) {
+		this.progressBar = progressBar;
 	}
 	
 	/***************************************************************************
-	 * Define el panel de <i>tabs</i>.
+	 * Sets the tab panel
 	 * 
-	 * @param panelTabs	Panel de <i>tabs</i>
+	 * @param panelTabs	Tab panel
 	 **************************************************************************/
-	public void defPanelTabs(JTabbedPane panelTabs) {
+	public void setTabPanel(JTabbedPane panelTabs) {
 		this.panelTabs = panelTabs;
 	}
 	
 	/***************************************************************************
-	 * Define la tabla de datos a utilizar por el <i>tab</i> de datos.
-	 * @param tabla
-	 * @param modelo
+	 * Sets the data table for using inside the data tab
+	 * @param table
+	 * @param model
 	 **************************************************************************/
-	public void defTablaDatos(MonitorTable tabla, DefaultTableModel modelo) {
-		tablaDatos = tabla;
-		modeloDatos = modelo;
+	public void setDataTable(MonitorTable table, DefaultTableModel model) {
+		dataTable = table;
+		dataModel = model;
 	}
 
 	/***************************************************************************
-	 * Define el graficador a utilizar por el <i>tab</i> de gráficas.
+	 * Sets the grapher for using inside the graph tab
 	 * 
-	 * @param graficador	Graficador a utilizar
+	 * @param grapher	Grapher to use
 	 **************************************************************************/
-	public void defGraficador(Plotter graficador) {
-		this.graficador = graficador;
+	public void setGrapher(Plotter grapher) {
+		this.grapher = grapher;
 	}
 	
 	/***************************************************************************
-	 * Define el <i>ComboBox</i> a utilizar para seleccionar el parámetro a
-	 * utilizar con el graficador.
+	 * Sets the combobox used to select the graphed parameter
 	 * 
-	 * @param comboParsGraf	<i>ComboBox</i> con el listado de parámetros
+	 * @param comboParsGraph	ComboBox with the parameter list
 	 **************************************************************************/
-	public void defComboParsGraf(JComboBox comboParsGraf) {
-		this.comboParsGraf = comboParsGraf;
+	public void setComboParsGraf(JComboBox comboParsGraf) {
+		this.comboParsGraph = comboParsGraf;
 	}
 	
 	/***************************************************************************
-	 * Define el botón para exportar una imágen del estado actual del
-	 * graficador.
+	 * Sets a button to export the actual state of the grapher icon
 	 * 
-	 * @param botonExportarGrafica	Botón para exportar una imagen
+	 * @param exportGraphButton	Button for exporting an image
 	 **************************************************************************/
-	public void defBotonExportarGrafica(JButton botonExportarGrafica) {
-		this.botonExportarGrafica = botonExportarGrafica;
+	public void setExportGraphButton(JButton exportGraphButton) {
+		this.exportGraphButton = exportGraphButton;
 	}
 	
 	/***************************************************************************
-	 * Define el graficador de topología a utilizar por el <i>tab</i> de
-	 * topología.
+	 * Sets the topology grapher to use in the topology tab
 	 * 
-	 * @param graficadorTopologia	Graficador de topología a utilizar
+	 * @param topologyGrapher	Topology Plotter to use
 	 **************************************************************************/
-	public void defGrafTopologia(TopologyPlotter graficadorTopologia) {
-		this.graficadorTopologia = graficadorTopologia;
+	public void setGraphTopology(TopologyPlotter graphTopology) {
+		this.topologyGrapher = graphTopology;
 	}
 	
 	/***************************************************************************
-	 * Define el <i>ComboBox</i> a utilizar para seleccionar el parámetro a
-	 * utilizar con el graficador de topología.
+	 * Sets the ComboBox used to select the graphed topology parameter
 	 * 
-	 * @param comboParsTopologia	<i>ComboBox</i> con los parámetros
+	 * @param comboParsTopology	Combobox with the parameters
 	 **************************************************************************/
-	public void defComboParsTopologia(JComboBox comboParsTopologia) {
-		this.comboParsTopologia = comboParsTopologia;
+	public void setTopologyComboParams(JComboBox topologyComboParams) {
+		this.comboParsTopology = topologyComboParams;
 	}
 
 	/***************************************************************************
-	 * Define el botón para importar una imágen de fondo a utlizar en el
-	 * graficador de topología.
+	 * Sets the import background picture button for the topology grapher
 	 * 
-	 * @param botonImportarFondo	Botón para importar fondo
+	 * @param importBackgroundButton	Button to import image
 	 **************************************************************************/
-	public void defBotonImportarFondo(JButton botonImportarFondo) {
-		this.botonImportarFondo = botonImportarFondo;
+	public void setImportBackgroundButton(JButton importBackgroundButton) {
+		this.importBackgroundButton = importBackgroundButton;
 	}
 
 	/***************************************************************************
-	 * Define el botón para exportar una imágen del estado actual del
-	 * graficador de topología.
+	 * Sets the export image button for the current state of the topology grapher
 	 * 
-	 * @param botonExportarTopologia	Botón para exportar una imágen
+	 * @param exportTopologyButton	Botón para exportar una imágen
 	 **************************************************************************/
-	public void defBotonExportarTopologia(JButton botonExportarTopologia) {
-		this.botonExportarTopologia = botonExportarTopologia;
+	public void setExportTopologyButton(JButton exportTopologyButton) {
+		this.exportTopologyButton = exportTopologyButton;
 	}
 	
 	/***************************************************************************
-	 * Define la tabla de eventos a utilizar por el <i>tab</i> de eventos.
+	 * Sets the event table used by the events tab
 	 * 
-	 * @param tabla
-	 * @param modelo
+	 * @param table
+	 * @param model
 	 **************************************************************************/
-	public void defTablaEventos(MonitorTable tabla, DefaultTableModel modelo) {
-		tablaEventos = tabla;
-		modeloEventos = modelo;
+	public void setEventTable(MonitorTable table, DefaultTableModel model) {
+		eventTable = table;
+		eventModel = model;
 		
-		modeloEventos = new DefaultTableModel();
-		TableSorter ordenador = new TableSorter(modeloEventos);
-		tablaEventos.setModel(ordenador);
-		ordenador.setTableHeader(tablaEventos.getTableHeader());
+		eventModel = new DefaultTableModel();
+		TableSorter sorter = new TableSorter(eventModel);
+		eventTable.setModel(sorter);
+		sorter.setTableHeader(eventTable.getTableHeader());
 		
-		modeloEventos.addColumn("ID");
-		modeloEventos.addColumn("Nombre");
-		modeloEventos.addColumn("Criterio");
-		modeloEventos.addColumn("Listo");
-		modeloEventos.addColumn("NID");
-		modeloEventos.addColumn("Detectado el");
+		eventModel.addColumn("ID");
+		eventModel.addColumn("Name");
+		eventModel.addColumn("Criteria");
+		eventModel.addColumn("Done");
+		eventModel.addColumn("NID");
+		eventModel.addColumn("Detected in");
 		
-		tablaEventos.getTableHeader().setBackground(new Color(0xe1e6ec));
-		tablaEventos.getTableHeader().setReorderingAllowed(false);
+		eventTable.getTableHeader().setBackground(new Color(0xe1e6ec));
+		eventTable.getTableHeader().setReorderingAllowed(false);
 		
-		tablaEventos.getColumnModel().getColumn(0).setCellRenderer(
+		eventTable.getColumnModel().getColumn(0).setCellRenderer(
 				new MonitorCellRenderer(SwingConstants.CENTER, true));
-		for (int i = 1; i < tablaEventos.getColumnCount(); i++)
-			tablaEventos.getColumnModel().getColumn(i).setCellRenderer(
+		for (int i = 1; i < eventTable.getColumnCount(); i++)
+			eventTable.getColumnModel().getColumn(i).setCellRenderer(
 					new MonitorCellRenderer(SwingConstants.CENTER, false));
-		tablaEventos.getColumnModel().getColumn(3).setCellRenderer(
+		eventTable.getColumnModel().getColumn(3).setCellRenderer(
 				new MonitorCellRenderer(SwingConstants.CENTER, true));
 		
-		tablaEventos.getColumnModel().getColumn(0).setPreferredWidth(42);
-		tablaEventos.getColumnModel().getColumn(0).setMinWidth(42);
-		tablaEventos.getColumnModel().getColumn(2).setPreferredWidth(130);
-		tablaEventos.getColumnModel().getColumn(2).setMinWidth(130);
-		tablaEventos.getColumnModel().getColumn(3).setPreferredWidth(42);
-		tablaEventos.getColumnModel().getColumn(3).setMinWidth(42);
-		tablaEventos.getColumnModel().getColumn(4).setPreferredWidth(42);
-		tablaEventos.getColumnModel().getColumn(4).setMinWidth(42);
-		tablaEventos.getColumnModel().getColumn(5).setPreferredWidth(130);
-		tablaEventos.getColumnModel().getColumn(5).setMinWidth(130);
+		eventTable.getColumnModel().getColumn(0).setPreferredWidth(42);
+		eventTable.getColumnModel().getColumn(0).setMinWidth(42);
+		eventTable.getColumnModel().getColumn(2).setPreferredWidth(130);
+		eventTable.getColumnModel().getColumn(2).setMinWidth(130);
+		eventTable.getColumnModel().getColumn(3).setPreferredWidth(42);
+		eventTable.getColumnModel().getColumn(3).setMinWidth(42);
+		eventTable.getColumnModel().getColumn(4).setPreferredWidth(42);
+		eventTable.getColumnModel().getColumn(4).setMinWidth(42);
+		eventTable.getColumnModel().getColumn(5).setPreferredWidth(130);
+		eventTable.getColumnModel().getColumn(5).setMinWidth(130);
 		
-		((TableSorter)tablaEventos.getModel()).setSortingStatus(
+		((TableSorter)eventTable.getModel()).setSortingStatus(
 				0, TableSorter.DESCENDING);
 	}
 	
 	/***************************************************************************
-	 * Define la tabla de mantenimiento a utilizar por el <i>tab</i>
-	 * de mantenimiento.
+	 * Sets the maintenance table used by the maintenance tab
 	 * 
-	 * @param tabla
-	 * @param modelo
+	 * @param table
+	 * @param model
 	 **************************************************************************/
-	public void defTablaMantenimiento(MonitorTable tabla, DefaultTableModel modelo) {
-		tablaMantenimiento = tabla;
-		modeloMantenimiento = modelo;
+	public void setMaintenanceTable(MonitorTable table, DefaultTableModel model) {
+		maintenanceTable = table;
+		maintenanceModel = model;
 		
-		modeloMantenimiento = new DefaultTableModel();
-		TableSorter ordenador = new TableSorter(modeloMantenimiento);
-		tablaMantenimiento.setModel(ordenador);
-		ordenador.setTableHeader(tablaMantenimiento.getTableHeader());
+		maintenanceModel = new DefaultTableModel();
+		TableSorter sorter = new TableSorter(maintenanceModel);
+		maintenanceTable.setModel(sorter);
+		sorter.setTableHeader(maintenanceTable.getTableHeader());
 		
-		modeloMantenimiento.addColumn("ID");
-		modeloMantenimiento.addColumn("Acción");
-		modeloMantenimiento.addColumn("Valor");
-		modeloMantenimiento.addColumn("NID");
-		modeloMantenimiento.addColumn("Ejecutar el");
-		modeloMantenimiento.addColumn("Ejecutada el");
-		modeloMantenimiento.addColumn("Listo");
-		modeloMantenimiento.addColumn("Repertir cada");
+		maintenanceModel.addColumn("ID");
+		maintenanceModel.addColumn("Action");
+		maintenanceModel.addColumn("Value");
+		maintenanceModel.addColumn("NID");
+		maintenanceModel.addColumn("Execute in");
+		maintenanceModel.addColumn("Executed in");
+		maintenanceModel.addColumn("Done");
+		maintenanceModel.addColumn("Repeat every");
 		
-		tablaMantenimiento.getTableHeader().setBackground(new Color(0xe1e6ec));
-		tablaMantenimiento.getTableHeader().setReorderingAllowed(false);
+		maintenanceTable.getTableHeader().setBackground(new Color(0xe1e6ec));
+		maintenanceTable.getTableHeader().setReorderingAllowed(false);
 		
-		tablaMantenimiento.getColumnModel().getColumn(0).setCellRenderer(
+		maintenanceTable.getColumnModel().getColumn(0).setCellRenderer(
 				new MonitorCellRenderer(SwingConstants.CENTER, true));
-		for (int i = 1; i < tablaMantenimiento.getColumnCount(); i++)
-			tablaMantenimiento.getColumnModel().getColumn(i).setCellRenderer(
+		for (int i = 1; i < maintenanceTable.getColumnCount(); i++)
+			maintenanceTable.getColumnModel().getColumn(i).setCellRenderer(
 					new MonitorCellRenderer(SwingConstants.CENTER, false));
-		tablaMantenimiento.getColumnModel().getColumn(6).setCellRenderer(
+		maintenanceTable.getColumnModel().getColumn(6).setCellRenderer(
 				new MonitorCellRenderer(SwingConstants.CENTER, true));
 		
-		int[] anchos = {42, 0, 0, 42, 130, 130, 42, 84};
+		int[] widths = {42, 0, 0, 42, 130, 130, 42, 84};
 		
-		for (int i = 0; i < anchos.length; i++)
-			if (anchos[i] != 0) {
-				tablaMantenimiento.getColumnModel().getColumn(i).
-						setPreferredWidth(anchos[i]);
-				tablaMantenimiento.getColumnModel().getColumn(i).
-						setMinWidth(anchos[i]);
+		for (int i = 0; i < widths.length; i++)
+			if (widths[i] != 0) {
+				maintenanceTable.getColumnModel().getColumn(i).
+						setPreferredWidth(widths[i]);
+				maintenanceTable.getColumnModel().getColumn(i).
+						setMinWidth(widths[i]);
 			}
 	
-		((TableSorter)tablaMantenimiento.getModel()).setSortingStatus(
+		((TableSorter)maintenanceTable.getModel()).setSortingStatus(
 				4, TableSorter.DESCENDING);
 	}
 	
 	//--------------------------------------------------------------------------
+	//	Methods to make a connection to the services provider
 	//
-	//   FUNCIONES PARA REALIZAR LA CONEXIÓN CON EL SERVIDOR DE SERVICIOS.
 	//
 	//==========================================================================
 	
 	/***************************************************************************
-	 * Realiza la conexión al servidor de servicios.
+	 * Creates the connection to the service provider
 	 **************************************************************************/
-	public void conectarServidor() {
+	public void connectServer() {
 		String url = (String)JOptionPane.showInputDialog(
-				null, "Indique el URL del servidor de servicios de TinySOA:",
-				"Conectar al servidor", JOptionPane.QUESTION_MESSAGE,
-				null, null, urlServidor.trim());
+				null, "URL of TinySOA services provider:",
+				"Connect to server", JOptionPane.QUESTION_MESSAGE,
+				null, null, serverUrl.trim());
 		if (url == null) return;
-		urlServidor = url;
-		guardarConfiguracion();
+		serverUrl = url;
+		saveConfiguration();
 		
 		new Thread(){
 			public void run() {
 				try {
-					barraProgreso.setVisible(true);
-					Service modeloServicio = new ObjectServiceFactory().
+					progressBar.setVisible(true);
+					Service serviceModel = new ObjectServiceFactory().
 							create(InfoServ.class);
-					servicioInformacion = (InfoServ)new XFireProxyFactory().
-							create(modeloServicio, urlServidor + "/InfoServ");	
-					dialogoSeleccionRed.mostrar(servicioInformacion,
-							barraProgreso);
+					infoServ = (InfoServ)new XFireProxyFactory().
+							create(serviceModel, serverUrl + "/InfoServ");	
+					netSelectionDialog.mostrar(infoServ,
+							progressBar);
 				} catch (Exception e) {
-					barraProgreso.setVisible(false);
-					servicioInformacion = null;
+					progressBar.setVisible(false);
+					infoServ = null;
 					JOptionPane.showMessageDialog(null,
-							"No se ha podido establecer comunicación con el " +
-							"servidor.\nPor favor, compruebe que la " + 
-							"dirección es correcta y vuelva a intentarlo.",
-							"Problema de conexión", JOptionPane.ERROR_MESSAGE);
-					conectarServidor();
-					desactivarControles();
+							"Impossible to stablish communication with the " +
+							"server.\nPlease, verify the URL and try again.", 
+							"Connection Problem", JOptionPane.ERROR_MESSAGE);
+					connectServer();
+					deactivateControls();
 				}
 			}
 		}.start();
 	}
 
 	/***************************************************************************
-	 * Crea y prepara el servicio client de red.
+	 * Creates and prepares the network client service
 	 * 
-	 * @param url	URL del servidor de servicios
+	 * @param url	Service provider URL
 	 **************************************************************************/
-	public void crearServicioRed(String url) {
-		this.urlServicioRed = url;
+	public void createNetworkService(String url) {
+		this.netServUrl = url;
 		new Thread(){
 			public void run() {
 				try {
-					actualizacionOcupada = true;
-					barraProgreso.setVisible(true);
-					Service modeloServicio = new ObjectServiceFactory().
+					refreshBusy = true;
+					progressBar.setVisible(true);
+					Service serviceModel = new ObjectServiceFactory().
 							create(NetServ.class);
-					servicioRed = (NetServ)new XFireProxyFactory().
-							create(modeloServicio, urlServicioRed);
+					netServ = (NetServ)new XFireProxyFactory().
+							create(serviceModel, netServUrl);
 
-					dialogoEvento = new DialogoEvento(
-							ventana, servicioRed, barraProgreso);
-					dialogoMantenimiento = new DialogoMantenimiento(
-							ventana, servicioRed, barraProgreso);
+					eventDialog = new EventDialog(
+							mainWindow, netServ, progressBar);
+					eventMaintenance = new MaintenanceDialog(
+							mainWindow, netServ, progressBar);
 					
-					procesarNodos();
-					procesarParametros();
+					processNodes();
+					processParameters();
 									
-					definirTiempos();
-					activarControles();
-					barraProgreso.setVisible(false);
-					actualizacionOcupada = false;
-					System.out.println("act crearServicioRed");
-					actualizar();
+					defineTimes();
+					activateControls();
+					progressBar.setVisible(false);
+					refreshBusy = false;
+					System.out.println("act createNetworkService");
+					refresh();
 				} catch (Exception e) {
-					barraProgreso.setVisible(false);
-					servicioRed = null;
+					progressBar.setVisible(false);
+					netServ = null;
 					JOptionPane.showMessageDialog(null,
-							"Hubo un error al comunicarse con el servicio de " +
-							"red.", "Problema de comunicación",
+							"There has been an error communicating with the network service ", 
+							"Communication Problem",
 							JOptionPane.ERROR_MESSAGE);
 					e.printStackTrace();
-					desactivarControles();
+					deactivateControls();
 				}
 			}}.start();
 	}
 
 	//--------------------------------------------------------------------------
 	//
-	//   FUNCIONES PARA ACTUALIZAR LA INTERFAZ CON DATOS.
+	//	Functions that refresh the UI with new data
 	//
 	//==========================================================================
 	
 	/***************************************************************************
-	 * Actualiza los datos en base al <i>slider</i>.
+	 * Refresh the data based on the slider value
 	 **************************************************************************/
-	public void actualizar() {
+	public void refresh() {
 		
 		new Thread() {
 			public void run() {
-				if (servicioRed == null) return;
-				if (actualizacionOcupada) {
-					System.out.println("intento de actualizar denegado");
+				if (netServ == null) return;
+				if (refreshBusy) {
+					System.out.println("refreshing denied");
 					return;
 				}
-				actualizacionOcupada = true;
-				bloquearActualizacion();
+				refreshBusy = true;
+				blockRefresh();
 				
-				actualizarTiempo();
-				if (panelTabs.getSelectedIndex() == 0) actualizarTablaDatos();
-				if (panelTabs.getSelectedIndex() == 1) actualizarGraficador();
-				if (panelTabs.getSelectedIndex() == 2) actualizarTopologia();
-				if (panelTabs.getSelectedIndex() == 3) actualizarTablaEventos();
-				if (panelTabs.getSelectedIndex() == 4) actualizarTablaMant();
+				refreshTime();
+				if (panelTabs.getSelectedIndex() == 0) refreshDataTable();
+				if (panelTabs.getSelectedIndex() == 1) refreshGrapher();
+				if (panelTabs.getSelectedIndex() == 2) refreshTopology();
+				if (panelTabs.getSelectedIndex() == 3) refreshEventTable();
+				if (panelTabs.getSelectedIndex() == 4) refreshMaintenanceTable();
 				
-				desbloquearActualizacion();
-				actualizacionOcupada = false;
+				unblockRefresh();
+				refreshBusy = false;
 			}
 		}.start();
 	}
 
-	private void actualizarTodo() {
-		definirTiempos();
-		System.out.println("act actualizarTodo");
-		actualizar();
+	private void refreshEverything() {
+		defineTimes();
+		System.out.println("act refreshEverything");
+		refresh();
 	}
 
 	/***************************************************************************
-	 * Actualiza la tabla de datos.
+	 * Refresh the data table
 	 **************************************************************************/
-	private void actualizarTablaDatos() {
+	private void refreshDataTable() {
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				public void run() {
 					DateFormat formato4 = new SimpleDateFormat(
 							"yyyy-MM-dd HH:mm:ss");
-					Vector<Reading> lecturas = servicioRed.
-							getReadingsUntil(formato4.format(tiempo),
-									((NetTreeNode)arbol.getModel().getRoot()).
+					Vector<Reading> readings = netServ.
+							getReadingsUntil(formato4.format(time),
+									((NetTreeNode)tree.getModel().getRoot()).
 									getChildCount() * 
-									modeloDatos.getColumnCount() * 3);
+									dataModel.getColumnCount() * 3);
 	
-					String[][] vacio = new String[modeloDatos.getRowCount()][];
-					for (int i = 0; i < vacio.length; i++) {
-						vacio[i] = new String[modeloDatos.getColumnCount()];
-						for (int j = 0; j < vacio[i].length; j++)
-							vacio[i][j] = "";
+					String[][] empty = new String[dataModel.getRowCount()][];
+					for (int i = 0; i < empty.length; i++) {
+						empty[i] = new String[dataModel.getColumnCount()];
+						for (int j = 0; j < empty[i].length; j++)
+							empty[i][j] = "";
 					}
 					
-					String tiempoMayor = "";
+					String maxTime = "";
 					
 					Reading l;
-					for (int i = 0; i < lecturas.size(); i++) {
-						l = (Reading)lecturas.get(i);
-						int renglon = buscarRenglon(l.getNid());
-						int columna = modeloDatos.findColumn(l.getParameter());
-						if (renglon >= 0) {
-							if (vacio[renglon][columna].compareTo("") == 0) {
-								modeloDatos.setValueAt(
-										formatearLectura(l.getValue(),
-										l.getParameter()), renglon, columna);
-								vacio[renglon][columna] = formatearLectura(
+					for (int i = 0; i < readings.size(); i++) {
+						l = (Reading)readings.get(i);
+						int row = findRow(l.getNid());
+						int column = dataModel.findColumn(l.getParameter());
+						if (row >= 0) {
+							if (empty[row][column].compareTo("") == 0) {
+								dataModel.setValueAt(
+										formatReading(l.getValue(),
+										l.getParameter()), row, column);
+								empty[row][column] = formatReading(
 										l.getValue(), l.getParameter());
 							}
-							if (vacio[renglon][1].compareTo("") == 0) {
-								modeloDatos.setValueAt(
+							if (empty[row][1].compareTo("") == 0) {
+								dataModel.setValueAt(
 										l.getDateTime().substring(0,
 										l.getDateTime().length() - 2),
-										renglon, 1);
-								vacio[renglon][1] =l.getDateTime().substring(0,
+										row, 1);
+								empty[row][1] =l.getDateTime().substring(0,
 										l.getDateTime().length() - 2);
 							}
-							if (l.getDateTime().compareTo(tiempoMayor) > 0)
-								tiempoMayor = l.getDateTime();
+							if (l.getDateTime().compareTo(maxTime) > 0)
+								maxTime = l.getDateTime();
 						}
 					}
 					
-					for (int i = 0; i < modeloDatos.getRowCount(); i++)
-						if (((String)modeloDatos.getValueAt(i, 1)) != null)
-							if (((String)modeloDatos.getValueAt(i, 1)).
-									compareTo(tiempoMayor) > 0)
+					for (int i = 0; i < dataModel.getRowCount(); i++)
+						if (((String)dataModel.getValueAt(i, 1)) != null)
+							if (((String)dataModel.getValueAt(i, 1)).
+									compareTo(maxTime) > 0)
 								for (int j = 1;
-									j < modeloDatos.getColumnCount(); j++)
-									modeloDatos.setValueAt("", i, j);
+									j < dataModel.getColumnCount(); j++)
+									dataModel.setValueAt("", i, j);
 					
 				}
 			});
-		} catch (Exception e) { Errors.error(e, "actualizarTablaDatos"); }
+		} catch (Exception e) { Errors.error(e, "refreshDataTable"); }
 	}
 
 	/***************************************************************************
-	 * Actualiza los nodos de la tabla de datos
+	 * Refresh data table nodes
 	 **************************************************************************/
 	@SuppressWarnings("unchecked")
-	private void actualizarNodosTablaDatos() {
-		int renglon; boolean modificado = false;
+	private void refreshDataTableNodes() {
+		int row; boolean modified = false;
 	
-		if (arbol.getModel().getRoot() == null) return;
+		if (tree.getModel().getRoot() == null) return;
 		
-		Enumeration e = ((NetTreeNode)arbol.getModel().getRoot()).children();
+		Enumeration e = ((NetTreeNode)tree.getModel().getRoot()).children();
 		while (e.hasMoreElements()) {
 			NetTreeNode el = (NetTreeNode)e.nextElement();
 			String id = el.toString().substring(5);
-			boolean seleccionado = el.isSelected();
+			boolean isSelected = el.isSelected();
 	
-			renglon = buscarRenglon(Integer.parseInt(id));
-			if ((renglon == -1) && (seleccionado)) {
-				modificado = true;
-				modeloDatos.addRow(new Object[]{id});
+			row = findRow(Integer.parseInt(id));
+			if ((row == -1) && (isSelected)) {
+				modified = true;
+				dataModel.addRow(new Object[]{id});
 			}
-			if ((renglon >= 0) && (!seleccionado)) {
-				modificado = true;
-				modeloDatos.removeRow(renglon);
+			if ((row >= 0) && (!isSelected)) {
+				modified = true;
+				dataModel.removeRow(row);
 			}
-			tablaDatos.repaint();
+			dataTable.repaint();
 		}
 	
-		if (modificado) {
-			System.out.println("act actualizarNodosTablaDatos");
-			actualizar();					
+		if (modified) {
+			System.out.println("act refreshDataTableNodes");
+			refresh();					
 		}
 	}
 
 	/***************************************************************************
-	 * Actualiza la grafica.
+	 * Refresh the graph
 	 **************************************************************************/
-	private void actualizarGraficador() {
+	private void refreshGrapher() {
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				@SuppressWarnings("unchecked")
 				public void run() {
-					if (servicioRed == null) return;
-					if (comboParsGraf.getSelectedItem() == null) return;
+					if (netServ == null) return;
+					if (comboParsGraph.getSelectedItem() == null) return;
 					
-					String parametro = comboParsGraf.
+					String parameter = comboParsGraph.
 							getSelectedItem().toString();
 					
-					DateFormat formato4 = new SimpleDateFormat(
+					DateFormat format4 = new SimpleDateFormat(
 							"yyyy-MM-dd HH:mm:ss");
-					Vector<Reading> lecturas = servicioRed.getReadings(
-							formato4.format(new Date(tiempo.getTime() -
-									graficador.obtDif() - 1000)),
-							formato4.format(tiempo), parametro, 0);
+					Vector<Reading> readings = netServ.getReadings(
+							format4.format(new Date(time.getTime() -
+									grapher.obtDif() - 1000)),
+							format4.format(time), parameter, 0);
 	
-					Vector<Vector> datos = new Vector<Vector>();
-					Vector<Reading> datosNodo = new Vector<Reading>();
+					Vector<Vector> data = new Vector<Vector>();
+					Vector<Reading> dataNodes = new Vector<Reading>();
 					
 					int nid = -1;
-					if (lecturas.size() > 0)
-						nid = lecturas.get(0).getNid();
+					if (readings.size() > 0)
+						nid = readings.get(0).getNid();
 							
 					int max = 0;
-					Enumeration e = ((NetTreeNode)arbol.
+					Enumeration e = ((NetTreeNode)tree.
 							getModel().getRoot()).children();
 					while (e.hasMoreElements()) {
 						NetTreeNode n = (NetTreeNode)e.nextElement();
 						int i = Integer.parseInt(n.toString().substring(5));
 						if (i > max) max = i;
 					}
-					boolean[] nodoSel = new boolean[max + 1];
-					e = ((NetTreeNode)arbol.
+					boolean[] nodeSel = new boolean[max + 1];
+					e = ((NetTreeNode)tree.
 							getModel().getRoot()).children();
 					while (e.hasMoreElements()) {
 						NetTreeNode n = (NetTreeNode)e.nextElement();
-						nodoSel[Integer.parseInt(n.toString().substring(5))] =
+						nodeSel[Integer.parseInt(n.toString().substring(5))] =
 							n.isSelected();
 					}
 					
-					e = lecturas.elements();
+					e = readings.elements();
 					while (e.hasMoreElements()) {
 						Reading l = (Reading)e.nextElement();
-						if (nodoSel[l.getNid()])
-						if (l.getParameter().compareTo(parametro) == 0) {
+						if (nodeSel[l.getNid()])
+						if (l.getParameter().compareTo(parameter) == 0) {
 							if (l.getNid() != nid) {
-								datos.add(datosNodo);
+								data.add(dataNodes);
 								
 								//System.out.println(datosNodo);
-								datosNodo = new Vector<Reading>();
+								dataNodes = new Vector<Reading>();
 								nid = l.getNid();
 							}
-							datosNodo.add(l);
+							dataNodes.add(l);
 						}
 					}
-					datos.add(datosNodo);
+					data.add(dataNodes);
 					
-					graficador.defTime(tiempo.getTime());
-					graficador.defData(datos);
+					grapher.defTime(time.getTime());
+					grapher.defData(data);
 				}
 			});
 			
-			graficador.repaint();
-		} catch (Exception e) { Errors.error(e, "actualizarGraficador"); }
+			grapher.repaint();
+		} catch (Exception e) { Errors.error(e, "refreshGrapher"); }
 	}
 
 	/***************************************************************************
-	 * Actualiza la gráfica de topología.
+	 * Refresh the topology graph
 	 **************************************************************************/
-	private void actualizarTopologia() {
+	private void refreshTopology() {
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				@SuppressWarnings("unchecked")
 				public void run() {
-					DateFormat formato4 = new SimpleDateFormat(
+					DateFormat format4 = new SimpleDateFormat(
 							"yyyy-MM-dd HH:mm:ss");
-					Vector<Reading> lecturas = servicioRed.
-							getReadingsUntil(formato4.format(tiempo),
-									((NetTreeNode)arbol.getModel().getRoot()).
+					Vector<Reading> readings = netServ.
+							getReadingsUntil(format4.format(time),
+									((NetTreeNode)tree.getModel().getRoot()).
 									getChildCount() * 
-									modeloDatos.getColumnCount() * 3);
+									dataModel.getColumnCount() * 3);
 					
-					graficadorTopologia.deleteAllNodes();
+					topologyGrapher.deleteAllNodes();
 					
 					int max = 0;
-					Enumeration e = ((NetTreeNode)arbol.
+					Enumeration e = ((NetTreeNode)tree.
 							getModel().getRoot()).children();
 					while (e.hasMoreElements()) {
 						NetTreeNode n = (NetTreeNode)e.nextElement();
 						int nid = Integer.parseInt(n.toString().substring(5));
 						if (nid > max) max = nid;
 					}
-					boolean[] nodoSel = new boolean[max + 1];
-					e = ((NetTreeNode)arbol.
+					boolean[] nodeSel = new boolean[max + 1];
+					e = ((NetTreeNode)tree.
 							getModel().getRoot()).children();
 					while (e.hasMoreElements()) {
 						NetTreeNode n = (NetTreeNode)e.nextElement();
-						nodoSel[Integer.parseInt(n.toString().substring(5))] =
+						nodeSel[Integer.parseInt(n.toString().substring(5))] =
 							n.isSelected();
 					}
 					
-					e = lecturas.elements();
-					String par = comboParsTopologia.
+					e = readings.elements();
+					String par = comboParsTopology.
 							getSelectedItem().toString();
 					
 					if (par.compareTo("Temp") == 0) {
-						graficadorTopologia.defEscala(0.0d, 35.0d);
-						graficadorTopologia.defTypeScale(
+						topologyGrapher.defEscala(0.0d, 35.0d);
+						topologyGrapher.defTypeScale(
 								TopologyPlotter.SCALE_HEAT);
-					} else if (par.compareTo("Luz") == 0) {
-						graficadorTopologia.defEscala(300.0d, 900.0d);
-						graficadorTopologia.defTypeScale(
+					} else if (par.compareTo("Light") == 0) {
+						topologyGrapher.defEscala(300.0d, 900.0d);
+						topologyGrapher.defTypeScale(
 								TopologyPlotter.SCALE_LIGHT);
 					} else if (par.compareTo("Volt") == 0) {
-						graficadorTopologia.defEscala(1.5d, 3.0d);
-						graficadorTopologia.defTypeScale(
+						topologyGrapher.defEscala(1.5d, 3.0d);
+						topologyGrapher.defTypeScale(
 								TopologyPlotter.SCALE_ENERGY);
 					} else {
-						graficadorTopologia.defEscala(300.0d, 1024.0d);
-						graficadorTopologia.defTypeScale(
+						topologyGrapher.defEscala(300.0d, 1024.0d);
+						topologyGrapher.defTypeScale(
 								TopologyPlotter.SCALE_HEAT);
 					}
 					
@@ -787,486 +779,486 @@ public class InterfaceEvents
 					while (e.hasMoreElements()) {
 						Reading l = (Reading)e.nextElement();
 						if (par.compareTo(l.getParameter()) == 0)
-							if (!graficadorTopologia.existNode(l.getNid()))
-								if (nodoSel[l.getNid()]) {
+							if (!topologyGrapher.existNode(l.getNid()))
+								if (nodeSel[l.getNid()]) {
 									NodeTopologyChart ngt =
 										new NodeTopologyChart(l.getNid(),
 												Double.parseDouble(
 														l.getValue()),
-												posTopNodos[l.getNid()].x,
-												posTopNodos[l.getNid()].y);
-									graficadorTopologia.addNode(ngt);
+												posTopNodes[l.getNid()].x,
+												posTopNodes[l.getNid()].y);
+									topologyGrapher.addNode(ngt);
 								}
 					}
 					
-					graficadorTopologia.repaint();
+					topologyGrapher.repaint();
 				}
 			});
-		} catch (Exception e) { Errors.error(e, "actualizarTopologia"); }
+		} catch (Exception e) { Errors.error(e, "refreshTopology"); }
 	}
 	
 	/***************************************************************************
-	 * Actualiza la tabla de eventos.
+	 * Refresh the event table
 	 **************************************************************************/
-	private void actualizarTablaEventos() {
+	private void refreshEventTable() {
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				@SuppressWarnings("unchecked")
 				public void run() {
-					Vector<Event> eventos = servicioRed.
+					Vector<Event> events = netServ.
 							getEventsList(0);
 					
-					String id, nombre, criterio, listo, nid, tiempo;
+					String id, name, criteria, done, nid, time;
 					
-					tablaEventos.clearTable();
-					Enumeration e = eventos.elements();
+					eventTable.clearTable();
+					Enumeration e = events.elements();
 					while (e.hasMoreElements()) {
-						Event evento = (Event)e.nextElement();
+						Event event = (Event)e.nextElement();
 						
-						id = evento.getId() + "";
-						nombre = evento.getName();
-						criterio = evento.getCriteria();
-						if (evento.getDetected()) listo = "Sí";
-						else listo = "No";
-						if (evento.getNid() == 0) nid = "-";
-						else nid = evento.getNid() + "";
-						if (evento.getDateTime() == null)
-							tiempo = "En espera";
-						else if (evento.getDateTime().compareTo("") == 0)
-							tiempo = "En espera";
-						else tiempo = evento.getDateTime();
+						id = event.getId() + "";
+						name = event.getName();
+						criteria = event.getCriteria();
+						if (event.getDetected()) done = "Yes";
+						else done = "No";
+						if (event.getNid() == 0) nid = "-";
+						else nid = event.getNid() + "";
+						if (event.getDateTime() == null)
+							time = "Waiting";
+						else if (event.getDateTime().compareTo("") == 0)
+							time = "Waiting";
+						else time = event.getDateTime();
 						
-						modeloEventos.addRow(new Object[]{id, nombre,
-								new CellTableTooltip(criterio),
-								listo, nid, tiempo});
+						eventModel.addRow(new Object[]{id, name,
+								new CellTableTooltip(criteria),
+								done, nid, time});
 						
-						dialogoMantenimiento.defEventos(eventos.toArray());
+						eventMaintenance.defEventos(events.toArray());
 					}
 				}
 			});
-		} catch (Exception e) { Errors.error(e, "actualizarTablaEventos"); }
+		} catch (Exception e) { Errors.error(e, "refreshEventTable"); }
 	}
 	
 	/***************************************************************************
-	 * Actualiza la tabla de mantenimiento.
+	 * Refresh maintenance table
 	 **************************************************************************/
-	private void actualizarTablaMant() {
+	private void refreshMaintenanceTable() {
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				@SuppressWarnings("unchecked")
 				public void run() {
-					Vector<Task> tasks = servicioRed.
+					Vector<Task> tasks = netServ.
 							getTasksList(0);
 					
-					String id, accion, valor, nid, tiempo,
-						ejecutada, listo, repetir;
+					String id, action, value, nid, time,
+						executed, done, repeat;
 
-					tablaMantenimiento.clearTable();
+					maintenanceTable.clearTable();
 					Enumeration e = tasks.elements();
 					while (e.hasMoreElements()) {
 						Task task = (Task)e.nextElement();
 						
 						id = task.getId() + "";
 						
-						accion = "";
+						action = "";
 						if (task.getType() ==
 							Constants.TYPE_ACTUATOR_START)
-							accion = "Enc. Act.";
+							action = "Act. Act.";
 						if (task.getType() ==
 							Constants.TYPE_ACTUATOR_STOP)
-							accion = "Apa. Act.";
+							action = "Des. Act.";
 						if (task.getType() ==
 							Constants.TYPE_CHANGE_DATA_RATE)
-							accion = "Cam. Tasa";
+							action = "Chg. Data Rate";
 						if (task.getType() ==
 							Constants.TYPE_SLEEP)
-							accion = "Entrar Esp.";
+							action = "Sleep";
 						if (task.getType() ==
 							Constants.TYPE_WAKEUP)
-							accion = "Salir Esp.";
+							action = "Wake Up";
 						
-						valor = "-";
+						value = "-";
 						if (task.getValue() > 0)
-							valor = task.getValue() + " segs";
+							value = task.getValue() + " segs";
 						if (task.getValue() ==
 							Constants.ACTUATOR_BUZZER)
-							valor = "Bocina";
+							value = "Buzz";
 						if (task.getValue() ==
 							Constants.ACTUATOR_LED_YELLOW)
-							valor = "Led Ama.";
+							value = "LedY";
 						if (task.getValue() ==
 							Constants.ACTUATOR_LED_RED)
-							valor = "Led Rojo";
+							value = "LedR";
 						if (task.getValue() ==
 							Constants.ACTUATOR_LED_GREEN)
-							valor = "Led Ver.";
+							value = "LedG";
 						
 						nid = "-";
 						if (task.getTargetNodeID() > 0)
 							nid = task.getTargetNodeID() + "";
 						
-						tiempo = task.getExecutionDateTime();
-						tiempo = tiempo.substring(0, tiempo.length() - 2);
+						time = task.getExecutionDateTime();
+						time = time.substring(0, time.length() - 2);
 						if (task.getWaitEventID() > 0)
-							tiempo = "Esperando evento " + task.getWaitEventID();
+							time = "Esperando evento " + task.getWaitEventID();
 						
-						ejecutada = "-";
+						executed = "-";
 						if (task.getLastExecuted() != null)
 							if (task.getLastExecuted().compareTo("") != 0)
-								ejecutada = task.getLastExecuted();
+								executed = task.getLastExecuted();
 						
-						listo = "No";
+						done = "No";
 						if (task.getDone())
-							listo = "Sí";
+							done = "Yes";
 						if (task.getMinsToRepeat() > 0)
-							listo = "-";
+							done = "-";
 						
-						repetir = "-";
+						repeat = "-";
 						if (task.getMinsToRepeat() > 0)
-							repetir = task.getMinsToRepeat() + " min";
+							repeat = task.getMinsToRepeat() + " min";
 
-						modeloMantenimiento.addRow(new Object[]{
-								id, accion, valor, nid, tiempo,
-								ejecutada, listo, repetir});
+						maintenanceModel.addRow(new Object[]{
+								id, action, value, nid, time,
+								executed, done, repeat});
 					}
 				}
 			});
-		} catch (Exception e) { Errors.error(e, "actualizarTablaEventos"); }
+		} catch (Exception e) { Errors.error(e, "refreshmaintenanceTable"); }
 	}
 
 	/***************************************************************************
-	 * Actualiza la etiqueta del <i>slider</i> y el tiempo actual.
+	 * Refresh the slider label and current time
 	 **************************************************************************/
-	private void actualizarTiempo() {
+	private void refreshTime() {
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				public void run() {
-					double factorTiempo = slider.getValue() / 10000.0d;
-					tiempo = new Date(Math.round(tiempoMinimo *
-							(1.0d - factorTiempo) + tiempoMaximo *
-							(factorTiempo)));
-					DateFormat formato2 = new SimpleDateFormat("dd/MM/yyyy");
-					DateFormat formato3 = new SimpleDateFormat("HH:mm:ss");
-					etiquetaSlider.setText("<html><center>" +
-							formato2.format(tiempo) +
-							"<br><b>" + formato3.format(tiempo) +
+					double timeFactor = slider.getValue() / 10000.0d;
+					time = new Date(Math.round(minTime *
+							(1.0d - timeFactor) + maxTime *
+							(timeFactor)));
+					DateFormat format2 = new SimpleDateFormat("dd/MM/yyyy");
+					DateFormat format3 = new SimpleDateFormat("HH:mm:ss");
+					labelSlider.setText("<html><center>" +
+							format2.format(time) +
+							"<br><b>" + format3.format(time) +
 							"</b></center></html>");
 				}
 			});
-		} catch (Exception e) { Errors.error(e, "actualizarTiempo"); }
+		} catch (Exception e) { Errors.error(e, "refreshTime"); }
 	}
 
 	/***************************************************************************
-	 * Define los tiempos y escalas del <i>slider</i>.
+	 * Define the sliders time and scale
 	 **************************************************************************/
-	private void definirTiempos() {
+	private void defineTimes() {
 		try {
-			DateFormat formato = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			Date inicio = (Date)formato.parse(
-					servicioRed.getMinDateTime());
-			Object res = servicioRed.getMaxDateTime();
+			DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date start = (Date)format.parse(
+					netServ.getMinDateTime());
+			Object res = netServ.getMaxDateTime();
 			System.out.println(res);
-			Date fin = (Date)formato.parse(res.toString());
-			tiempoMinimo = inicio.getTime();
-			tiempoMaximo = fin.getTime();
+			Date fin = (Date)format.parse(res.toString());
+			minTime = start.getTime();
+			maxTime = fin.getTime();
 			slider.setValue(10000);
-		} catch (Exception e) { Errors.error(e, "definirTiempos"); }
+		} catch (Exception e) { Errors.error(e, "defineTimes"); }
 	}
 	
 	//--------------------------------------------------------------------------
+	//	Functions to prepare and configure the GUI components
 	//
-	//   FUNCIONES PARA PREPARAR Y CONFIGURAR LOS COMPONENTES DE LA INTERFAZ.
 	//
 	//==========================================================================
 
 	/***************************************************************************
-	 * Procesa los nodos de la red.
+	 * Process the network nodes
 	 **************************************************************************/
-	private void procesarNodos() {
-		Vector<Node> nodos = servicioRed.getNodesList();
-		crearArbolNodos(nodos.toArray());
-		crearTabla(nodos.toArray());
-		crearTopologiaNodos(nodos.toArray());
-		dialogoMantenimiento.defNodos(nodos.toArray());
+	private void processNodes() {
+		Vector<Node> nodes = netServ.getNodesList();
+		createTreeNodes(nodes.toArray());
+		createTable(nodes.toArray());
+		createNodeTopology(nodes.toArray());
+		eventMaintenance.defNodos(nodes.toArray());
 	}
 
 	/***************************************************************************
-	 * Procesa los parámetros de la red.
+	 * Process network parameters
 	 **************************************************************************/
-	private void procesarParametros() {
-		Vector<Parameter> parameters = servicioRed.getSensorTypesList();
-		comboParsGraf.removeAllItems();
-		comboParsTopologia.removeAllItems();
+	private void processParameters() {
+		Vector<Parameter> parameters = netServ.getSensorTypesList();
+		comboParsGraph.removeAllItems();
+		comboParsTopology.removeAllItems();
 		for (int i = 0; i < parameters.size(); i++) {
-			comboParsGraf.addItem(parameters.get(i).getName());
-			comboParsTopologia.addItem(parameters.get(i).getName());
+			comboParsGraph.addItem(parameters.get(i).getName());
+			comboParsTopology.addItem(parameters.get(i).getName());
 		}
-		if (comboParsGraf.getItemCount() > 2) {
-			comboParsGraf.setSelectedIndex(
-					comboParsGraf.getItemCount() - 2);
-			comboParsTopologia.setSelectedIndex(
-					comboParsTopologia.getItemCount() - 2);
+		if (comboParsGraph.getItemCount() > 2) {
+			comboParsGraph.setSelectedIndex(
+					comboParsGraph.getItemCount() - 2);
+			comboParsTopology.setSelectedIndex(
+					comboParsTopology.getItemCount() - 2);
 		}
 	}
 
 	/***************************************************************************
-	 * Crea el arbol de nodos.
+	 * Create the node tree
 	 * 
-	 * @param nodos	Un arreglo con el nombre de los nodos
+	 * @param nodes	A node array with the node names
 	 **************************************************************************/
-	private void crearArbolNodos(Object[] nodos) {
+	private void createTreeNodes(Object[] nodes) {
 		NetTreeNode top = new NetTreeNode(
-				servicioRed.getNetName(), iconoRed);
-		((DefaultTreeModel)arbol.getModel()).setRoot(top);	
+				netServ.getNetName(), netIcon);
+		((DefaultTreeModel)tree.getModel()).setRoot(top);	
 		NetTreeNode c = null;
-		for (int i = 0; i < nodos.length; i++) {
-			c = new NetTreeNode("Nodo " + ((Node)nodos[i]).getId(),
-					iconoEstadoNormal);
+		for (int i = 0; i < nodes.length; i++) {
+			c = new NetTreeNode("Nodo " + ((Node)nodes[i]).getId(),
+					normalStateIcon);
 			top.add(c);
 		}
-		arbol.expandRow(0);
+		tree.expandRow(0);
 	}
 
 	/***************************************************************************
-	 * Crea la tabla de datos.
+	 * Create the data table
 	 * 
-	 * @param nodos	Un arreglo con el ID de los nodos
+	 * @param nodes	A node array with the node ID
 	 **************************************************************************/
-	private void crearTabla(Object[] nodos) {
-		Vector<Parameter> parameters = servicioRed.getSensorTypesList();
-		Object[] parametrosCols = new Object[parameters.size() + 2];
-		parametrosCols[0] = "ID";
-		parametrosCols[1] = "Tiempo";
+	private void createTable(Object[] nodes) {
+		Vector<Parameter> parameters = netServ.getSensorTypesList();
+		Object[] columnParameters = new Object[parameters.size() + 2];
+		columnParameters[0] = "ID";
+		columnParameters[1] = "Time";
 		for (int i = 0; i < parameters.size(); i++)
-			parametrosCols[i + 2] = parameters.get(i).getName();
+			columnParameters[i + 2] = parameters.get(i).getName();
 		
-		modeloDatos = new DefaultTableModel();
-		TableSorter ordenador = new TableSorter(modeloDatos);
-		tablaDatos.setModel(ordenador);
-		ordenador.setTableHeader(tablaDatos.getTableHeader());
+		dataModel = new DefaultTableModel();
+		TableSorter sorter = new TableSorter(dataModel);
+		dataTable.setModel(sorter);
+		sorter.setTableHeader(dataTable.getTableHeader());
 		
-		for (int i = 0; i < parametrosCols.length; i++)
-			modeloDatos.addColumn(parametrosCols[i]);
+		for (int i = 0; i < columnParameters.length; i++)
+			dataModel.addColumn(columnParameters[i]);
 		
-		tablaDatos.getTableHeader().setBackground(new Color(0xe1e6ec));
-		tablaDatos.getTableHeader().setReorderingAllowed(false);
+		dataTable.getTableHeader().setBackground(new Color(0xe1e6ec));
+		dataTable.getTableHeader().setReorderingAllowed(false);
 		
-		tablaDatos.getColumnModel().getColumn(0).setCellRenderer(
+		dataTable.getColumnModel().getColumn(0).setCellRenderer(
 				new MonitorCellRenderer(SwingConstants.CENTER, true));
-		for (int i = 1; i < tablaDatos.getColumnCount(); i++)
-			tablaDatos.getColumnModel().getColumn(i).setCellRenderer(
+		for (int i = 1; i < dataTable.getColumnCount(); i++)
+			dataTable.getColumnModel().getColumn(i).setCellRenderer(
 					new MonitorCellRenderer(SwingConstants.CENTER, false));
 				
-		for (int i = 0; i < nodos.length; i++)
-			modeloDatos.addRow(new Object[]{((Node)nodos[i]).getId()});
+		for (int i = 0; i < nodes.length; i++)
+			dataModel.addRow(new Object[]{((Node)nodes[i]).getId()});
 		
-		tablaDatos.getColumnModel().getColumn(0).setPreferredWidth(42);
-		tablaDatos.getColumnModel().getColumn(0).setMinWidth(42);
-		tablaDatos.getColumnModel().getColumn(1).setPreferredWidth(130);
-		tablaDatos.getColumnModel().getColumn(1).setMinWidth(130);
+		dataTable.getColumnModel().getColumn(0).setPreferredWidth(42);
+		dataTable.getColumnModel().getColumn(0).setMinWidth(42);
+		dataTable.getColumnModel().getColumn(1).setPreferredWidth(130);
+		dataTable.getColumnModel().getColumn(1).setMinWidth(130);
 		
-		((TableSorter)tablaDatos.getModel()).setSortingStatus(
+		((TableSorter)dataTable.getModel()).setSortingStatus(
 				0, TableSorter.ASCENDING);
 	}
 
 	/***************************************************************************
-	 * Crea los nodos de la grafica de topología.
+	 * Create the topology graph nodes
 	 * 
-	 * @param nodos	Un arreglo con el ID de los nodos
+	 * @param nodes	Un arreglo con el ID de los nodos
 	 **************************************************************************/
-	private void crearTopologiaNodos(Object[] nodos) {
+	private void createNodeTopology(Object[] nodes) {
 		int max = 0, ancho, alto, x, y;
-		for (int i = 0; i < nodos.length; i++)
-			if (((Node)nodos[i]).getId() > max)
-				max = ((Node)nodos[i]).getId();
+		for (int i = 0; i < nodes.length; i++)
+			if (((Node)nodes[i]).getId() > max)
+				max = ((Node)nodes[i]).getId();
 		
-		posTopNodos = new Point[max + 1];
+		posTopNodes = new Point[max + 1];
 		
-		for (int i = 0; i < nodos.length; i++) {
-			ancho = graficadorTopologia.getWidth();
-			alto = graficadorTopologia.getHeight();
+		for (int i = 0; i < nodes.length; i++) {
+			ancho = topologyGrapher.getWidth();
+			alto = topologyGrapher.getHeight();
 			x = (int)Math.round(Math.random() * ancho);
 			y = (int)Math.round(Math.random() * alto);			
-			posTopNodos[((Node)nodos[i]).getId()] = new Point(x, y);
+			posTopNodes[((Node)nodes[i]).getId()] = new Point(x, y);
 		}
 		
-		graficadorTopologia.defPosNodes(posTopNodos);
+		topologyGrapher.defPosNodes(posTopNodes);
 	}
 
 	//--------------------------------------------------------------------------
 	//
-	//   FUNCIONES PARA BLOQUEAR Y/O DESBLOQUEAR COMPONENTES EN LA INTERFAZ.
+	//   Block/Unblock GUI components
 	//
 	//==========================================================================
 	
 	/***************************************************************************
-	 * Desbloquea la actualización y muestra la barra de progreso.
+	 * Unblock refresh and show progress bar
 	 **************************************************************************/
-	private void desbloquearActualizacion() {
+	private void unblockRefresh() {
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				public void run() {
-					barraProgreso.setVisible(false);
+					progressBar.setVisible(false);
 				}
 			});
-		} catch (Exception e) { Errors.error(e, "desbloquearActualizacion"); }
+		} catch (Exception e) { Errors.error(e, "unblickRefresh"); }
 	}
 
 	/***************************************************************************
-	 * Bloquea la actualización y muestra la barra de progreso.
+	 * Blocks refresh and show progress bar
 	 **************************************************************************/
-	private void bloquearActualizacion() {
+	private void blockRefresh() {
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				public void run() {
-					barraProgreso.setVisible(true);
+					progressBar.setVisible(true);
 				}
 			});
-		} catch (Exception e) { Errors.error(e, "bloquearActualizacion"); }
+		} catch (Exception e) { Errors.error(e, "blockRefresh"); }
 	}
 
 	/***************************************************************************
-	 * Activa todos los controles.
+	 * Activate all controls
 	 **************************************************************************/
-	public void activarControles() {
+	public void activateControls() {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				slider.setEnabled(true);
-				actualizarCheck.setEnabled(true);
-				botonBarraAtrasar.setEnabled(true);
-				botonBarraReproducir.setEnabled(true);
-				botonBarraAdelantar.setEnabled(true);
-				menuInicio.setEnabled(true);
-				menuReproducir.setEnabled(true);
-				menuFinal.setEnabled(true);
-				botonBarraActualizar.setEnabled(true);
-				menuActualizar.setEnabled(true);
+				refreshCheck.setEnabled(true);
+				dragBarButton.setEnabled(true);
+				playBarButton.setEnabled(true);
+				forwardBarButton.setEnabled(true);
+				startMenu.setEnabled(true);
+				playMenu.setEnabled(true);
+				finalMenu.setEnabled(true);
+				refreshBarButton.setEnabled(true);
+				refreshMenu.setEnabled(true);
 				panelTabs.setEnabled(true);		
-				comboParsGraf.setEnabled(true);
-				comboParsTopologia.setEnabled(true);
+				comboParsGraph.setEnabled(true);
+				comboParsTopology.setEnabled(true);
 	
-				actualizarCheck.setSelected(false);
+				refreshCheck.setSelected(false);
 			}
 		});
 	}
 
 	/***************************************************************************
-	 * Desactiva todos los controles.
+	 * Deactivate all controls
 	 **************************************************************************/
-	public void desactivarControles() {
+	public void deactivateControls() {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				slider.setEnabled(false);
-				actualizarCheck.setEnabled(false);
-				botonBarraAtrasar.setEnabled(false);
-				botonBarraReproducir.setEnabled(false);
-				botonBarraAdelantar.setEnabled(false);
-				menuInicio.setEnabled(false);
-				menuReproducir.setEnabled(false);
-				menuFinal.setEnabled(false);
-				botonBarraActualizar.setEnabled(false);
-				menuActualizar.setEnabled(false);
+				refreshCheck.setEnabled(false);
+				dragBarButton.setEnabled(false);
+				playBarButton.setEnabled(false);
+				forwardBarButton.setEnabled(false);
+				startMenu.setEnabled(false);
+				playMenu.setEnabled(false);
+				finalMenu.setEnabled(false);
+				refreshBarButton.setEnabled(false);
+				refreshMenu.setEnabled(false);
 				panelTabs.setEnabled(false);
-				comboParsGraf.setEnabled(false);
-				comboParsTopologia.setEnabled(false);
+				comboParsGraph.setEnabled(false);
+				comboParsTopology.setEnabled(false);
 			}
 		});
 	}
 
 	/***************************************************************************
-	 * Activa/desactiva controles en preparación para la actualización en vivo.
+	 * Activate/Deactivate controls in preparation of live update
 	 **************************************************************************/
-	private void prepararActualizacionVivo() {
-		boolean enVivo = actualizarCheck.isSelected();
+	private void prepareLiveRefresh() {
+		boolean enVivo = refreshCheck.isSelected();
 		if (enVivo) {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
-					rebobinarTimer.stop();
-					adelantarTimer.stop();
-					reproduccionTimer.stop();
-					botonBarraAtrasar.setEnabled(false);
-					botonBarraReproducir.setEnabled(false);
-					botonBarraAdelantar.setEnabled(false);
-					botonExportarGrafica.setEnabled(false);
-					botonExportarTopologia.setEnabled(false);
-					botonImportarFondo.setEnabled(false);
-					menuInicio.setEnabled(false);
-					menuReproducir.setEnabled(false);
-					menuFinal.setEnabled(false);
+					rewindTimer.stop();
+					forwardTimer.stop();
+					playTimer.stop();
+					dragBarButton.setEnabled(false);
+					playBarButton.setEnabled(false);
+					forwardBarButton.setEnabled(false);
+					exportGraphButton.setEnabled(false);
+					exportTopologyButton.setEnabled(false);
+					importBackgroundButton.setEnabled(false);
+					startMenu.setEnabled(false);
+					playMenu.setEnabled(false);
+					finalMenu.setEnabled(false);
 					slider.setEnabled(false);
-					graficadorTopologia.setEnabled(false);
-					tablaEventos.setEnabled(false);
+					topologyGrapher.setEnabled(false);
+					eventTable.setEnabled(false);
 					
-					actualizarVivo.restart();
+					refreshLive.restart();
 				}
 			});
 		} else {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
-					botonBarraAtrasar.setEnabled(true);
-					botonBarraReproducir.setEnabled(true);
-					botonBarraAdelantar.setEnabled(true);
-					botonExportarGrafica.setEnabled(true);
-					botonExportarTopologia.setEnabled(true);
-					botonImportarFondo.setEnabled(true);
-					menuInicio.setEnabled(true);
-					menuReproducir.setEnabled(true);
-					menuFinal.setEnabled(true);
+					dragBarButton.setEnabled(true);
+					playBarButton.setEnabled(true);
+					forwardBarButton.setEnabled(true);
+					exportGraphButton.setEnabled(true);
+					exportTopologyButton.setEnabled(true);
+					importBackgroundButton.setEnabled(true);
+					startMenu.setEnabled(true);
+					playMenu.setEnabled(true);
+					finalMenu.setEnabled(true);
 					slider.setEnabled(true);
-					graficadorTopologia.setEnabled(true);
-					tablaEventos.setEnabled(true);
+					topologyGrapher.setEnabled(true);
+					eventTable.setEnabled(true);
 					
-					actualizarVivo.stop();
+					refreshLive.stop();
 				}
 			});
 		}
 	}
 
 	/***************************************************************************
-	 * Activa/desactiva controles en preparación para la reproducción/pausa.
+	 * Activate/Deactivate controls in preparation of play/pause
 	 **************************************************************************/
-	private void reproducirPausar() {
-		if (reproduccionTimer.isRunning()) {
+	private void playPause() {
+		if (playTimer.isRunning()) {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
-					botonBarraAtrasar.setEnabled(true);
-					botonBarraAdelantar.setEnabled(true);
-					botonBarraReproducir.setToolTipText("Reproducir");
-					botonBarraReproducir.setIcon(iconoReproduccion);
-					menuReproducir.setText("Reproducir");
-					menuReproducir.setIcon(iconoReproduccion2);
-					actualizarCheck.setEnabled(true);
-					menuActualizar.setEnabled(true);
-					botonBarraActualizar.setEnabled(true);
-					botonExportarGrafica.setEnabled(true);
-					botonExportarTopologia.setEnabled(true);
-					botonImportarFondo.setEnabled(true);
-					graficadorTopologia.setEnabled(true);
-					tablaEventos.setEnabled(true);
+					dragBarButton.setEnabled(true);
+					forwardBarButton.setEnabled(true);
+					playBarButton.setToolTipText("Play");
+					playBarButton.setIcon(playIcon);
+					playMenu.setText("Play");
+					playMenu.setIcon(play2Icon);
+					refreshCheck.setEnabled(true);
+					refreshMenu.setEnabled(true);
+					refreshBarButton.setEnabled(true);
+					exportGraphButton.setEnabled(true);
+					exportTopologyButton.setEnabled(true);
+					importBackgroundButton.setEnabled(true);
+					topologyGrapher.setEnabled(true);
+					eventTable.setEnabled(true);
 					
-					reproduccionTimer.stop();
+					playTimer.stop();
 				}
 			});
 			
 		} else {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
-					botonBarraAtrasar.setEnabled(false);
-					botonBarraAdelantar.setEnabled(false);
-					botonBarraReproducir.setToolTipText("Pausar");
-					botonBarraReproducir.setIcon(iconoPausa);
-					menuReproducir.setText("Pausar");
-					menuReproducir.setIcon(iconoPausa2);
-					actualizarCheck.setEnabled(false);
-					menuActualizar.setEnabled(false);
-					botonBarraActualizar.setEnabled(false);
-					botonExportarGrafica.setEnabled(false);
-					botonExportarTopologia.setEnabled(false);
-					botonImportarFondo.setEnabled(false);
-					graficadorTopologia.setEnabled(false);
-					tablaEventos.setEnabled(false);
+					dragBarButton.setEnabled(false);
+					forwardBarButton.setEnabled(false);
+					playBarButton.setToolTipText("Pause");
+					playBarButton.setIcon(pauseIcon);
+					playMenu.setText("Pause");
+					playMenu.setIcon(pause2Icon);
+					refreshCheck.setEnabled(false);
+					refreshMenu.setEnabled(false);
+					refreshBarButton.setEnabled(false);
+					exportGraphButton.setEnabled(false);
+					exportTopologyButton.setEnabled(false);
+					importBackgroundButton.setEnabled(false);
+					topologyGrapher.setEnabled(false);
+					eventTable.setEnabled(false);
 					
-					reproduccionTimer.restart();
+					playTimer.restart();
 				}
 			});
 		}
@@ -1274,110 +1266,108 @@ public class InterfaceEvents
 
 	//--------------------------------------------------------------------------
 	//
-	//   FUNCIONES PARA CARGAR LA CONFIGURACIÓN DEL SISTEMA.
+	//   Load system configuration
 	//
 	//==========================================================================
 	
 	/***************************************************************************
-	 * Carga la configuración del visor.
+	 * Load Monitor configuration
 	 **************************************************************************/
-	private void cargarConfiguracion() {
+	private void loadConfiguration() {
 		Properties p = new Properties();
 		try {
-			p.loadFromXML(new FileInputStream(archivoConfiguracion));
-			urlServidor = p.getProperty("visor.servidor");
+			p.loadFromXML(new FileInputStream(configurationArchive));
+			serverUrl = p.getProperty("visor.servidor");
 		} catch (Exception e) {
-			urlServidor = "http://localhost:8080";
-			guardarConfiguracion();
+			serverUrl = "http://localhost:8080";
+			saveConfiguration();
 		}
 		
-		if (urlServidor == null) {
-			urlServidor = "http://localhost:8080";
-			guardarConfiguracion();
+		if (serverUrl == null) {
+			serverUrl = "http://localhost:8080";
+			saveConfiguration();
 		}
 	}
 	
 	/***************************************************************************
-	 * Guarda la configuración del visor.
+	 * Save monitor configuration
 	 **************************************************************************/
-	private void guardarConfiguracion() {
+	private void saveConfiguration() {
 		Properties p = new Properties();
 		try {
-			p.loadFromXML(new FileInputStream(archivoConfiguracion));
-			p.setProperty("visor.servidor", urlServidor);
-			p.storeToXML(new FileOutputStream(archivoConfiguracion), null);
+			p.loadFromXML(new FileInputStream(configurationArchive));
+			p.setProperty("visor.servidor", serverUrl);
+			p.storeToXML(new FileOutputStream(configurationArchive), null);
 		} catch (Exception e) {}
 	}
 	
 	//--------------------------------------------------------------------------
 	//
-	//   FUNCIONES PARA IMPORTAR Y EXPORTAR IMÁGENES.
+	//   Import and Export image functions
 	//
 	//==========================================================================
 	
 	/***************************************************************************
-	 * Presenta un diálogo y exporta una imágen con el estado actual del
-	 * graficador.
+	 * Presents a dialog and exports an image with the current grapher state
 	 **************************************************************************/
-	private void exportarGrafica() {
-		JFileChooser dialogo = new JFileChooser();
+	private void exportGraph() {
+		JFileChooser dialog = new JFileChooser();
 		
-		dialogo.addChoosableFileFilter(
+		dialog.addChoosableFileFilter(
 				new FilterFile(new String[]{"png"}, "Imagen PNG"));
-		dialogo.addChoosableFileFilter(
+		dialog.addChoosableFileFilter(
 				new FilterFile(new String[]{"bmp"}, "Imagen BMP"));
 		//dialogo.addChoosableFileFilter(
 		//		new FiltroArchivos(new String[]{"gif"}, "Imagen GIF"));
-		dialogo.addChoosableFileFilter(
+		dialog.addChoosableFileFilter(
 				new FilterFile(new String[]{"jpg", "jpeg", "jpe"},
 						"Imagen JPG"));
-		dialogo.setAcceptAllFileFilterUsed(false);
+		dialog.setAcceptAllFileFilterUsed(false);
 		
-		graficador.defProgress(barraProgreso);
+		grapher.defProgress(progressBar);
 		
-		int res = dialogo.showSaveDialog(null);
+		int res = dialog.showSaveDialog(null);
 		if (res == JFileChooser.APPROVE_OPTION) {
-			String a = dialogo.getSelectedFile().getAbsoluteFile().toString();
-			String f = dialogo.getFileFilter().getDescription().
+			String a = dialog.getSelectedFile().getAbsoluteFile().toString();
+			String f = dialog.getFileFilter().getDescription().
 					substring(7, 10).toLowerCase();
 			if (a.substring(a.length() - 4, a.length() -3).compareTo(".") != 0)
 				a += "." + f;
-			graficador.guardarImagen(a, f);
+			grapher.guardarImagen(a, f);
 		}
 		
 	}
 	
 	/***************************************************************************
-	 * Presenta un diálogo y define la imágen de fondo del graficador de
-	 * topología.
+	 * Presents a dialog and defines the background image of the topology grapher
 	 **************************************************************************/
-	private void importarImagenFondo() {
+	private void importBackgroundImage() {
 		new Thread() {
 			public void run() {
-				JFileChooser dialogo = new JFileChooser();
+				JFileChooser dialog = new JFileChooser();
 		
-				dialogo.addChoosableFileFilter(
-						new FilterFile(new String[]{"png"}, "Imagen PNG"));
-				dialogo.addChoosableFileFilter(
-						new FilterFile(new String[]{"bmp"}, "Imagen BMP"));
+				dialog.addChoosableFileFilter(
+						new FilterFile(new String[]{"png"}, "PNG image"));
+				dialog.addChoosableFileFilter(
+						new FilterFile(new String[]{"bmp"}, "BMP image"));
 				//dialogo.addChoosableFileFilter(
 				//		new FiltroArchivos(new String[]{"gif"}, "Imagen GIF"));
-				dialogo.addChoosableFileFilter(
+				dialog.addChoosableFileFilter(
 						new FilterFile(new String[]{"jpg", "jpeg", "jpe"},
-								"Imagen JPG"));
-				dialogo.setAcceptAllFileFilterUsed(false);
+								"JPG image"));
+				dialog.setAcceptAllFileFilterUsed(false);
 		
-				int res = dialogo.showOpenDialog(null);
+				int res = dialog.showOpenDialog(null);
 				if (res == JFileChooser.APPROVE_OPTION) {
-					String archivo = dialogo.getSelectedFile().
+					String archive = dialog.getSelectedFile().
 							getAbsoluteFile().toString();
 			
 					Image image = Toolkit.getDefaultToolkit().
-							createImage(archivo);
+							createImage(archive);
 					if (image != null) {
 						BufferedImage bImage = toBufferedImage(image);
-						graficadorTopologia.defBackgr(bImage);
-						graficadorTopologia.repaint();
+						topologyGrapher.defBackgr(bImage);
+						topologyGrapher.repaint();
 					}
 				}
 			}
@@ -1385,50 +1375,50 @@ public class InterfaceEvents
 	}
 
 	/***************************************************************************
-	 * Presenta un diálogo y exporta una imágen con el estado actual del
-	 * graficador de topología.
+	 * Presents a dialog and exports an image with the current topology grapher
+	 * state
 	 **************************************************************************/
-	private void exportarGraficaTopologia() {
-		JFileChooser dialogo = new JFileChooser();
+	private void exportTopologyGraph() {
+		JFileChooser dialog = new JFileChooser();
 		
-		dialogo.addChoosableFileFilter(
-				new FilterFile(new String[]{"png"}, "Imagen PNG"));
-		dialogo.addChoosableFileFilter(
-				new FilterFile(new String[]{"bmp"}, "Imagen BMP"));
+		dialog.addChoosableFileFilter(
+				new FilterFile(new String[]{"png"}, "PNG image"));
+		dialog.addChoosableFileFilter(
+				new FilterFile(new String[]{"bmp"}, "BMP image"));
 		//dialogo.addChoosableFileFilter(
 		//		new FiltroArchivos(new String[]{"gif"}, "Imagen GIF"));
-		dialogo.addChoosableFileFilter(
+		dialog.addChoosableFileFilter(
 				new FilterFile(new String[]{"jpg", "jpeg", "jpe"},
-						"Imagen JPG"));
-		dialogo.setAcceptAllFileFilterUsed(false);
+						"JPG image"));
+		dialog.setAcceptAllFileFilterUsed(false);
 		
-		graficador.defProgress(barraProgreso);
+		grapher.defProgress(progressBar);
 		
-		int res = dialogo.showSaveDialog(null);
+		int res = dialog.showSaveDialog(null);
 		if (res == JFileChooser.APPROVE_OPTION) {
-			String a = dialogo.getSelectedFile().getAbsoluteFile().toString();
-			String f = dialogo.getFileFilter().getDescription().
+			String a = dialog.getSelectedFile().getAbsoluteFile().toString();
+			String f = dialog.getFileFilter().getDescription().
 					substring(7, 10).toLowerCase();
 			if (a.substring(a.length() - 4, a.length() -3).compareTo(".") != 0)
 				a += "." + f;
-			graficadorTopologia.saveImage(a, f);
+			topologyGrapher.saveImage(a, f);
 		}
 		
 	}
 
 	/***************************************************************************
-	 * Función para verificar si una imagen es transparente.
+	 * Verify if an image is transparent
 	 * 
-	 * @param imagen	Imagen a revisar
-	 * @return			Verdadero si la imagen es transparente
+	 * @param image	Image to verify
+	 * @return			True if image is transparent
 	 **************************************************************************/
-	private boolean esTransparente(Image imagen) {
-	    if (imagen instanceof BufferedImage) {
-	        BufferedImage bimage = (BufferedImage)imagen;
+	private boolean isTransparent(Image image) {
+	    if (image instanceof BufferedImage) {
+	        BufferedImage bimage = (BufferedImage)image;
 	        return bimage.getColorModel().hasAlpha();
 	    }
 	
-	     PixelGrabber pg = new PixelGrabber(imagen, 0, 0, 1, 1, false);
+	     PixelGrabber pg = new PixelGrabber(image, 0, 0, 1, 1, false);
 	    try {
 	        pg.grabPixels();
 	    } catch (InterruptedException e) {}
@@ -1438,20 +1428,18 @@ public class InterfaceEvents
 	}
 	
 	/***************************************************************************
-	 * Función para transformar una <code>Image</code> a una
-	 * <code>BufferedImage</code>.
+	 * Transform an <code>Image</code> to a <code>BufferedImage</code>
 	 * 
-	 * @param imagen	Imagen a convertir
-	 * @return			Una versión <code>BufferedImage</code> de
-	 * 					<code>imagen</code>
+	 * @param image	Image to convert
+	 * @return			A <code>BufferedImage</code> version of <code>imagen</code>
 	 **************************************************************************/
-	private BufferedImage toBufferedImage(Image imagen) {
-	    if (imagen instanceof BufferedImage) {
-	        return (BufferedImage)imagen;
+	private BufferedImage toBufferedImage(Image image) {
+	    if (image instanceof BufferedImage) {
+	        return (BufferedImage)image;
 	    }
 	
-	    imagen = new ImageIcon(imagen).getImage();	
-	    boolean hasAlpha = esTransparente(imagen);
+	    image = new ImageIcon(image).getImage();	
+	    boolean hasAlpha = isTransparent(image);
 	    BufferedImage bimage = null;
 	    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 	    try {
@@ -1462,7 +1450,7 @@ public class InterfaceEvents
 	        GraphicsDevice gs = ge.getDefaultScreenDevice();
 	        GraphicsConfiguration gc = gs.getDefaultConfiguration();
 	        bimage = gc.createCompatibleImage(
-	            imagen.getWidth(null), imagen.getHeight(null), transparency);
+	            image.getWidth(null), image.getHeight(null), transparency);
 	    } catch (HeadlessException e) {}
 	
 	    if (bimage == null) {
@@ -1470,11 +1458,11 @@ public class InterfaceEvents
 	        if (hasAlpha) {
 	            type = BufferedImage.TYPE_INT_ARGB;
 	        }
-	        bimage = new BufferedImage(imagen.getWidth(null), imagen.getHeight(null), type);
+	        bimage = new BufferedImage(image.getWidth(null), image.getHeight(null), type);
 	    }
 	
 	    Graphics g = bimage.createGraphics();
-	    g.drawImage(imagen, 0, 0, null);
+	    g.drawImage(image, 0, 0, null);
 	    g.dispose();
 	
 	    return bimage;
@@ -1482,276 +1470,276 @@ public class InterfaceEvents
 	
 	//--------------------------------------------------------------------------
 	//
-	//   FUNCIONES PARA MANEJAR EVENTOS MAYORES.
+	//   Handle mayor events
 	//
 	//==========================================================================
 	
 	/***************************************************************************
-	 * Prepara y muestra el diálogo de agregar evento.
+	 * Prepares and show the add event dialog
 	 **************************************************************************/
-	private void agregarEvento() {
-		dialogoEvento.setTitle("Agregar Evento");
-		dialogoEvento.defValores(0, "", "");
-		dialogoEvento.mostrar();
-		actualizar();
+	private void addEvent() {
+		eventDialog.setTitle("Add Event");
+		eventDialog.setValues(0, "", "");
+		eventDialog.showDialog();
+		refresh();
 	}
 	
 	/***************************************************************************
-	 * Prepara y muestra el diálogo de modificar evento.
+	 * Prepares and show the modify event dialog
 	 **************************************************************************/
-	private void modificarEvento() {
+	private void modifyEvent() {
 		new Thread() {
 			public void run() {
-				int i = tablaEventos.getSelectedRow();
+				int i = eventTable.getSelectedRow();
 				if (i == -1) {
 					JOptionPane.showMessageDialog(
-							ventana, "Seleccione el evento a modificar.",
-							"Problema", JOptionPane.WARNING_MESSAGE);
+							mainWindow, "Select the event to modify.",
+							"Problem", JOptionPane.WARNING_MESSAGE);
 					return;
 				}
 
 				int id = Integer.parseInt(
-						tablaEventos.getValueAt(i, 0).toString());
+						eventTable.getValueAt(i, 0).toString());
 				
-				actualizacionOcupada = true;
-				Event e = servicioRed.getEventByID(id);
-				actualizacionOcupada = false;
+				refreshBusy = true;
+				Event e = netServ.getEventByID(id);
+				refreshBusy = false;
 				
-				dialogoEvento.setTitle("Modificar Evento");
-				dialogoEvento.defValores(id, e.getName(), e.getCriteria());
-				dialogoEvento.mostrar();
-				actualizar();
+				eventDialog.setTitle("Modify Event");
+				eventDialog.setValues(id, e.getName(), e.getCriteria());
+				eventDialog.showDialog();
+				refresh();
 			}
 		}.start();
 	}
 	
 	/***************************************************************************
-	 * Elimina el evento seleccionado en la tabla de eventos.
+	 * Deletes selected event
 	 **************************************************************************/
-	private void eliminarEvento() {
+	private void deleteEvent() {
 		new Thread() {
 			public void run() {
-				int i = tablaEventos.getSelectedRow();
+				int i = eventTable.getSelectedRow();
 				if (i == -1) {
 					JOptionPane.showMessageDialog(
-							ventana, "Seleccione el evento a eliminar.",
-							"Problema", JOptionPane.WARNING_MESSAGE);
+							mainWindow, "Select the event to delete.",
+							"Problem", JOptionPane.WARNING_MESSAGE);
 					return;
 				}
 
 				int id = Integer.parseInt(
-						tablaEventos.getValueAt(i, 0).toString());
-				String nombre = tablaEventos.getValueAt(i, 1).toString();
+						eventTable.getValueAt(i, 0).toString());
+				String nombre = eventTable.getValueAt(i, 1).toString();
 				
 				int res = JOptionPane.showConfirmDialog(
-						ventana, "¿Desea eliminar el evento " + nombre + "?",
-						"Eliminar Evento", JOptionPane.YES_NO_OPTION);
+						mainWindow, "¿Do you wish to delete the event " + nombre + "?",
+						"Delete Event", JOptionPane.YES_NO_OPTION);
 				
 				if (res == JOptionPane.NO_OPTION) return;
 				if (res == -1) return;
 				
-				actualizacionOcupada = true;
-				servicioRed.removeEvent(id);
-				actualizacionOcupada = false;
-				actualizar();
+				refreshBusy = true;
+				netServ.removeEvent(id);
+				refreshBusy = false;
+				refresh();
 			}
 		}.start();
 	}
 	
 	/***************************************************************************
-	 * Prepara y muestra el diálogo de agregar tarea de mantenimiento.
+	 * Prepares and shows the add maintenance task dialog
 	 **************************************************************************/
 	private void agregarTareaMantenimiento() {
-		dialogoMantenimiento.mostrarAgregar();
-		actualizar();
+		eventMaintenance.mostrarAgregar();
+		refresh();
 	}
 	
 	/***************************************************************************
-	 * Prepara y muestra el diálogo de modificar tarea de mantenimiento.
+	 * Prepares and show the modify maintenance tasks dialog
 	 **************************************************************************/
 	private void modificarTareaMantenimiento() {
 		new Thread() {
 			public void run() {
-				int i = tablaMantenimiento.getSelectedRow();
+				int i = maintenanceTable.getSelectedRow();
 				if (i == -1) {
 					JOptionPane.showMessageDialog(
-							ventana, "Seleccione la tarea a modificar.",
-							"Problema", JOptionPane.WARNING_MESSAGE);
+							mainWindow, "Select the task to modify.",
+							"Problem", JOptionPane.WARNING_MESSAGE);
 					return;
 				}
 
 				int id = Integer.parseInt(
-						tablaMantenimiento.getValueAt(i, 0).toString());
+						maintenanceTable.getValueAt(i, 0).toString());
 				
-				dialogoMantenimiento.mostrarModificar(id);
-				actualizar();
+				eventMaintenance.mostrarModificar(id);
+				refresh();
 			}
 		}.start();
 	}
 	
 	/***************************************************************************
-	 * Elimina la tarea seleccionada en la tabla de mantenimiento.
+	 * Deletes selected task
 	 **************************************************************************/
-	private void eliminarTareaMantenimiento() {
+	private void deleteMaintenanceTask() {
 		new Thread() {
 			public void run() {
-				int i = tablaMantenimiento.getSelectedRow();
+				int i = maintenanceTable.getSelectedRow();
 				if (i == -1) {
 					JOptionPane.showMessageDialog(
-							ventana, "Seleccione la tarea a eliminar.",
-							"Problema", JOptionPane.WARNING_MESSAGE);
+							mainWindow, "Select task to delete.",
+							"Problem", JOptionPane.WARNING_MESSAGE);
 					return;
 				}
 
 				int id = Integer.parseInt(
-						tablaMantenimiento.getValueAt(i, 0).toString());
+						maintenanceTable.getValueAt(i, 0).toString());
 				
 				int res = JOptionPane.showConfirmDialog(
-						ventana, "¿Desea eliminar la tarea con ID " + id + "?",
-						"Eliminar Task", JOptionPane.YES_NO_OPTION);
+						mainWindow, "Do you wish to delete the task with ID " + id + "?",
+						"Delete Task", JOptionPane.YES_NO_OPTION);
 				
 				if (res == JOptionPane.NO_OPTION) return;
 				if (res == -1) return;
 				
-				actualizacionOcupada = true;
-				servicioRed.removeTask(id);
-				actualizacionOcupada = false;
-				actualizar();
+				refreshBusy = true;
+				netServ.removeTask(id);
+				refreshBusy = false;
+				refresh();
 			}
 		}.start();
 	}
 	
 	//--------------------------------------------------------------------------
 	//
-	//   FUNCIONES VARIAS.
+	//   Misc Functions
 	//
 	//==========================================================================
 
 	/***************************************************************************
-	 * Busca el renglón correspondiente al nodo nid
+	 * Searches for the row corresponding to a given node id
 	 * 
-	 * @param nid 	Nodo a buscar
-	 * @return		El índice del renglón donde se encuentra el nodo indicado.
+	 * @param nid 	Node to search for
+	 * @return		Index of the row where the node is
 	 **************************************************************************/
-	private int buscarRenglon(int nid) {
-		int renglon = -1;
-		for (int i = 0; i < modeloDatos.getRowCount(); i++)
-			if (modeloDatos.getValueAt(i, 0).
+	private int findRow(int nid) {
+		int row = -1;
+		for (int i = 0; i < dataModel.getRowCount(); i++)
+			if (dataModel.getValueAt(i, 0).
 					toString().compareTo(nid + "") == 0)
-				renglon = i;
-		return renglon;
+				row = i;
+		return row;
 	}
 
 	/***************************************************************************
-	 * Convierte el valor de un parámetro de lectura a una cadena.
+	 * Converts a reading parameter value into a string
 	 * 
-	 * @param valor		Valor del parámetro
-	 * @param parametro	Tipo del parámetro
-	 * @return				Una cadena con el valor formateado
+	 * @param value		Parameter value
+	 * @param parameter	Parameter type
+	 * @return				A string with the formated reading
 	 **************************************************************************/
-	private String formatearLectura(String valor, String parametro) {
+	private String formatReading(String value, String parameter) {
 		NumberFormat nf0 = new DecimalFormat("0");
 		NumberFormat nf1 = new DecimalFormat("0.0");
 		NumberFormat nf2 = new DecimalFormat("0.00");
-		if (parametro.compareTo("Temp") == 0)
-			return nf1.format(Double.parseDouble(valor)) + " °C";
-		else if (parametro.compareTo("TmIn") == 0)
-			return nf1.format(Double.parseDouble(valor)) + " °C";
-		else if (parametro.compareTo("Hum") == 0)
-			return nf1.format(Double.parseDouble(valor)) + " %";
-		else if (parametro.compareTo("Pres") == 0)
-			return nf1.format(Double.parseDouble(valor)) + " mba";
-		else if (parametro.compareTo("AceX") == 0)
-			return nf2.format(Double.parseDouble(valor)) + " g";
-		else if (parametro.compareTo("AceY") == 0)
-			return nf2.format(Double.parseDouble(valor)) + " g";
-		else if (parametro.compareTo("Volt") == 0)
-			return nf2.format(Double.parseDouble(valor)) + " V";
-		else if (parametro.compareTo("Luz") == 0)
-			return nf1.format(Double.parseDouble(valor)) + " Lux";
-		else return nf0.format(Double.parseDouble(valor));
+		if (parameter.compareTo("Temp") == 0)
+			return nf1.format(Double.parseDouble(value)) + " °C";
+		else if (parameter.compareTo("TmIn") == 0)
+			return nf1.format(Double.parseDouble(value)) + " °C";
+		else if (parameter.compareTo("Hum") == 0)
+			return nf1.format(Double.parseDouble(value)) + " %";
+		else if (parameter.compareTo("Pres") == 0)
+			return nf1.format(Double.parseDouble(value)) + " mba";
+		else if (parameter.compareTo("AceX") == 0)
+			return nf2.format(Double.parseDouble(value)) + " g";
+		else if (parameter.compareTo("AceY") == 0)
+			return nf2.format(Double.parseDouble(value)) + " g";
+		else if (parameter.compareTo("Volt") == 0)
+			return nf2.format(Double.parseDouble(value)) + " V";
+		else if (parameter.compareTo("Light") == 0)
+			return nf1.format(Double.parseDouble(value)) + " Lux";
+		else return nf0.format(Double.parseDouble(value));
 	}
 	
 	//--------------------------------------------------------------------------
 	//
-	//   FUNCIONES PARA MANEJAR LOS EVENTOS.
+	//   Event handling
 	//
 	//==========================================================================
 
 	/***************************************************************************
-	 * Función para procesar una acción realizada.
+	 * Process an action
 	 * 
-	 * @param evt	Evento generador de la acción
+	 * @param evt	Event generator
 	 **************************************************************************/
 	public void actionPerformed(ActionEvent evt) {
 		String cmd = evt.getActionCommand();
 		if (cmd.compareTo("") == 0)
 			cmd = ((JButton)evt.getSource()).getToolTipText();
 		
-		if (cmd.compareTo("Salir") == 0) {
+		if (cmd.compareTo("Exit") == 0) {
 			System.exit(0);
-		} else if (cmd.compareTo("Conectar al servidor...") == 0) {
-			conectarServidor();
-		} else if (cmd.compareTo("Seleccionar red...") == 0) {
-			dialogoSeleccionRed.mostrar(servicioInformacion, barraProgreso);
-		} else if (cmd.compareTo("Ir al inicio") == 0) {
+		} else if (cmd.compareTo("Connect to server...") == 0) {
+			connectServer();
+		} else if (cmd.compareTo("Select network...") == 0) {
+			netSelectionDialog.mostrar(infoServ, progressBar);
+		} else if (cmd.compareTo("Go to start") == 0) {
 			slider.setValue(0);
-			System.out.println("act Ir al inicio");
-			actualizar();
-		} else if (cmd.compareTo("Ir al final") == 0) {
+			System.out.println("act Go to start");
+			refresh();
+		} else if (cmd.compareTo("Go to end") == 0) {
 			slider.setValue(10000);
-			System.out.println("act Ir al final");
-			actualizar();
-		} else if (cmd.compareTo("Actualizar") == 0) {
-			prepararActualizacionVivo();
-		} else if (cmd.compareTo("Reproducir") == 0) {
-			reproducirPausar();
-		} else if (cmd.compareTo("Pausar") == 0) {
-			reproducirPausar();
-		} else if (cmd.compareTo("Actualizar todo") == 0) {
-			actualizarTodo();
-		} else if (cmd.compareTo("Alejar") == 0) {
-			graficador.defDif(Math.round(graficador.obtDif() +
-					graficador.obtDif() * 0.2d));
-			System.out.println("act Alejar");
-			actualizar();
-		} else if (cmd.compareTo("Acercar") == 0) {
-			graficador.defDif(Math.round(graficador.obtDif() -
-					graficador.obtDif() * 0.2d));
-			System.out.println("act Acercar");
-			actualizar();
-		} else  if (cmd.compareTo("Exportar gráfica...") == 0) {
-			exportarGrafica();
+			System.out.println("act Go to end");
+			refresh();
+		} else if (cmd.compareTo("Refresh") == 0) {
+			prepareLiveRefresh();
+		} else if (cmd.compareTo("Play") == 0) {
+			playPause();
+		} else if (cmd.compareTo("Pause") == 0) {
+			playPause();
+		} else if (cmd.compareTo("Update everything") == 0) {
+			refreshEverything();
+		} else if (cmd.compareTo("Zoom out") == 0) {
+			grapher.defDif(Math.round(grapher.obtDif() +
+					grapher.obtDif() * 0.2d));
+			System.out.println("act Zoom out");
+			refresh();
+		} else if (cmd.compareTo("Zoom in") == 0) {
+			grapher.defDif(Math.round(grapher.obtDif() -
+					grapher.obtDif() * 0.2d));
+			System.out.println("act Zoom in");
+			refresh();
+		} else  if (cmd.compareTo("Export graph...") == 0) {
+			exportGraph();
 		} else if (cmd.compareTo("comboBoxChanged") == 0) {
 			cmd = ((JComboBox)evt.getSource()).getToolTipText();
-			if (cmd.compareTo("Parámetro a graficar") == 0)
+			if (cmd.compareTo("Parameter to graph") == 0)
 				if (((JComboBox)evt.getSource()).isEnabled()) {
-				System.out.println("act Parameter a graficar");
-				actualizar();
+				System.out.println("act Parameter to graph");
+				refresh();
 			}
-		} else if (cmd.compareTo("Importar imagen de fondo...") == 0) {
-			importarImagenFondo();
-		} else if (cmd.compareTo("Exportar imagen de topología...") == 0) {
-			exportarGraficaTopologia();
-		} else if (cmd.compareTo("Agregar evento...") == 0) {
-			agregarEvento();
-		} else if (cmd.compareTo("Modificar evento...") == 0) {
-			modificarEvento();
-		} else if (cmd.compareTo("Eliminar evento...") == 0) {
-			eliminarEvento();
-		} else if (cmd.compareTo("Agregar tarea...") == 0) {
+		} else if (cmd.compareTo("Import background image...") == 0) {
+			importBackgroundImage();
+		} else if (cmd.compareTo("Export topology image...") == 0) {
+			exportTopologyGraph();
+		} else if (cmd.compareTo("Add event...") == 0) {
+			addEvent();
+		} else if (cmd.compareTo("Modify event...") == 0) {
+			modifyEvent();
+		} else if (cmd.compareTo("Delete event...") == 0) {
+			deleteEvent();
+		} else if (cmd.compareTo("Add task...") == 0) {
 			agregarTareaMantenimiento();
-		} else if (cmd.compareTo("Modificar tarea...") == 0) {
+		} else if (cmd.compareTo("Modify task...") == 0) {
 			modificarTareaMantenimiento();
-		} else if (cmd.compareTo("Eliminar tarea...") == 0) {
-			eliminarTareaMantenimiento();
+		} else if (cmd.compareTo("Delete task...") == 0) {
+			deleteMaintenanceTask();
 		}
 		
 		else System.out.println(cmd);
 	}
 
 	/***************************************************************************
-	 * Escucha los cambios en el <code>slider</code>.
+	 * Listen for slider changes
 	 * 
 	 * @param evt	Evento generador del cambio
 	 **************************************************************************/
@@ -1760,64 +1748,64 @@ public class InterfaceEvents
 			JSlider slider = (JSlider)evt.getSource();
 			if (!slider.getValueIsAdjusting()) {
 				System.out.println("act stateChanged");
-				actualizar();
+				refresh();
 			}
 		} else if (evt.getSource() instanceof JTabbedPane) {
 			System.out.println("act JTabbedPane");
-			actualizar();
+			refresh();
 		} else System.out.println(evt.getSource());
 	}
 
 	/***************************************************************************
-	 * Método ejecutado al hacer click con algún botón del ratón. Utilizado
-	 * en el arbol de nodos para seleccionar/deseleccionar nodos.
+	 * Executed when clicking a button. this is used in the
+	 * node tree to select/unselect nodes
 	 **************************************************************************/
 	public void mouseClicked(MouseEvent evt) {
-		if (evt.getSource() instanceof JTree) actualizarNodosTablaDatos();
+		if (evt.getSource() instanceof JTree) refreshDataTableNodes();
 	}
 	
 	/***************************************************************************
-	 * Método ejecutado al presionar algún botón del ratón. Utilizado para
-	 * atrasar y adelantar el tiempo con los botones de las barras de
-	 * herramientas.
+	 * Executed when pressing a button. used to go forward or backwards in time
+	 * with the toolbar buttons
 	 * 
-	 * @param evt	Evento originador de la acción
+	 * @param evt	event originator
 	 **************************************************************************/
 	public void mousePressed(MouseEvent evt) {
 		if (evt.getButton() != MouseEvent.BUTTON1) return;
 		if (!(evt.getSource() instanceof JButton)) return;
 		String cmd = ((JButton)evt.getSource()).getToolTipText();
-		if (cmd.compareTo("Rebobinar") == 0) rebobinarTimer.restart();
-		if (cmd.compareTo("Adelantar") == 0) adelantarTimer.restart();
+		if (cmd.compareTo("Rewind") == 0) rewindTimer.restart();
+		if (cmd.compareTo("Forward") == 0) forwardTimer.restart();
 	}
 
 	/***************************************************************************
-	 * Método ejecutado al soltar algún botón del ratón. Utilizado para
-	 * detener las acciones de atrasar o adelantar.
+	 * Executed when letting go a button. Used to stop the rewind or go forward
+	 * actions
 	 * 
-	 * @param evt	Evento originador de la acción
+	 * @param evt	event originator
 	 **************************************************************************/
 	public void mouseReleased(MouseEvent evt) {
 		mouseExited(evt);
 	}
 
 	/***************************************************************************
-	 * Método ejecutado al salir el apuntador del ratón del área del
-	 * componente. Utilizado para detener las acciones de atrasar o adelantar.
+	 * Executed when the mouse pointer exits the component area. Used to stop
+	 * the rewind or forward actions
 	 * 
-	 * @param evt	Evento originador de la acción
+	 * @param evt	event originator
 	 **************************************************************************/
 	public void mouseExited(MouseEvent evt) {
 		if (!(evt.getSource() instanceof JButton)) return;
 		String cmd = ((JButton)evt.getSource()).getToolTipText();
-		if (cmd.compareTo("Rebobinar") == 0) rebobinarTimer.stop();
-		if (cmd.compareTo("Adelantar") == 0) adelantarTimer.stop();
+		if (cmd.compareTo("Rewind") == 0) rewindTimer.stop();
+		if (cmd.compareTo("Forward") == 0) forwardTimer.stop();
 	}
 	
 	/***************************************************************************
-	 * Método ejecutado al entrar el apuntador del ratón del área del
-	 * componente. Método no utilizado.
+	 * Executed when the mouse pointer enters the component area. This is never
+	 * used
 	 **************************************************************************/	
 	public void mouseEntered(MouseEvent evt) {}
 	
 }
+ 
