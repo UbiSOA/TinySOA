@@ -20,7 +20,7 @@
  * 
  ******************************************************************************/
 
-package net.tinyos.tinysoa.visor;
+package net.tinyos.tinysoa.monitor;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -32,182 +32,181 @@ import javax.swing.tree.*;
 import net.tinyos.tinysoa.util.*;
 
 /*******************************************************************************
- * Aplicación de demostración que utiliza los servicios ofrecidos por TinySOA
- * Servidor.
+ * Demo app that uses those services offered by TinySOA Server
  * 
  * @author		Edgardo Avilés López
  * @version	0.4, 07/28/2006
  ******************************************************************************/
 public class TinySOAMonitor {
 
-	private static String ARCHIVO_CONFIGURACION = "config.xml";
+	private static String CONFIG_FILE = "config.xml";
 	
-	private static JFrame ventana;
+	private static JFrame window;
 	
-	private static ImageIcon[] iconos;
-	private static InterfaceEvents eventosInterfaz;
-	private static JTree arbol;
-	private static JPopupMenu popMenuEventos, popMenuMantenimiento;
+	private static ImageIcon[] icons;
+	private static InterfaceEvents interfaceEvents;
+	private static JTree tree;
+	private static JPopupMenu popMenuEvents, popMenuMaintenance;
 
 	/***************************************************************************
-	 * Crea el menú de la aplicación.
+	 * Creates the application menu
 	 **************************************************************************/
-	private static void crearMenu() {
+	private static void createMenu() {
 		JMenuBar menuBar = new JMenuBar();
-		JMenu menu = new JMenu("Sistema");
+		JMenu menu = new JMenu("System");
 		menu.setMnemonic(KeyEvent.VK_S);
 		menuBar.add(menu);
 		
 		JMenuItem item;
 		
-		item = new JMenuItem("Conectar al servidor...", iconos[1]);
+		item = new JMenuItem("Connect to server...", icons[1]);
 		item.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_C, KeyEvent.CTRL_MASK + KeyEvent.ALT_MASK));
 		item.setMnemonic(KeyEvent.VK_C);
-		item.addActionListener(eventosInterfaz);
+		item.addActionListener(interfaceEvents);
 		menu.add(item);
 		
-		item = new JMenuItem("Seleccionar red...", iconos[2]);
+		item = new JMenuItem("Select network...", icons[2]);
 		item.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_S, KeyEvent.CTRL_MASK + KeyEvent.ALT_MASK));
 		item.setMnemonic(KeyEvent.VK_S);
-		item.addActionListener(eventosInterfaz);
+		item.addActionListener(interfaceEvents);
 		menu.add(item);
 		
-		item = new JMenuItem("Actualizar todo", iconos[3]);
+		item = new JMenuItem("Update everything", icons[3]);
 		item.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_F5, KeyEvent.CTRL_MASK));
 		item.setMnemonic(KeyEvent.VK_A);
-		item.addActionListener(eventosInterfaz);
+		item.addActionListener(interfaceEvents);
 		menu.add(item);
 		
-		eventosInterfaz.setRefreshEverythingMenuButton(item);
+		interfaceEvents.setRefreshEverythingMenuButton(item);
 		
 		menu.addSeparator();
 		
-		item = new JMenuItem("Salir", iconos[0]);
+		item = new JMenuItem("Exit", icons[0]);
 		item.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_X, KeyEvent.CTRL_MASK + KeyEvent.ALT_MASK));
 		item.setMnemonic(KeyEvent.VK_L);
-		item.addActionListener(eventosInterfaz);
+		item.addActionListener(interfaceEvents);
 		menu.add(item);
 		
-		menu = new JMenu("Reproducción");
+		menu = new JMenu("Play");
 		menu.setMnemonic(KeyEvent.VK_R);
 		menuBar.add(menu);
 		
-		JMenuItem itemInicio = new JMenuItem("Ir al inicio", iconos[10]);
+		JMenuItem itemInicio = new JMenuItem("Go to start", icons[10]);
 		itemInicio.setAccelerator(
 				KeyStroke.getKeyStroke(KeyEvent.VK_I, KeyEvent.CTRL_MASK));
 		itemInicio.setMnemonic(KeyEvent.VK_I);
-		itemInicio.addActionListener(eventosInterfaz);
+		itemInicio.addActionListener(interfaceEvents);
 		menu.add(itemInicio);
 		
-		JMenuItem itemReproduccion = new JMenuItem("Reproducir", iconos[12]);
+		JMenuItem itemReproduccion = new JMenuItem("Play", icons[12]);
 		itemReproduccion.setAccelerator(
 				KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.CTRL_MASK));
 		itemReproduccion.setMnemonic(KeyEvent.VK_R);
-		itemReproduccion.addActionListener(eventosInterfaz);
+		itemReproduccion.addActionListener(interfaceEvents);
 		menu.add(itemReproduccion);
 		
-		JMenuItem itemFinal = new JMenuItem("Ir al final", iconos[13]);
+		JMenuItem itemFinal = new JMenuItem("Go to end", icons[13]);
 		itemFinal.setAccelerator(
 				KeyStroke.getKeyStroke(KeyEvent.VK_F, KeyEvent.CTRL_MASK));
 		itemFinal.setMnemonic(KeyEvent.VK_F);
-		itemFinal.addActionListener(eventosInterfaz);
+		itemFinal.addActionListener(interfaceEvents);
 		menu.add(itemFinal);
 		
-		eventosInterfaz.setPlayControls2(itemInicio, itemReproduccion,
-				itemFinal, iconos[12], iconos[11]);
+		interfaceEvents.setPlayControls2(itemInicio, itemReproduccion,
+				itemFinal, icons[12], icons[11]);
 		
-		ventana.setJMenuBar(menuBar);	
+		window.setJMenuBar(menuBar);	
 	}
 	
 	/***************************************************************************
-	 * Crea la barra de herramientas principal de la aplicación.
+	 * Creates the main toolbar
 	 **************************************************************************/
-	private static void crearBarraHerramientas() {
-		JToolBar barra = new JToolBar();
-		barra.setFloatable(true);
-		barra.setRollover(true);
-		JButton boton;
+	private static void createToolbar() {
+		JToolBar bar = new JToolBar();
+		bar.setFloatable(true);
+		bar.setRollover(true);
+		JButton button;
 		
-		boton = new JButton(iconos[1]);
-		boton.setToolTipText("Conectar al servidor...");
-		boton.addActionListener(eventosInterfaz);
-		boton.setFocusPainted(false);
-		barra.add(boton);
+		button = new JButton(icons[1]);
+		button.setToolTipText("Connect to server...");
+		button.addActionListener(interfaceEvents);
+		button.setFocusPainted(false);
+		bar.add(button);
 		
-		boton = new JButton(iconos[2]);
-		boton.setToolTipText("Seleccionar red...");
-		boton.addActionListener(eventosInterfaz);
-		boton.setFocusPainted(false);
-		barra.add(boton);
+		button = new JButton(icons[2]);
+		button.setToolTipText("Select network...");
+		button.addActionListener(interfaceEvents);
+		button.setFocusPainted(false);
+		bar.add(button);
 		
-		boton = new JButton(iconos[3]);
-		boton.setToolTipText("Actualizar todo");
-		boton.addActionListener(eventosInterfaz);
-		boton.setFocusPainted(false);
-		barra.add(boton);
+		button = new JButton(icons[3]);
+		button.setToolTipText("Update everything");
+		button.addActionListener(interfaceEvents);
+		button.setFocusPainted(false);
+		bar.add(button);
 		
-		eventosInterfaz.setRefreshEverythingButton(boton);
+		interfaceEvents.setRefreshEverythingButton(button);
 		
-		barra.addSeparator();
+		bar.addSeparator();
 		
-		JButton botonAtrasar = new JButton(iconos[5]);
-		botonAtrasar.setToolTipText("Rebobinar");
-		botonAtrasar.addMouseListener(eventosInterfaz);
-		botonAtrasar.setFocusPainted(false);
-		barra.add(botonAtrasar);
+		JButton rewindButton = new JButton(icons[5]);
+		rewindButton.setToolTipText("Rewind");
+		rewindButton.addMouseListener(interfaceEvents);
+		rewindButton.setFocusPainted(false);
+		bar.add(rewindButton);
 		
-		JButton botonReproducir = new JButton(iconos[7]);
-		botonReproducir.setToolTipText("Reproducir");
-		botonReproducir.addActionListener(eventosInterfaz);
-		botonReproducir.setFocusPainted(false);
-		barra.add(botonReproducir);
+		JButton playButton = new JButton(icons[7]);
+		playButton.setToolTipText("Play");
+		playButton.addActionListener(interfaceEvents);
+		playButton.setFocusPainted(false);
+		bar.add(playButton);
 		
-		JButton botonAdelantar = new JButton(iconos[8]);
-		botonAdelantar.setToolTipText("Adelantar");
-		botonAdelantar.addMouseListener(eventosInterfaz);
-		botonAdelantar.setFocusPainted(false);
-		barra.add(botonAdelantar);
+		JButton forwardButton = new JButton(icons[8]);
+		forwardButton.setToolTipText("Forward");
+		forwardButton.addMouseListener(interfaceEvents);
+		forwardButton.setFocusPainted(false);
+		bar.add(forwardButton);
 		
-		eventosInterfaz.setPlayControls(botonAtrasar, botonReproducir,
-				botonAdelantar, iconos[7], iconos[6]);
+		interfaceEvents.setPlayControls(rewindButton, playButton,
+				forwardButton, icons[7], icons[6]);
 		
-		barra.addSeparator();
+		bar.addSeparator();
 		
-		JCheckBox cb = new JCheckBox("Actualizar");
+		JCheckBox cb = new JCheckBox("Refresh");
 		cb.setOpaque(false);
 		cb.setFocusPainted(false);
-		cb.addActionListener(eventosInterfaz);
-		eventosInterfaz.setRefreshCheckbox(cb);
-		barra.add(cb);
+		cb.addActionListener(interfaceEvents);
+		interfaceEvents.setRefreshCheckbox(cb);
+		bar.add(cb);
 		
-		JProgressBar barraProgreso = new JProgressBar();
-		barraProgreso.setIndeterminate(true);
-		barraProgreso.setString("Cargando...");
-		barraProgreso.setStringPainted(true);
-		barraProgreso.setBackground(Color.WHITE);
-		barraProgreso.setPreferredSize(new Dimension(100,20));
-		barraProgreso.setMaximumSize(new Dimension(100,20));
-		barraProgreso.setVisible(false);
-		barra.add(Box.createGlue());
-		barra.add(barraProgreso);
-		barra.addSeparator();
+		JProgressBar progressBar = new JProgressBar();
+		progressBar.setIndeterminate(true);
+		progressBar.setString("Loading...");
+		progressBar.setStringPainted(true);
+		progressBar.setBackground(Color.WHITE);
+		progressBar.setPreferredSize(new Dimension(100,20));
+		progressBar.setMaximumSize(new Dimension(100,20));
+		progressBar.setVisible(false);
+		bar.add(Box.createGlue());
+		bar.add(progressBar);
+		bar.addSeparator();
 		
-		eventosInterfaz.setProgressBar(barraProgreso);
+		interfaceEvents.setProgressBar(progressBar);
 		
-		Container cont = ventana.getContentPane();
+		Container cont = window.getContentPane();
 		cont.setLayout(new BorderLayout());
-		cont.add(barra, BorderLayout.NORTH);
+		cont.add(bar, BorderLayout.NORTH);
 	}
 	
 	/***************************************************************************
-	 * Crea el arbol de nodos.
+	 * Creates the node tree
 	 **************************************************************************/
-	private static JScrollPane crearArbol() {
-		arbol = new JTree() {
+	private static JScrollPane createTree() {
+		tree = new JTree() {
 			private static final long serialVersionUID =
 					-1739266534130784240L;
 			protected void setExpandedState(TreePath path, boolean state) {
@@ -215,38 +214,38 @@ public class TinySOAMonitor {
 			}
 		};
 		
-		arbol.setCellRenderer(new NetTreeNodeRenderer());
-		arbol.addMouseListener(new SelectedNetTreeNodeListener(arbol));
-		arbol.addMouseListener(eventosInterfaz);
-		arbol.getSelectionModel().setSelectionMode(
+		tree.setCellRenderer(new NetTreeNodeRenderer());
+		tree.addMouseListener(new SelectedNetTreeNodeListener(tree));
+		tree.addMouseListener(interfaceEvents);
+		tree.getSelectionModel().setSelectionMode(
 				TreeSelectionModel.SINGLE_TREE_SELECTION);
-		arbol.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
+		tree.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
 		
-		((DefaultTreeModel)arbol.getModel()).setRoot(null);
-		eventosInterfaz.setTree(arbol);
+		((DefaultTreeModel)tree.getModel()).setRoot(null);
+		interfaceEvents.setTree(tree);
 				
-		ToolTipManager.sharedInstance().registerComponent(arbol);
-		JScrollPane vistaArbol = new JScrollPane(arbol);
-		vistaArbol.setBorder(BorderFactory.createEmptyBorder());
-		vistaArbol.setHorizontalScrollBarPolicy(
+		ToolTipManager.sharedInstance().registerComponent(tree);
+		JScrollPane treeView = new JScrollPane(tree);
+		treeView.setBorder(BorderFactory.createEmptyBorder());
+		treeView.setHorizontalScrollBarPolicy(
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		vistaArbol.setMinimumSize(new Dimension(120, 120));
-		vistaArbol.setPreferredSize(new Dimension(136, 136));
-		vistaArbol.setMaximumSize(new Dimension(200, 200));
+		treeView.setMinimumSize(new Dimension(120, 120));
+		treeView.setPreferredSize(new Dimension(136, 136));
+		treeView.setMaximumSize(new Dimension(200, 200));
 		
-		return vistaArbol;
+		return treeView;
 	}
 	
 	/***************************************************************************
-	 * Crea el <i>slider</i>.
+	 * Create the slider
 	 **************************************************************************/
-	private static JPanel crearPanelSlider() {
+	private static JPanel createPanelSlider() {
 		JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 10000, 10000);
 		slider.setPaintTicks(true);
 		slider.setMajorTickSpacing(1000);
 		slider.setMinorTickSpacing(100);
 		slider.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
-		slider.addChangeListener(eventosInterfaz);
+		slider.addChangeListener(interfaceEvents);
 		JPanel panelSlider = new JPanel();
 		panelSlider.setLayout(new BorderLayout());
 		panelSlider.add(slider, BorderLayout.CENTER);
@@ -257,73 +256,73 @@ public class TinySOAMonitor {
 		label.setBorder(BorderFactory.createEmptyBorder(4,2,4,8));
 		panelSlider.add(label, BorderLayout.EAST);
 		
-		eventosInterfaz.setSlider(slider, label);
+		interfaceEvents.setSlider(slider, label);
 		
 		return panelSlider;
 	}
 
 	/***************************************************************************
-	 * Crea el panel de <i>tabs</i>.
+	 * Create the tab panel
 	 **************************************************************************/
-	private static JPanel crearPanelTabs() {
+	private static JPanel createTabPanel() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
 		panel.setBorder(BorderFactory.createEmptyBorder(4,6,2,6));
 		
 		JTabbedPane tabbedPane = new JTabbedPane();
 		
-		JPanel tab = crearTabDatos();
+		JPanel tab = createDataTab();
 		tab.setOpaque(false);
-		tabbedPane.add(tab, "Datos");
+		tabbedPane.add(tab, "Data");
 		
-		tab = crearTabGraficas();
+		tab = createGraphsTab();
 		tab.setOpaque(false);
-		tabbedPane.add(tab, "Gráficas");
+		tabbedPane.add(tab, "Graphs");
 		
-		tab = crearTabTopologia();
+		tab = createTopologyTab();
 		tab.setOpaque(false);
-		tabbedPane.add(tab, "Topología");
+		tabbedPane.add(tab, "Topology");
 		
-		tab = crearTabEventos();
+		tab = createEventTab();
 		tab.setOpaque(false);
-		tabbedPane.add(tab, "Eventos");
+		tabbedPane.add(tab, "Events");
 		
-		tab = crearTabMantenimiento();
+		tab = createMaintenanceTab();
 		tab.setOpaque(false);
-		tabbedPane.add(tab, "Mantenimiento");
+		tabbedPane.add(tab, "Maintenance");
 		
-		eventosInterfaz.setTabPanel(tabbedPane);
-		tabbedPane.addChangeListener(eventosInterfaz);
+		interfaceEvents.setTabPanel(tabbedPane);
+		tabbedPane.addChangeListener(interfaceEvents);
 		
 		panel.add(tabbedPane, BorderLayout.CENTER);		
 		return panel;
 	}
 	
 	/***************************************************************************
-	 * Crea el <i>tab</i> de datos.
+	 * Creates the data tab
 	 **************************************************************************/
-	private static JPanel crearTabDatos() {
+	private static JPanel createDataTab() {
 		JPanel panel = new JPanel();
 		panel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
 		panel.setLayout(new BorderLayout());
 		
-		DefaultTableModel modelo = new DefaultTableModel();
-		TableSorter ordenador = new TableSorter(modelo);
-		MonitorTable tabla = new MonitorTable(ordenador);
-		ordenador.setTableHeader(tabla.getTableHeader());
-		JScrollPane scrollTabla = new JScrollPane(tabla);
-		scrollTabla.setHorizontalScrollBarPolicy(
+		DefaultTableModel model = new DefaultTableModel();
+		TableSorter sorter = new TableSorter(model);
+		MonitorTable table = new MonitorTable(sorter);
+		sorter.setTableHeader(table.getTableHeader());
+		JScrollPane tableScroll = new JScrollPane(table);
+		tableScroll.setHorizontalScrollBarPolicy(
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		panel.add(scrollTabla, BorderLayout.CENTER);
-		eventosInterfaz.setDataTable(tabla, modelo);
+		panel.add(tableScroll, BorderLayout.CENTER);
+		interfaceEvents.setDataTable(table, model);
 		
 		return panel;
 	}
 	
 	/***************************************************************************
-	 * Crea el <i>tab</i> de gráficas.
+	 * Creates the graph tab
 	 **************************************************************************/
-	private static JPanel crearTabGraficas() {
+	private static JPanel createGraphsTab() {
 		JPanel panel = new JPanel();
 		panel.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createEmptyBorder(4,4,4,4),
@@ -337,13 +336,13 @@ public class TinySOAMonitor {
 		panel2.setBackground(Color.WHITE);
 		//panel2.setBorder(new JTextField().getBorder());
 		panel2.setLayout(new BorderLayout());
-		Plotter graficador = new Plotter();
-		panel2.add(graficador, BorderLayout.CENTER);
-		eventosInterfaz.setGrapher(graficador);
+		Plotter grapher = new Plotter();
+		panel2.add(grapher, BorderLayout.CENTER);
+		interfaceEvents.setGrapher(grapher);
 		
-		JToolBar barra = new JToolBar();
+		JToolBar bar = new JToolBar();
 		
-		barra.add(Box.createGlue());
+		bar.add(Box.createGlue());
 
 		JLabel label = new JLabel("Parámetro: ");
 		label.setFocusable(false);
@@ -353,51 +352,51 @@ public class TinySOAMonitor {
 		combo.setFocusable(false);
 		combo.setMaximumSize(new Dimension(120, 25));
 		combo.setToolTipText("Parámetro a graficar");
-		eventosInterfaz.setComboParsGraf(combo);
-		combo.addActionListener(eventosInterfaz);
+		interfaceEvents.setComboParsGraf(combo);
+		combo.addActionListener(interfaceEvents);
 		
-		barra.add(label);
-		barra.add(combo);
+		bar.add(label);
+		bar.add(combo);
 		
-		barra.addSeparator();
+		bar.addSeparator();
 
-		JButton boton = new JButton(iconos[17]);
-		boton.setToolTipText("Exportar gráfica...");
-		boton.addActionListener(eventosInterfaz);
-		boton.setFocusPainted(false);
-		barra.add(boton);
-		eventosInterfaz.setExportGraphButton(boton);
+		JButton button = new JButton(icons[17]);
+		button.setToolTipText("Exportar gráfica...");
+		button.addActionListener(interfaceEvents);
+		button.setFocusPainted(false);
+		bar.add(button);
+		interfaceEvents.setExportGraphButton(button);
 
-		barra.addSeparator();
+		bar.addSeparator();
 
-		boton = new JButton(iconos[18]);
-		boton.setToolTipText("Acercar");
-		boton.addActionListener(eventosInterfaz);
-		boton.setFocusPainted(false);
-		barra.add(boton);
+		button = new JButton(icons[18]);
+		button.setToolTipText("Acercar");
+		button.addActionListener(interfaceEvents);
+		button.setFocusPainted(false);
+		bar.add(button);
 		
-		boton = new JButton(iconos[19]);
-		boton.setToolTipText("Alejar");
-		boton.addActionListener(eventosInterfaz);
-		boton.setFocusPainted(false);
-		barra.add(boton);
+		button = new JButton(icons[19]);
+		button.setToolTipText("Alejar");
+		button.addActionListener(interfaceEvents);
+		button.setFocusPainted(false);
+		bar.add(button);
 		
-		barra.add(Box.createGlue());
+		bar.add(Box.createGlue());
 		
-		barra.setFloatable(false);
-		barra.setRollover(true);
+		bar.setFloatable(false);
+		bar.setRollover(true);
 		
 		
 		panel.add(panel2, BorderLayout.CENTER);
-		panel.add(barra, BorderLayout.NORTH);
+		panel.add(bar, BorderLayout.NORTH);
 		
 		return panel;
 	}
 	
 	/***************************************************************************
-	 * Crea el <i>tab</i> de topología.
+	 * Create topology tab
 	 **************************************************************************/
-	private static JPanel crearTabTopologia() {
+	private static JPanel createTopologyTab() {
 		JPanel panel = new JPanel();
 		panel.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createEmptyBorder(4,4,4,4),
@@ -411,13 +410,13 @@ public class TinySOAMonitor {
 		panel2.setBackground(Color.WHITE);
 		//panel2.setBorder(new JTextField().getBorder());
 		panel2.setLayout(new BorderLayout());
-		TopologyPlotter graficador = new TopologyPlotter();
-		panel2.add(graficador, BorderLayout.CENTER);
-		eventosInterfaz.setGraphTopology(graficador);
+		TopologyPlotter grapher = new TopologyPlotter();
+		panel2.add(grapher, BorderLayout.CENTER);
+		interfaceEvents.setGraphTopology(grapher);
 		
-		JToolBar barra = new JToolBar();
+		JToolBar bar = new JToolBar();
 		
-		barra.add(Box.createGlue());
+		bar.add(Box.createGlue());
 
 		JLabel label = new JLabel("Parámetro: ");
 		label.setFocusable(false);
@@ -427,72 +426,72 @@ public class TinySOAMonitor {
 		combo.setFocusable(false);
 		combo.setMaximumSize(new Dimension(120, 25));
 		combo.setToolTipText("Parámetro a graficar");
-		eventosInterfaz.setTopologyComboParams(combo);
-		combo.addActionListener(eventosInterfaz);
+		interfaceEvents.setTopologyComboParams(combo);
+		combo.addActionListener(interfaceEvents);
 		
-		barra.add(label);
-		barra.add(combo);
+		bar.add(label);
+		bar.add(combo);
 		
-		barra.addSeparator();
+		bar.addSeparator();
 		
-		JButton boton = new JButton(iconos[20]);
-		boton.setToolTipText("Importar imagen de fondo...");
-		boton.addActionListener(eventosInterfaz);
-		boton.setFocusPainted(false);
-		barra.add(boton);
-		eventosInterfaz.setImportBackgroundButton(boton);
+		JButton button = new JButton(icons[20]);
+		button.setToolTipText("Importar imagen de fondo...");
+		button.addActionListener(interfaceEvents);
+		button.setFocusPainted(false);
+		bar.add(button);
+		interfaceEvents.setImportBackgroundButton(button);
 
-		boton = new JButton(iconos[17]);
-		boton.setToolTipText("Exportar imagen de topología...");
-		boton.addActionListener(eventosInterfaz);
-		boton.setFocusPainted(false);
-		barra.add(boton);
-		eventosInterfaz.setExportTopologyButton(boton);
+		button = new JButton(icons[17]);
+		button.setToolTipText("Exportar imagen de topología...");
+		button.addActionListener(interfaceEvents);
+		button.setFocusPainted(false);
+		bar.add(button);
+		interfaceEvents.setExportTopologyButton(button);
 		
-		barra.add(Box.createGlue());
+		bar.add(Box.createGlue());
 		
-		barra.setFloatable(false);
-		barra.setRollover(true);
+		bar.setFloatable(false);
+		bar.setRollover(true);
 		
 		panel.add(panel2, BorderLayout.CENTER);
-		panel.add(barra, BorderLayout.NORTH);
+		panel.add(bar, BorderLayout.NORTH);
 		
 		return panel;
 	}
 	
 	/***************************************************************************
-	 * Crea el <i>tab</i> de eventos.
+	 * Creates the event tab
 	 **************************************************************************/
-	private static JPanel crearTabEventos() {
+	private static JPanel createEventTab() {
 		JPanel panel = new JPanel();
 		panel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
 		panel.setLayout(new BorderLayout());
 		
-		DefaultTableModel modelo = new DefaultTableModel();
-		TableSorter ordenador = new TableSorter(modelo);
-		MonitorTable tabla = new MonitorTable(ordenador);
-		ordenador.setTableHeader(tabla.getTableHeader());
-		JScrollPane scrollTabla = new JScrollPane(tabla);
-		scrollTabla.setHorizontalScrollBarPolicy(
+		DefaultTableModel model = new DefaultTableModel();
+		TableSorter sorter = new TableSorter(model);
+		MonitorTable table = new MonitorTable(sorter);
+		sorter.setTableHeader(table.getTableHeader());
+		JScrollPane scrollTable = new JScrollPane(table);
+		scrollTable.setHorizontalScrollBarPolicy(
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		panel.add(scrollTabla, BorderLayout.CENTER);
-		eventosInterfaz.setEventTable(tabla, modelo);
+		panel.add(scrollTable, BorderLayout.CENTER);
+		interfaceEvents.setEventTable(table, model);
 		
-		popMenuEventos = new JPopupMenu();
+		popMenuEvents = new JPopupMenu();
 		
 		JMenuItem item = new JMenuItem("Add event...");
-		item.addActionListener(eventosInterfaz);
-		popMenuEventos.add(item);
+		item.addActionListener(interfaceEvents);
+		popMenuEvents.add(item);
 		
 		item = new JMenuItem("Modify event...");
-		item.addActionListener(eventosInterfaz);
-		popMenuEventos.add(item);
+		item.addActionListener(interfaceEvents);
+		popMenuEvents.add(item);
 		
 		item = new JMenuItem("Delete event...");
-		item.addActionListener(eventosInterfaz);
-		popMenuEventos.add(item);
+		item.addActionListener(interfaceEvents);
+		popMenuEvents.add(item);
 		
-		scrollTabla.addMouseListener(new MouseAdapter() {
+		scrollTable.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
 				if (evt.isPopupTrigger()) {
 					boolean act = false;
@@ -500,7 +499,7 @@ public class TinySOAMonitor {
 						act = ((JScrollPane)evt.getSource()).isEnabled();
 					if (evt.getSource() instanceof JTable)
 						act = ((JTable)evt.getSource()).isEnabled();
-					if (act) popMenuEventos.show(evt.getComponent(),
+					if (act) popMenuEvents.show(evt.getComponent(),
 								evt.getX(), evt.getY());
 				}
 			}
@@ -511,50 +510,50 @@ public class TinySOAMonitor {
 						act = ((JScrollPane)evt.getSource()).isEnabled();
 					if (evt.getSource() instanceof JTable)
 						act = ((JTable)evt.getSource()).isEnabled();
-					if (act) popMenuEventos.show(evt.getComponent(),
+					if (act) popMenuEvents.show(evt.getComponent(),
 								evt.getX(), evt.getY());
 	            }
 	        }
 		});
 		
-		tabla.addMouseListener(scrollTabla.getMouseListeners()[0]);
+		table.addMouseListener(scrollTable.getMouseListeners()[0]);
 		
 		return panel;
 	}
 	
 	/***************************************************************************
-	 * Crea el <i>tab</i> de mantenimiento.
+	 * Create the maintenance tab
 	 **************************************************************************/
-	private static JPanel crearTabMantenimiento() {
+	private static JPanel createMaintenanceTab() {
 		JPanel panel = new JPanel();
 		panel.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
 		panel.setLayout(new BorderLayout());
 		
-		DefaultTableModel modelo = new DefaultTableModel();
-		TableSorter ordenador = new TableSorter(modelo);
-		MonitorTable tabla = new MonitorTable(ordenador);
-		ordenador.setTableHeader(tabla.getTableHeader());
-		JScrollPane scrollTabla = new JScrollPane(tabla);
-		scrollTabla.setHorizontalScrollBarPolicy(
+		DefaultTableModel model = new DefaultTableModel();
+		TableSorter sorter = new TableSorter(model);
+		MonitorTable table = new MonitorTable(sorter);
+		sorter.setTableHeader(table.getTableHeader());
+		JScrollPane scrollTable = new JScrollPane(table);
+		scrollTable.setHorizontalScrollBarPolicy(
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		panel.add(scrollTabla, BorderLayout.CENTER);
-		eventosInterfaz.setMaintenanceTable(tabla, modelo);
+		panel.add(scrollTable, BorderLayout.CENTER);
+		interfaceEvents.setMaintenanceTable(table, model);
 		
-		popMenuMantenimiento = new JPopupMenu();
+		popMenuMaintenance = new JPopupMenu();
 		
 		JMenuItem item = new JMenuItem("Add task...");
-		item.addActionListener(eventosInterfaz);
-		popMenuMantenimiento.add(item);
+		item.addActionListener(interfaceEvents);
+		popMenuMaintenance.add(item);
 		
 		item = new JMenuItem("Modify task...");
-		item.addActionListener(eventosInterfaz);
-		popMenuMantenimiento.add(item);
+		item.addActionListener(interfaceEvents);
+		popMenuMaintenance.add(item);
 		
 		item = new JMenuItem("Delete task...");
-		item.addActionListener(eventosInterfaz);
-		popMenuMantenimiento.add(item);
+		item.addActionListener(interfaceEvents);
+		popMenuMaintenance.add(item);
 		
-		scrollTabla.addMouseListener(new MouseAdapter() {
+		scrollTable.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
 				if (evt.isPopupTrigger()) {
 					boolean act = false;
@@ -562,7 +561,7 @@ public class TinySOAMonitor {
 						act = ((JScrollPane)evt.getSource()).isEnabled();
 					if (evt.getSource() instanceof JTable)
 						act = ((JTable)evt.getSource()).isEnabled();
-					if (act) popMenuMantenimiento.show(evt.getComponent(),
+					if (act) popMenuMaintenance.show(evt.getComponent(),
 								evt.getX(), evt.getY());
 				}
 			}
@@ -573,114 +572,114 @@ public class TinySOAMonitor {
 						act = ((JScrollPane)evt.getSource()).isEnabled();
 					if (evt.getSource() instanceof JTable)
 						act = ((JTable)evt.getSource()).isEnabled();
-					if (act) popMenuMantenimiento.show(evt.getComponent(),
+					if (act) popMenuMaintenance.show(evt.getComponent(),
 								evt.getX(), evt.getY());
 	            }
 	        }
 		});
 		
-		tabla.addMouseListener(scrollTabla.getMouseListeners()[0]);
+		table.addMouseListener(scrollTable.getMouseListeners()[0]);
 		
 		return panel;
 	}
 	
 	/***************************************************************************
-	 * Crea los páneles de tiempo e información.
+	 * Create the time and information panel
 	 **************************************************************************/
-	private static JPanel crearPanelesContenido() {
+	private static JPanel createContentPanes() {
 		JPanel panel = new JPanel();
 		panel.setMinimumSize(new Dimension(500,300));
 		panel.setLayout(new BorderLayout());
-		panel.add(crearPanelTabs(), BorderLayout.CENTER);		
-		panel.add(crearPanelSlider(), BorderLayout.SOUTH);
+		panel.add(createTabPanel(), BorderLayout.CENTER);		
+		panel.add(createPanelSlider(), BorderLayout.SOUTH);
 		return panel;
 	}
 	
 	/***************************************************************************
-	 * Crea la interfaz de usuario.
+	 * Create the GUI
 	 **************************************************************************/
-	private static void crearVentana() {
+	private static void createWindow() {
 		//try {	UIManager.setLookAndFeel(	"com.sun.java.swing.plaf.windows." + "WindowsLookAndFeel");	} catch (Exception e) {}
 		
-		ventana = new JFrame("TinySOA Visor 1.0");
-		ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window = new JFrame("TinySOA Monitor 1.0");
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		eventosInterfaz = new InterfaceEvents(ARCHIVO_CONFIGURACION, ventana,
-				iconos[2], iconos[15], iconos[14], iconos[16]);
-		crearMenu();
-		crearBarraHerramientas();
+		interfaceEvents = new InterfaceEvents(CONFIG_FILE, window,
+				icons[2], icons[15], icons[14], icons[16]);
+		createMenu();
+		createToolbar();
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-		splitPane.add(crearArbol(), JSplitPane.LEFT);
-		splitPane.add(crearPanelesContenido(), JSplitPane.RIGHT);
-		ventana.getContentPane().add(splitPane, BorderLayout.CENTER);
+		splitPane.add(createTree(), JSplitPane.LEFT);
+		splitPane.add(createContentPanes(), JSplitPane.RIGHT);
+		window.getContentPane().add(splitPane, BorderLayout.CENTER);
 
-		ventana.setSize(new Dimension(800, 600));
+		window.setSize(new Dimension(800, 600));
 		
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		ventana.setLocation((dim.width - ventana.getSize().width) / 2,
-				(dim.height - ventana.getSize().height) / 2);
+		window.setLocation((dim.width - window.getSize().width) / 2,
+				(dim.height - window.getSize().height) / 2);
 		
-		ventana.setVisible(true);
+		window.setVisible(true);
 	}
 	
 	/***************************************************************************
-	 * Función principal del visor.
+	 * Main monitor function
 	 * 
-	 * @param args	Argumentos de entrada.
+	 * @param args	Input arguments
 	 **************************************************************************/	
 	public static void main(String[] args) {
 		UIManager.getDefaults().put("ScrollPane.background", new Color(0xe1e6ec));
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				iconos = new ImageIcon[21];
-				iconos[0] = new ImageIcon(getClass().getResource(
+				icons = new ImageIcon[21];
+				icons[0] = new ImageIcon(getClass().getResource(
 						"/net/tinyos/tinysoa/img/men.empty.png"));
-				iconos[1] = new ImageIcon(getClass().getResource(
+				icons[1] = new ImageIcon(getClass().getResource(
 						"/net/tinyos/tinysoa/img/men.server.png"));
-				iconos[2] = new ImageIcon(getClass().getResource(
+				icons[2] = new ImageIcon(getClass().getResource(
 						"/net/tinyos/tinysoa/img/men.select.net.png"));
-				iconos[3] = new ImageIcon(getClass().getResource(
+				icons[3] = new ImageIcon(getClass().getResource(
 						"/net/tinyos/tinysoa/img/men.refresh.png"));
-				iconos[4] = new ImageIcon(getClass().getResource(
+				icons[4] = new ImageIcon(getClass().getResource(
 						"/net/tinyos/tinysoa/img/men.control.start.png"));
-				iconos[5] = new ImageIcon(getClass().getResource(
+				icons[5] = new ImageIcon(getClass().getResource(
 						"/net/tinyos/tinysoa/img/men.control.back.png"));
-				iconos[6] = new ImageIcon(getClass().getResource(
+				icons[6] = new ImageIcon(getClass().getResource(
 						"/net/tinyos/tinysoa/img/men.control.pause.png"));
-				iconos[7] = new ImageIcon(getClass().getResource(
+				icons[7] = new ImageIcon(getClass().getResource(
 						"/net/tinyos/tinysoa/img/men.control.play.png"));
-				iconos[8] = new ImageIcon(getClass().getResource(
+				icons[8] = new ImageIcon(getClass().getResource(
 						"/net/tinyos/tinysoa/img/men.control.forward.png"));
-				iconos[9] = new ImageIcon(getClass().getResource(
+				icons[9] = new ImageIcon(getClass().getResource(
 						"/net/tinyos/tinysoa/img/men.control.final.png"));
-				iconos[10] = new ImageIcon(getClass().getResource(
+				icons[10] = new ImageIcon(getClass().getResource(
 						"/net/tinyos/tinysoa/img/men.control2.start.png"));
-				iconos[11] = new ImageIcon(getClass().getResource(
+				icons[11] = new ImageIcon(getClass().getResource(
 						"/net/tinyos/tinysoa/img/men.control2.pause.png"));
-				iconos[12] = new ImageIcon(getClass().getResource(
+				icons[12] = new ImageIcon(getClass().getResource(
 						"/net/tinyos/tinysoa/img/men.control2.play.png"));
-				iconos[13] = new ImageIcon(getClass().getResource(
+				icons[13] = new ImageIcon(getClass().getResource(
 						"/net/tinyos/tinysoa/img/men.control2.final.png"));
-				iconos[14] = new ImageIcon(getClass().getResource(
+				icons[14] = new ImageIcon(getClass().getResource(
 						"/net/tinyos/tinysoa/img/men.sensor.waiting.png"));
-				iconos[15] = new ImageIcon(getClass().getResource(
+				icons[15] = new ImageIcon(getClass().getResource(
 						"/net/tinyos/tinysoa/img/men.sensor.normal.png"));
-				iconos[16] = new ImageIcon(getClass().getResource(
+				icons[16] = new ImageIcon(getClass().getResource(
 						"/net/tinyos/tinysoa/img/men.sensor.problem.png"));
-				iconos[17] = new ImageIcon(getClass().getResource(
+				icons[17] = new ImageIcon(getClass().getResource(
 						"/net/tinyos/tinysoa/img/men.export.png"));
-				iconos[18] = new ImageIcon(getClass().getResource(
+				icons[18] = new ImageIcon(getClass().getResource(
 						"/net/tinyos/tinysoa/img/men.zoom.in.png"));
-				iconos[19] = new ImageIcon(getClass().getResource(
+				icons[19] = new ImageIcon(getClass().getResource(
 						"/net/tinyos/tinysoa/img/men.zoom.out.png"));
-				iconos[20] = new ImageIcon(getClass().getResource(
+				icons[20] = new ImageIcon(getClass().getResource(
 						"/net/tinyos/tinysoa/img/men.import.image.png"));
 
 				Locale.setDefault(new Locale("us", "US"));
 				
-				crearVentana();
-				eventosInterfaz.deactivateControls();
-				eventosInterfaz.connectServer();
+				createWindow();
+				interfaceEvents.deactivateControls();
+				interfaceEvents.connectServer();
 			}
 		});
 	}
