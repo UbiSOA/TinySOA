@@ -134,7 +134,8 @@ public class NetSelectDialog extends JDialog {
 	public void show(InfoServ service, JProgressBar progressBar) {
 		if (service == null) {
 			JOptionPane.showMessageDialog(
-					null, "Still has been connected to the server.",
+					null, "You are not connected to a services provider yet.\nPlease " +
+							"connect to a service provider and try again.",
 					"Connection problem", JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
