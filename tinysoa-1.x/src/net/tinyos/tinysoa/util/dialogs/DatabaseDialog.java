@@ -245,6 +245,7 @@ public class DatabaseDialog extends JDialog implements
 					"MySQL Server.<br>Please check access data and try " +
 					"again.</html>", "Connection Error",
 					JOptionPane.ERROR_MESSAGE);
+			logger.error(ex.getMessage());
 			server.requestFocus();
 			server.selectAll();
 			return;
