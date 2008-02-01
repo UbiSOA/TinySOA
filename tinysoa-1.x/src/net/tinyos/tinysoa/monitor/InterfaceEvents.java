@@ -322,7 +322,7 @@ public class InterfaceEvents
 	/***************************************************************************
 	 * Sets the export image button for the current state of the topology grapher
 	 * 
-	 * @param exportTopologyButton	Botón para exportar una imágen
+	 * @param exportTopologyButton	Export image button
 	 **************************************************************************/
 	public void setExportTopologyButton(JButton exportTopologyButton) {
 		this.exportTopologyButton = exportTopologyButton;
@@ -1064,7 +1064,7 @@ public class InterfaceEvents
 	/***************************************************************************
 	 * Create the topology graph nodes
 	 * 
-	 * @param nodes	Un arreglo con el ID de los nodos
+	 * @param nodes Array with the nodes ID
 	 **************************************************************************/
 	private void createNodeTopology(Object[] nodes) {
 		int max = 0, ancho, alto, x, y;

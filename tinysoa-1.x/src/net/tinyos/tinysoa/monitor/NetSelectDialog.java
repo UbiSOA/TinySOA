@@ -60,7 +60,7 @@ public class NetSelectDialog extends JDialog {
 		panel.setLayout(new BorderLayout());
 		panel.setBorder(BorderFactory.createEmptyBorder(8,8,8,8));
 		
-		JLabel label = new JLabel("Networks of sensors available:");
+		JLabel label = new JLabel("Sensors networks available:");
 		label.setBorder(BorderFactory.createEmptyBorder(0,0,4,0));
 		
 		panel.add(label, BorderLayout.NORTH);
