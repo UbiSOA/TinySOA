@@ -370,13 +370,13 @@ public class TinySOAMonitor {
 		bar.addSeparator();
 
 		button = new JButton(icons[18]);
-		button.setToolTipText("Approach");
+		button.setToolTipText("Zoom in");
 		button.addActionListener(interfaceEvents);
 		button.setFocusPainted(false);
 		bar.add(button);
 		
 		button = new JButton(icons[19]);
-		button.setToolTipText("Away");
+		button.setToolTipText("Zoom out");
 		button.addActionListener(interfaceEvents);
 		button.setFocusPainted(false);
 		bar.add(button);
