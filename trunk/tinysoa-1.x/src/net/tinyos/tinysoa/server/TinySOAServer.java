@@ -213,34 +213,34 @@ public class TinySOAServer {
 	}
 	
 	/***************************************************************************
-	 * Detiene el server de servicios.
+	 * Stops the service provider
 	 **************************************************************************/
 	public static void stop() {
 		try {
 			server.stop();
 		} catch (Exception e) {
-			Errors.error(e, "Error al detener el server.");
+			Errors.error(e, "Error stopping the server.");
 		}
 	}
 	
 	/***************************************************************************
-	 * Método principal de la aplicación TinySOA Servidor.
+	 * Main method
 	 * 
-	 * @param args	Argumentos de entrada
+	 * @param args	Arguments
 	 **************************************************************************/
 	public static void main(String[] args) {
 		PropertyConfigurator.configure("log4j.properties");
 
 		try {
-			System.out.println("Iniciando " + WINDOW_TITLE + "...");
+			System.out.println("Starting " + WINDOW_TITLE + "...");
 			loadConfig();
 			connectDB();
-			System.out.println("Preparando " + InetAddress.getLocalHost() +
+			System.out.println("Preparing " + InetAddress.getLocalHost() +
 					":" + port + "...");
 			start();
-			System.out.println("Listo y esperando solicitudes...");
+			System.out.println("Ready and awaiting petitions...");
 		} catch(Exception ex) {
-			Errors.error(ex, "Error al iniciar el sistema.");
+			Errors.error(ex, "Error starting the system.");
 		}
 	}	
 	
