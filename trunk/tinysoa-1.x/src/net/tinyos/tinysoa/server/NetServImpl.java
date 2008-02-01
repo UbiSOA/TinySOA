@@ -248,7 +248,7 @@ public class NetServImpl implements NetServ
 			rs = st.executeQuery("SELECT t1.parameter, t2.description FROM " +
 					"parameters AS t1, descriptions AS t2 WHERE net_id=" +
 					netID + " AND t1.parameter = t2.parameter " +
-					"ORDER BY t1.parametro");
+					"ORDER BY t1.parameter");
 			
 			while (rs.next()) {
 				Parameter p = new Parameter();

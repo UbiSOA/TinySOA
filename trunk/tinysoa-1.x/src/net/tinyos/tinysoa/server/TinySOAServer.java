@@ -235,10 +235,10 @@ public class TinySOAServer {
 			System.out.println("Starting " + WINDOW_TITLE + "...");
 			loadConfig();
 			connectDB();
-			System.out.println("Preparing " + InetAddress.getLocalHost() +
+			System.out.println("Opening " + InetAddress.getLocalHost() +
 					":" + port + "...");
 			start();
-			System.out.println("Ready and awaiting petitions...");
+			System.out.println("Ready and waiting requests...");
 		} catch(Exception ex) {
 			Errors.error(ex, "Error starting the system.");
 		}

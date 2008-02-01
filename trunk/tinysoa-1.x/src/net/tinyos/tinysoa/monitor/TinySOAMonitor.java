@@ -344,14 +344,14 @@ public class TinySOAMonitor {
 		
 		bar.add(Box.createGlue());
 
-		JLabel label = new JLabel("Parámetro: ");
+		JLabel label = new JLabel("Parameter: ");
 		label.setFocusable(false);
 		label.setFont(new Font("Arial", Font.PLAIN, 12));
 		
 		JComboBox combo = new JComboBox();
 		combo.setFocusable(false);
 		combo.setMaximumSize(new Dimension(120, 25));
-		combo.setToolTipText("Parámetro a graficar");
+		combo.setToolTipText("Parameter to graph");
 		interfaceEvents.setComboParsGraf(combo);
 		combo.addActionListener(interfaceEvents);
 		
@@ -361,7 +361,7 @@ public class TinySOAMonitor {
 		bar.addSeparator();
 
 		JButton button = new JButton(icons[17]);
-		button.setToolTipText("Exportar gráfica...");
+		button.setToolTipText("Exporting graphic...");
 		button.addActionListener(interfaceEvents);
 		button.setFocusPainted(false);
 		bar.add(button);
@@ -370,13 +370,13 @@ public class TinySOAMonitor {
 		bar.addSeparator();
 
 		button = new JButton(icons[18]);
-		button.setToolTipText("Acercar");
+		button.setToolTipText("Approach");
 		button.addActionListener(interfaceEvents);
 		button.setFocusPainted(false);
 		bar.add(button);
 		
 		button = new JButton(icons[19]);
-		button.setToolTipText("Alejar");
+		button.setToolTipText("Away");
 		button.addActionListener(interfaceEvents);
 		button.setFocusPainted(false);
 		bar.add(button);
@@ -418,14 +418,14 @@ public class TinySOAMonitor {
 		
 		bar.add(Box.createGlue());
 
-		JLabel label = new JLabel("Parámetro: ");
+		JLabel label = new JLabel("Parameter: ");
 		label.setFocusable(false);
 		label.setFont(new Font("Arial", Font.PLAIN, 12));
 		
 		JComboBox combo = new JComboBox();
 		combo.setFocusable(false);
 		combo.setMaximumSize(new Dimension(120, 25));
-		combo.setToolTipText("Parámetro a graficar");
+		combo.setToolTipText("Parameter to graph");
 		interfaceEvents.setTopologyComboParams(combo);
 		combo.addActionListener(interfaceEvents);
 		
@@ -435,14 +435,14 @@ public class TinySOAMonitor {
 		bar.addSeparator();
 		
 		JButton button = new JButton(icons[20]);
-		button.setToolTipText("Importar imagen de fondo...");
+		button.setToolTipText("Importing background image...");
 		button.addActionListener(interfaceEvents);
 		button.setFocusPainted(false);
 		bar.add(button);
 		interfaceEvents.setImportBackgroundButton(button);
 
 		button = new JButton(icons[17]);
-		button.setToolTipText("Exportar imagen de topología...");
+		button.setToolTipText("Exporting topology image...");
 		button.addActionListener(interfaceEvents);
 		button.setFocusPainted(false);
 		bar.add(button);
