@@ -435,14 +435,14 @@ public class TinySOAMonitor {
 		bar.addSeparator();
 		
 		JButton button = new JButton(icons[20]);
-		button.setToolTipText("Importing background image...");
+		button.setToolTipText("Import background image...");
 		button.addActionListener(interfaceEvents);
 		button.setFocusPainted(false);
 		bar.add(button);
 		interfaceEvents.setImportBackgroundButton(button);
 
 		button = new JButton(icons[17]);
-		button.setToolTipText("Exporting topology image...");
+		button.setToolTipText("Export topology image...");
 		button.addActionListener(interfaceEvents);
 		button.setFocusPainted(false);
 		bar.add(button);
