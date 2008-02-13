@@ -20,7 +20,7 @@
  * 
  ******************************************************************************/
 
-package net.tinyos.tinysoa.monitor;
+package net.tinyos.tinysoa.visor;
 
 import java.awt.*;
 import java.awt.event.*;
