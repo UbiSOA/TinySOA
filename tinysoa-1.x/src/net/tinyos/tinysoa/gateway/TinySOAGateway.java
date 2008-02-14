@@ -1,5 +1,5 @@
 /*
- *  Copyright 2007 Edgardo Avilés López
+ *  Copyright 2006 Edgardo Avilés López
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,6 +20,9 @@ package net.tinyos.tinysoa.gateway;
 import net.tinyos.message.*;
 import net.tinyos.tinysoa.common.*;
 import net.tinyos.tinysoa.util.*;
+import net.tinyos.tinysoa.util.dialogs.PropertiesDialog;
+import net.tinyos.tinysoa.util.tables.MonitorTable;
+
 import javax.swing.border.*;
 import javax.swing.table.*;
 import javax.swing.*;
@@ -116,7 +119,8 @@ public class TinySOAGateway {
 		setStatus("<html><strong>Connected successfully</strong> to " +
 				"SerialForwarder.</html>");
 		
-		setStatus("<html><strong>Connecting</strong> to database&hellip;</html>");
+		setStatus("<html><strong>Connecting</strong> to " +
+				"database&hellip;</html>");
 
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -127,14 +131,15 @@ public class TinySOAGateway {
 			//ex.printStackTrace();
 			System.err.println("Impossible to connect to database.");
 			System.err.println(
-					"Please check if the config.xml file information is correct " +
-					"and that the database is working correctly.");
+					"Please check if the config.xml file information is " +
+					"correct and that the database is working correctly.");
 			System.exit(1);
 		}
 		
 		processor.setDB(db);
 		
-		setStatus("<html><strong>Connected successfully</strong> to database.</html>");
+		setStatus("<html><strong>Connected successfully</strong> to " +
+				"database.</html>");
 		
 		if (configuration.getProperty("network.id") == null) {
 			processor.setReady(false);
@@ -173,9 +178,7 @@ public class TinySOAGateway {
 		}
 		
 		setStatus("<html>Waiting <strong>registers</strong>&hellip;</html>");
-		client.sendCommand(
-				0, Constants.TYPE_REGISTER_REQUEST, 0);
-		
+		client.sendCommand(0, Constants.TYPE_REGISTER_REQUEST, 0);
 	}
 	
 	/***************************************************************************
@@ -191,7 +194,7 @@ public class TinySOAGateway {
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setIconImage(i04.getImage());
 		
-		// Starts user interface construction --------------------------
+		// Starts user interface construction ----------------------------------
 
 		bl01 = new BorderLayout();
 		p01	= new JPanel();
@@ -240,7 +243,7 @@ public class TinySOAGateway {
 		tp01.add(sp01, i01);
 		//tp01.add(new JPanel(), i02);
 
-		// Ends user interface construction ------------------------
+		// Ends user interface construction ------------------------------------
 		
 		window.setSize(new Dimension(800, 700));
 		
@@ -255,6 +258,8 @@ public class TinySOAGateway {
 
 	/***************************************************************************
 	 * Sets current status in the user interface and in the console.
+	 * 
+	 * @param s	Status text
 	 **************************************************************************/
 	private static void setStatus(String s) {
 		setStatus(s, false);
@@ -262,6 +267,9 @@ public class TinySOAGateway {
 	
 	/***************************************************************************
 	 * Sets current status in the user interface and optionally in the console.
+	 * 
+	 * @param s			Status text
+	 * @param justGUI	<code>True</code> to just update GUI
 	 **************************************************************************/
 	private static void setStatus(String s, boolean justGUI) {
 		l01.setText(s);
@@ -299,4 +307,5 @@ public class TinySOAGateway {
 			}
 		});
 	}
+	
 }
