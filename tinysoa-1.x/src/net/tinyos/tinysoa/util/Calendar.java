@@ -1,22 +1,17 @@
 /*
- * "Copyright (c) 2005-2006 The Regents of the Centro de Investigación Científica y de
- * Educación Superior de la ciudad de Ensenada, Baja California (CICESE).
- *
- * Permission to use, copy, modify, and distribute this software and its
- * documentation for any purpose, without fee, and without written agreement is
- * hereby granted, provided that the above copyright notice, the following
- * two paragraphs and the author appear in all copies of this software.
+ *  Copyright 2006 Edgardo Avilés López
  * 
- * IN NO EVENT SHALL CICESE BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
- * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OF THIS
- * SOFTWARE AND ITS DOCUMENTATION, EVEN IF CICESE HAS BEEN ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  * 
- * CICESE SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE.  THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND CICESE
- * HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS,
- * OR MODIFICATIONS."
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *    
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  * 
  ******************************************************************************/
 
@@ -25,7 +20,8 @@ package net.tinyos.tinysoa.util;
 import java.util.*;
 
 /*******************************************************************************
- *Class utility related to the calendar.
+ * Calendar class that provides utility methods that returns the current date or
+ * time in various formats.
  * 
  * @author		Edgardo Avilés López
  * @version	0.2, 07/24/2006
@@ -36,7 +32,7 @@ public final class Calendar {
 	private static String d, m, y, y2, h, mi, s, ms;
 	
 	/***************************************************************************
-	 * Update information Currently.
+	 * Updates internal data with the current date and time.
 	 **************************************************************************/
 	public static void read() {
 		cal = new GregorianCalendar();
@@ -51,53 +47,56 @@ public final class Calendar {
 	}
 	
 	/***************************************************************************
-	 * Returns the current date in format d/m/y.
+	 * Returns the current date with format <code>d/m/y</code>.
 	 * 
-	 * @return Returns a string with the date in format d/m/y.
+	 * @return A string for the current date with format <code>d/m/y</code>
 	 **************************************************************************/
 	public static String currentDate() {
 		read(); return m + "/" + d + "/" + y;
 	}
 	
 	/***************************************************************************
-	 * Returns the current date in format Y-m-d.
+	 * Returns the current date with format <code>Y-m-d</code>. Useful to
+	 * database queries.
 	 * 
-	 * @return	Returns a string with the date in format Y-m-d;
+	 * @return	A string for the current date with format <code>Y-m-d</code>
 	 **************************************************************************/
 	public static String currentDateBD() {
 		read(); return y2 + "-" + m + "-" + d;
 	}
 
 	/***************************************************************************
-	 * Returns the current time in format h:mi:s.ms.
+	 * Returns the current time with format <code>h:mi:s.ms</code>.
 	 * 
-	 * @return	Returns a string with the time in format h:mi:s.ms.
+	 * @return	A string for the current time with format
+	 * 			<code>h:mi:s.ms</code>.
 	 **************************************************************************/
 	public static String currentTime() {
 		read(); return h + ":" + mi + ":" + s + "." + ms;
 	}
-	
+
 	/***************************************************************************
-	 * Returns the current time in format h:mi:s
+	 * Returns the current time with format <code>h:mi:s</code>. Useful to
+	 * database queries.
 	 * 
-	 * @return	Returns a string with the time in format h:mi:s
+	 * @return	A string for the current time with format <code>h:mi:s</code>
 	 **************************************************************************/
 	public static String currentTimeBD() {
 		read(); return h + ":" + mi + ":" + s;
 	}
-	
+
 	/***************************************************************************
-	 * Fills a string with the length and string filled data.
+	 * Pads a string on the left to a certain length with another given string.
 	 * 
-	 * @param	s			Desired string.
-	 * @param	length	Desired length.
-	 * @param	padCad		String filled.
-	 * @return The string adjusted according the options.
+	 * @param	s		The input string
+	 * @param	length	Target length
+	 * @param	padStr	Padding string
+	 * @return The padded string
 	 **************************************************************************/
-	public static String pad(String s, int length, String padCad) {
+	public static String pad(String s, int length, String padStr) {
 		while (s.length() < length)
-			s = padCad + s;
+			s = padStr + s;
 		return s;
 	}
-	
+
 }
