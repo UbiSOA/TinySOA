@@ -1,5 +1,5 @@
 /*
- *  Copyright 2007 Edgardo Avilés López
+ *  Copyright 2006 Edgardo Avilés López
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import javax.swing.table.*;
 import net.tinyos.tinysoa.common.*;
 import net.tinyos.tinysoa.util.*;
 import net.tinyos.tinysoa.util.Calendar;
+import net.tinyos.tinysoa.util.tables.MonitorCellRenderer;
 
 /*******************************************************************************
  * Class that implements the Message Processor module of the TinySOA Gateway
@@ -82,7 +83,7 @@ public class MessageProcessor {
 	}
 	
 	/***************************************************************************
-	 * Defines te database connection to use.
+	 * Defines the database connection to use.
 	 * 
 	 * @param db	Database connector object to use
 	 **************************************************************************/
@@ -144,7 +145,7 @@ public class MessageProcessor {
 	/***************************************************************************
 	 * Defines if the processor is ready to write in the database.
 	 * 
-	 * @param ready
+	 * @param ready	<code>True</code> if processor is ready
 	 **************************************************************************/
 	public void setReady(boolean ready) {
 		this.ready = ready;
@@ -226,8 +227,10 @@ public class MessageProcessor {
 				
 				if (!client.getSendBusy()) {
 					Statement st2 = db.createStatement();
-					client.sendCommand(rs.getInt("node_id"), rs.getInt("type"), rs.getInt("value"));
-					st2.execute("UPDATE maintenance SET ready=1 WHERE id=" + rs.getInt("id"));
+					client.sendCommand(rs.getInt("node_id"), rs.getInt("type"),
+							rs.getInt("value"));
+					st2.execute("UPDATE maintenance SET ready=1 WHERE id=" +
+							rs.getInt("id"));
 				}
 				
 			}
@@ -368,7 +371,8 @@ public class MessageProcessor {
 		try {
 			st = db.createStatement();
 			st.executeUpdate("INSERT INTO history VALUES('0', '" + netID +
-					"', '" + nodeID + "', NOW(), '" + par + "', '" + val + "')");
+					"', '" + nodeID + "', NOW(), '" + par +
+					"', '" + val + "')");
 		} catch (SQLException ex) {
 			Errors.errorBD(ex);
 		} finally {
@@ -440,7 +444,7 @@ public class MessageProcessor {
 	 * Process a register message.
 	 * 
 	 * @param m			Received message
-	 * @param convert	True is data must be converted
+	 * @param convert	<code>True</code> is data must be converted
 	 * @return			An object array with the requested information
 	 **************************************************************************/
 	private Object[] processRegister(TinySOAMsg m, boolean convert) {
@@ -514,5 +518,6 @@ public class MessageProcessor {
 				Converter.intToSensParam(m.get_l7(), convert),
 				Converter.intToSensParam(m.get_l8(), convert)
 		};
-	}	
+	}
+	
 }
