@@ -1,5 +1,5 @@
 /*
- *  Copyright 2007 Edgardo Avilés López
+ *  Copyright 2006 Edgardo Avilés López
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -71,7 +71,8 @@ public class InfoServImpl implements InfoServ {
 				r.setId(rs.getInt("id"));
 				r.setName(rs.getString("name"));
 				r.setDescription(rs.getString("description"));
-				r.setWsdl("http://" + InetAddress.getLocalHost().getHostAddress() +
+				r.setWsdl("http://" +
+						InetAddress.getLocalHost().getHostAddress() +
 						":" + port + "/NetServ" + r.getId() + "?wsdl");
 				networks.add(r);
 			}

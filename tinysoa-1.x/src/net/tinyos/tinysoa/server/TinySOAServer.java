@@ -1,5 +1,5 @@
 /*
- *  Copyright 2007 Edgardo Avilés López
+ *  Copyright 2006 Edgardo Avilés López
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -92,7 +92,7 @@ public class TinySOAServer {
 	}
 	
 	/***************************************************************************
-	 * Method to make a database connection.
+	 * Method to establish a database connection.
 	 **************************************************************************/
 	private static void connectDB() {
 		try {
@@ -108,7 +108,7 @@ public class TinySOAServer {
 			
 			try {
 				
-				// Save dialog new DB access configuration.
+				// Stores the new DB access from the dialog data.
 				Properties configuracion = new Properties();
 				configuracion.loadFromXML(
 						new FileInputStream(CONFIG_FILE));
@@ -135,7 +135,7 @@ public class TinySOAServer {
 		
 		try {
 			
-			// Try to connect once again. It should work now.
+			// Try to connect again. It should work now.
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			db = DriverManager.getConnection("jdbc:mysql://" + serv + "/" +
 					dBase + "?user=" + user + "&password=" + passwd);
@@ -149,15 +149,18 @@ public class TinySOAServer {
 	}
 	
 	/***************************************************************************
-	 * Starts the server and registers the information and a network service for
+	 * Starts the server and loads an information service
+	 * (<code>InfoServ</code>) and a network service (<code>NetServ</code>) for
 	 * each of the available sensor networks.
+	 * 
+	 * @see	InfoServ, NetServ
 	 **************************************************************************/
 	public static void start() {
 		XFire xfire = XFireFactory.newInstance().getXFire();
 		AnnotationServiceFactory factory = new AnnotationServiceFactory(
 				new Jsr181WebAnnotations(), xfire.getTransportManager());
 		
-		// Information service registration.
+		// Loading information service.
 		Service service = factory.create(InfoServImpl.class, "InfoServ",
 				"http://numenor.cicese.mx/TinySOA", null);
 		service.setInvoker(new BeanInvoker(new InfoServImpl(db, port)));
@@ -172,7 +175,7 @@ public class TinySOAServer {
 			st = db.createStatement();
 			rs = st.executeQuery("SELECT * FROM networks ORDER BY id");
 			
-			// Register each network service.
+			// Loads a network service for each sensor network.
 			while (rs.next()) {
 				int rid = rs.getInt("id");
 				Service netService = factory.create(NetServImpl.class,
@@ -204,16 +207,17 @@ public class TinySOAServer {
 		} catch (Exception e) {
 			if (((MultiException)e).getException(0) instanceof BindException)
 				JOptionPane.showMessageDialog(null, "<html>" +
-						"The port <i>" + port + "</i> is already in use by another service. Please,<br>" +
-						"change the port for TinySOA Server in the " + CONFIG_FILE + " file.</html>",
-						"Server Initialization Error", JOptionPane.ERROR_MESSAGE);
+					"The port <i>" + port + "</i> is already in use by " +
+					"another service. Please,<br>change the port for " +
+					"TinySOA Server in the " + CONFIG_FILE + " file.</html>",
+					"Server Initialization Error", JOptionPane.ERROR_MESSAGE);
 			logger.error(e);
 			System.exit(1);
 		}
 	}
 	
 	/***************************************************************************
-	 * Stops the service provider
+	 * Stops the server.
 	 **************************************************************************/
 	public static void stop() {
 		try {
@@ -240,7 +244,7 @@ public class TinySOAServer {
 			start();
 			System.out.println("Ready and waiting requests...");
 		} catch(Exception ex) {
-			Errors.error(ex, "Error starting the system.");
+			Errors.error(ex, "Error at starting the system.");
 		}
 	}	
 	
