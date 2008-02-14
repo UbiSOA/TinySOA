@@ -1,5 +1,5 @@
 /*
- *  Copyright 2007 Edgardo Avilés López
+ *  Copyright 2006 Edgardo Avilés López
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -193,8 +193,8 @@ public class NetServImpl implements NetServ
 		
 		try {
 			st = db.createStatement();
-			rs = st.executeQuery("SELECT node_id FROM history WHERE net_id=" + netID +
-					" GROUP BY node_id ORDER BY node_id");
+			rs = st.executeQuery("SELECT node_id FROM history WHERE net_id=" +
+					netID + " GROUP BY node_id ORDER BY node_id");
 			
 			while (rs.next()) {
 				Node n = new Node();
@@ -300,8 +300,8 @@ public class NetServImpl implements NetServ
 							((Node)nodes.get(i)).getId() + "' " +
 							"ORDER BY date_time DESC LIMIT 0," +
 							getSensorTypesList().size());
-				else rs = st.executeQuery("SELECT * FROM history WHERE net_id=" +
-							netID + " AND node_id='" +
+				else rs = st.executeQuery("SELECT * FROM history " +
+							"WHERE net_id=" + netID + " AND node_id='" +
 							((Node)nodes.get(i)).getId() + "' AND parameter='" +
 							sensorType + "' " +
 							"ORDER BY date_time DESC LIMIT 0,1");
@@ -578,9 +578,9 @@ public class NetServImpl implements NetServ
 		if (critq.length() > 4)
 			critq = critq.substring(4);
 		
-		String query = "SELECT node_id, date_time, parameter AS N FROM history " +
-				"WHERE (" +	critq + ") " + extra + " AND net_id='" + netID +
-				"' GROUP BY parameter";
+		String query = "SELECT node_id, date_time, parameter AS N " +
+			"FROM history WHERE (" +	critq + ") " + extra + " AND net_id='" +
+			netID + "' GROUP BY parameter";
 		
 		Statement st = null;
 		ResultSet rs = null;
@@ -661,9 +661,9 @@ public class NetServImpl implements NetServ
 		if (critq.length() > 4)
 			critq = critq.substring(4);
 		
-		String query = "SELECT node_id, date_time, parameter AS N FROM history " +
-				"WHERE (" +	critq + ") " + extra + " AND net_id='" + netID +
-				"' GROUP BY parameter";
+		String query = "SELECT node_id, date_time, parameter AS N " +
+			"FROM history WHERE (" +	critq + ") " + extra + " AND net_id='" +
+			netID + "' GROUP BY parameter";
 		
 		Statement st = null;
 		ResultSet rs = null;
@@ -862,10 +862,10 @@ public class NetServImpl implements NetServ
 		minsToRepeat = minsToRepeat * 1000;
 		
 		String query = "INSERT INTO maintenance(" +
-				"type, value, node_id, repeat, event_id, date_time, net_id) " +
-				"VALUES('" + type + "', '" + value + "', '" + targetNodeID + "', '" +
-				minsToRepeat + "', '" + waitEventID + "', '" + executionDateTime +
-				"', '" + netID + "')";
+			"type, value, node_id, repeat, event_id, date_time, net_id) " +
+			"VALUES('" + type + "', '" + value + "', '" + targetNodeID +
+			"', '" + minsToRepeat + "', '" + waitEventID + "', '" +
+			executionDateTime + "', '" + netID + "')";
 		
 		Statement st = null;
 		
@@ -894,8 +894,8 @@ public class NetServImpl implements NetServ
 	 * @param value				Action value
 	 * @param targetNodeID		Target node ID, <code>0</code> for all nodes
 	 * @param executionDateTime	Date and time in which the task will be executed
-	 * 							if it is empty it takes the current date and time
-	 * 							to immediate action
+	 * 							if it is empty it takes the current date and
+	 * 							time to immediate action
 	 * @param minsToRepeat		Amount of minutes in which the task will be
 	 * 							repeating, if is <code>0</code> there will be
 	 * 							no repetitions
