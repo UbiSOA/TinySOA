@@ -21,7 +21,7 @@ import net.tinyos.message.*;
 import net.tinyos.tinysoa.common.*;
 import net.tinyos.tinysoa.util.*;
 import net.tinyos.tinysoa.util.dialogs.PropertiesDialog;
-import net.tinyos.tinysoa.util.tables2.MonitorTable;
+import net.tinyos.tinysoa.util.table.MonitorTable;
 
 import javax.swing.border.*;
 import javax.swing.table.*;

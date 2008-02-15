@@ -25,8 +25,8 @@ import javax.swing.table.*;
 import javax.swing.tree.*;
 
 import net.tinyos.tinysoa.util.*;
-import net.tinyos.tinysoa.util.tables2.MonitorTable;
-import net.tinyos.tinysoa.util.tables2.TableSorter;
+import net.tinyos.tinysoa.util.table.MonitorTable;
+import net.tinyos.tinysoa.util.table.TableSorter;
 
 /*******************************************************************************
  * Demo app that uses those services offered by TinySOA Server
