@@ -15,7 +15,7 @@
  * 
  ******************************************************************************/
 
-package net.tinyos.tinysoa.util.table;
+package net.tinyos.tinysoa.util.tables;
 
 /*******************************************************************************
  * ClassUtility that allows the value of the cell in a table has
