@@ -1,22 +1,17 @@
 /*
- * "Copyright (c) 2005-2006 The Regents of the Centro de Investigación y de
- * Educación Superior de la ciudad de Ensenada, Baja California (CICESE).
- *
- * Permission to use, copy, modify, and distribute this software and its
- * documentation for any purpose, without fee, and without written agreement is
- * hereby granted, provided that the above copyright notice, the following
- * two paragraphs and the author appear in all copies of this software.
+ *  Copyright 2006 Edgardo Avilés López
  * 
- * IN NO EVENT SHALL CICESE BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
- * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OF THIS
- * SOFTWARE AND ITS DOCUMENTATION, EVEN IF CICESE HAS BEEN ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  * 
- * CICESE SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE.  THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND CICESE
- * HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS,
- * OR MODIFICATIONS."
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *    
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  * 
  ******************************************************************************/
 
@@ -27,8 +22,9 @@ import java.text.*;
 import net.tinyos.tinysoa.common.*;
 
 /*******************************************************************************
- * Class converter parameters reading, as well as numbers and identifiers  
- * of parameters, actuators, and sensors.
+ * One of the core utilities class. As suggested by the name, converts the main
+ * data types and labels such as reading parameters, sensor identifiers,
+ * actuators types, and raw sensor data.
  * 
  * @author		Edgardo Avilés López
  * @version	0.3, 07/24/2006 
@@ -40,23 +36,24 @@ public final class Converter {
 	private static NumberFormat nf3d = new DecimalFormat("0.000");
 	
 	/***************************************************************************
-	 * Converts a reading ADC to the equivalent of temperature in degrees 
-	 * Celsius with precision of a decimal digit.
+	 * Converts an ADC raw value to a temperature equivalent in Celsius degrees.
+	 * Result is returned as a string with one digit precision.
 	 * 
-	 * @param ADC	Reading ADC of sensor
-	 * @return		A string with the temperature in degree celsius 
-	 * 	 **************************************************************************/
+	 * @param ADC	Raw sensor reading
+	 * @return		A string containing the temperature in Celsius degrees
+	 **************************************************************************/
 	public static String adcToTemp(int ADC) {
 		return adcToTemp(ADC, 1);
 	}
 	
 	/***************************************************************************
-	 * Converts a reading ADC to the equivalent of temperature in degrees 
-	 * Celsius with the precision indicated.
+	 * Converts an ADC raw value to a temperature equivalent in Celsius degrees.
+	 * Result is returned as a string with the given precision and the string
+	 * " °C" added at the end.
 	 * 
-	 * @param ADC			Reading ADC of sensor
-	 * @param precision	    Desired precision
-	 * @return				A string with the temperature in degree celsius 
+	 * @param ADC		Raw sensor reading
+	 * @param precision	Desired precision
+	 * @return			A string containing the temperature in Celsius degrees
 	 **************************************************************************/
 	public static String adcToTemp(int ADC, int precision) {
 		double a , b, c, R1, Rthr, ADC_FS, kelvin;
@@ -67,15 +64,16 @@ public final class Converter {
 		ADC_FS = 1023;
 		Rthr = R1 * (ADC_FS - ADC) / ADC;
 		kelvin = 1 / (a + b * Math.log(Rthr) + c *
-				Math.pow(Math.log(Rthr), 3.0));
+		Math.pow(Math.log(Rthr), 3.0));
 		return rounding(kelvin - 273.15, precision) + " °C";
 	}
 	
 	/***************************************************************************
-	 * 	Converts a reading ADC to the equivalent temperature in degrees celsius .
+	 * Converts an ADC raw value to a temperature equivalent in Celsius degrees.
+	 * Result is returned as a double.
 	 * 
-	 * @param ADC	Reading ADC of sensor
-	 * @return		A double with the temperature in degree celsius 
+	 * @param ADC	Raw sensor reading
+	 * @return		A double containing the temperature in Celsius degrees
 	 **************************************************************************/
 	public static double adcToTempD(int ADC) {
 		double a , b, c, R1, Rthr, ADC_FS, kelvin;
@@ -86,153 +84,160 @@ public final class Converter {
 		ADC_FS = 1023;
 		Rthr = R1 * (ADC_FS - ADC) / ADC;
 		kelvin = 1 / (a + b * Math.log(Rthr) + c *
-				Math.pow(Math.log(Rthr), 3.0));
+		Math.pow(Math.log(Rthr), 3.0));
 		return Double.parseDouble(rounding(kelvin - 273.15, 3));
 	}
 	
 	/***************************************************************************
-	 * Converts a reading your ADC voltage equivalent to an accuracy 
-	 * of two decimal digits.
+	 * Converts an ADC raw value to a voltage equivalent. Result is returned as
+	 * a string with two digits precision and the string " v" added at the end.
 	 * 
-	 * @param ADC	Reading ADC of sensor
-	 * @return		A string with the voltage equivalent
+	 * @param ADC	Raw sensor reading
+	 * @return		A string containing the voltage equivalent for the input
 	 **************************************************************************/
 	public static String adcToVolt(int ADC) {
 		return rounding(ADC / 1000.0, 2) + " v";
 	}
 	
 	/***************************************************************************
-	 * Convert a reading ADC to equivalent in voltage.
+	 * Converts an ADC raw value to a voltage equivalent. Result is returned as
+	 * a double.
 	 * 
-	 * @param ADC	Reading ADC of sensor
-	 * @return		A double with the voltage equivalent
+	 * @param ADC	Raw sensor reading
+	 * @return		A double containing the voltage equivalent for the input
 	 **************************************************************************/
 	public static double adcToVoltD(int ADC) {
 		return Double.parseDouble(rounding(ADC / 1000.0, 3));
 	}
 	
 	/***************************************************************************
-	 * Turn an ID number from a node to a string representation in the 
-	 * identification number of the node. If it is wrong to turn this returns 
-	 * a string hex equivalent to the number of ID.
+	 * Converts a node ID number to its equivalent string representation. If ID
+	 * number equals the gateway station, returns the string "-". If
+	 * <code>convert</code> is <code>false</code>, returns a string with the
+	 * ID number in hexadecimal format.
 	 * 
-	 * @param i			ID of node
-	 * @param convert	True if Whether to convert the numbers
-	 * @return		    A string with the identification of node
+	 * @param id		Node ID
+	 * @param convert	<code>False</code> to hexadecimal format
+	 * @return			A string containing the node ID
 	 **************************************************************************/
-	public static String intToId(int i, boolean convert) {
+	public static String intToId(int id, boolean convert) {
 		if (convert) {
-			if (i == 0x7e) return "-";
-			else return i + "";
-		} else return Converter.intToHex(i, 2);
+			if (id == 0x7e) return "-";
+			else return id + "";
+		} else return Converter.intToHex(id, 2);
 	}
 	
 	/***************************************************************************
-	 * Returns a string with the type of actuator indicated by <code> i </ code>.
+	 * Converts an actuator type number to its equivalent string representation.
 	 * 
-	 * @param i	Type of actuator
-	 * @return		A string with the name of actuator
+	 * @param type	Input actuator type
+	 * @return		A string with the name of the actuator
 	 * @see			Constants
 	 **************************************************************************/
-	public static String intToActuator(int i) {
+	public static String intToActuator(int type) {
 		String s = "";
-		if (i == Constants.ACTUATOR_BUZZER)		s = "Buzz";
-		if (i == Constants.ACTUATOR_LED_YELLOW)	s = "LedY";
-		if (i == Constants.ACTUATOR_LED_BLUE)		s = "LedB";
-		if (i == Constants.ACTUATOR_LED_RED)		s = "LedR";
-		if (i == Constants.ACTUATOR_LED_GREEN)		s = "LedG";
+		if (type == Constants.ACTUATOR_BUZZER)		s = "Buzz";
+		if (type == Constants.ACTUATOR_LED_YELLOW)	s = "LedY";
+		if (type == Constants.ACTUATOR_LED_BLUE)	s = "LedB";
+		if (type == Constants.ACTUATOR_LED_RED)		s = "LedR";
+		if (type == Constants.ACTUATOR_LED_GREEN)	s = "LedG";
 		return s;
 	}
 
 	/***************************************************************************
-	 * Returns a string with the type of message indicated by <code> i </ code>. 
-     * If it is wrong to turn this type returns in a hex string.
+	 * Converts a message type to its equivalent string representation. If
+	 * <code>convert</code> is <code>false</code>, returns the input in
+	 * hexadecimal format.
 	 * 
-	 * @param i			Type of message
-	 * @param convert	True if need convert the number
-	 * @return				A string with the type of message
-	 * @see					Constants
+	 * @param type		Input message type
+	 * @param convert	<code>False</code> to hexadecimal format
+	 * @return			A string with the message type
+	 * @see				Constants
 	 **************************************************************************/
-	public static String intToType(int i, boolean convert) {
+	public static String intToType(int type, boolean convert) {
 		String[] TYPES = {"Read", "Reg", "Act. Act.", "Des. Act.", "Sleep",
 				"Wake Up", "Chg. Data Rate"};
-		if (convert) return TYPES[i];
-		else return Converter.intToHex(i, 2);
+		if (convert) return TYPES[type];
+		else return Converter.intToHex(type, 2);
 	}
 	
 	/***************************************************************************
-	 * Returns a string with the <i>sensor board</i> indicated for
-	 * <code>i</code>.
+	 * Converts a sensor board ID number to its equivalent string
+	 * representation.
 	 * 
-	 * @param i	Type of <i>sensor board</i>
-	 * @return		String with the type of <i>sensor board</i>
-	 * @see			Constants
+	 * @param boardID	Sensor board ID number
+	 * @return			A string with the sensor board name
+	 * @see				Constants
 	 **************************************************************************/
-	public static String intToSens(int i) {
-		return intToSens(i, true);
+	public static String intToSens(int boardID) {
+		return intToSens(boardID, true);
 	}
 
 	/***************************************************************************
-	 * Returns a string with the <i>sensor board</i> indicated for
-	 * <code>i</code>. If convert is false, returns returns the number in a
-	 * string hex.
+	 * Converts a sensor board ID number to its equivalent string
+	 * representation. If <code>convert</code> is <code>false</code> result is
+	 * returned as an hexadecimal string.
 	 * 
-	 * @param i			Type of <i>sensor board</i>
-	 * @param convert	True if need convert the number
-	 * @return			A string with the type of <i>sensor board</i>
+	 * @param boardID	Sensor board ID number
+	 * @param convert	<code>False</code> to get an hexadecimal string
+	 * @return			A string with the sensor board name
 	 * @see				Constants
 	 **************************************************************************/
-	public static String intToSens(int i, boolean convert) {
+	public static String intToSens(int boardID, boolean convert) {
 		String s = "-";
-		if (i == 0x01) s = "MDA500";
-		if (i == 0x02) s = "MTS510";
-		if (i == 0x03) s = "MEP500";
-		if (i == 0x80) s = "MDA400";
-		if (i == 0x81) s = "MDA300";
-		if (i == 0x82) s = "MTS101";
-		if (i == 0x83) s = "MTS300";
-		if (i == 0x84) s = "MTS310";
-		if (i == 0x85) s = "MTS400";
-		if (i == 0x86) s = "MTS420";
-		if (i == 0x87) s = "MEP401";
-		if (i == 0x90) s = "MDA320";
-		if (i == 0xA0) s = "MSP410";
+		if (boardID == 0x01) s = "MDA500";
+		if (boardID == 0x02) s = "MTS510";
+		if (boardID == 0x03) s = "MEP500";
+		if (boardID == 0x80) s = "MDA400";
+		if (boardID == 0x81) s = "MDA300";
+		if (boardID == 0x82) s = "MTS101";
+		if (boardID == 0x83) s = "MTS300";
+		if (boardID == 0x84) s = "MTS310";
+		if (boardID == 0x85) s = "MTS400";
+		if (boardID == 0x86) s = "MTS420";
+		if (boardID == 0x87) s = "MEP401";
+		if (boardID == 0x90) s = "MDA320";
+		if (boardID == 0xA0) s = "MSP410";
 		if (convert) return s;
-		else return Converter.intToHex(i, 2);
+		else return Converter.intToHex(boardID, 2);
 	}
 	
 	/***************************************************************************
-	 * Returns a string with the type parameter sensing indicated by 
-	 * <code> i </ code> because he is not an equivalent returns this chain? ". 
-	 * If this is false returns convert the number into a hex string.
+	 * Converts a sensor parameter type to a string with the form
+	 * "v<code>X</code>" where <code>X</code> is the parameter type specified by
+	 * <code>type</code>. If result is "v0", returns the string "?". If
+	 * <code>convert</code> is <code>false</code>, returns an hexadecimal
+	 * string.
 	 * 
-	 * @param i			Type of parameter
-	 * @param convert	True if need convert the number
-	 * @return			A string with the parameter of sense
+	 * @param type		Sensor parameter type
+	 * @param convert	<code>False</code> to get an hexadecimal string
+	 * @return			A string with the sensor parameter name
 	 * @see				Constants
 	 **************************************************************************/
-	public static String intToSensParam(int i, boolean convert) {
-		String s = sensorLabel(i, 0);
+	public static String intToSensParam(int type, boolean convert) {
+		String s = sensorLabel(type, 0);
 		if (s.compareTo("v0") == 0) s = "?";
 		if (convert) return s;
-		else return Converter.intToHex(i, 4);
+		else return Converter.intToHex(type, 4);
 	}
 
 	/***************************************************************************
-	 * Returns a string with the type parameter sensing sensor indicated by 
-	 * <code> </ code> because he is not the type that returns a null string.
+	 * Converts a sensor parameter type to its equivalent string representation.
+	 * If there is no match, returns a <code>null</code> string.
 	 * 
-	 * @param sensor	Type of parameter (sensor)
-	 * @return			A string with the parameter of sensing
-	 * @see				Constants
+	 * @param type	Sensor parameter type
+	 * @return		A string with the sensor parameter name
+	 * @see			Constants
 	 **************************************************************************/
-	public static String sensorLabel(int sensor) {
-		String t = sensorLabel(sensor, 0);
+	public static String sensorLabel(int type) {
+		String t = sensorLabel(type, 0);
 		if ("v0".compareTo(t) == 0) t = null;
 		return t;
 	}
 
 	/***************************************************************************
+	 * Converts a sensor parameter name
+	 * 
 	 * Returns a string with the type parameter sensing indicated by 
 	 * <code> sensor </ code> if the type is <code> SENSOR_NULO </ code> 
 	 * this returns a string "vX" where X is the position of slot <i> </ i> 
