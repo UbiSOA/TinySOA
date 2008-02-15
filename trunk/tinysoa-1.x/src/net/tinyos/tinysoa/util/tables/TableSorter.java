@@ -1,4 +1,4 @@
-package net.tinyos.tinysoa.util.table;
+package net.tinyos.tinysoa.util.tables;
 
 import java.awt.*;
 import java.awt.event.*;

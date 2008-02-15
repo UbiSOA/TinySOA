@@ -36,10 +36,10 @@ import net.tinyos.tinysoa.util.*;
 import net.tinyos.tinysoa.util.dialogs.EventDialog;
 import net.tinyos.tinysoa.util.dialogs.MaintenanceDialog;
 import net.tinyos.tinysoa.util.dialogs.NetSelectDialog;
-import net.tinyos.tinysoa.util.table.CellTableTooltip;
-import net.tinyos.tinysoa.util.table.MonitorCellRenderer;
-import net.tinyos.tinysoa.util.table.MonitorTable;
-import net.tinyos.tinysoa.util.table.TableSorter;
+import net.tinyos.tinysoa.util.tables.CellTableTooltip;
+import net.tinyos.tinysoa.util.tables.MonitorCellRenderer;
+import net.tinyos.tinysoa.util.tables.MonitorTable;
+import net.tinyos.tinysoa.util.tables.TableSorter;
 
 import org.codehaus.xfire.client.*;
 import org.codehaus.xfire.service.*;

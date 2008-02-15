@@ -15,7 +15,7 @@
  * 
  ******************************************************************************/
 
-package net.tinyos.tinysoa.util.table;
+package net.tinyos.tinysoa.util.tables;
 
 import java.awt.*;
 import javax.swing.*;
@@ -24,12 +24,12 @@ import javax.swing.table.*;
 import net.tinyos.tinysoa.util.SensedData;
 
 /*******************************************************************************
- * Implements a personalized table cell renderer
+ * Implements a personalized table cell <i>cell renderer</i>
  * 
  * @author		Edgardo Avilés López
  * @version	0.1, 07/25/2006
  ******************************************************************************/
-public class MonitorTableCellRenderer extends JLabel
+public class MonitorCellRenderer extends JLabel
 		implements TableCellRenderer {
 	private static final long serialVersionUID = 1170124836368156719L;
 	
@@ -39,17 +39,17 @@ public class MonitorTableCellRenderer extends JLabel
 	/***************************************************************************
 	 * Class constructor
 	 * 
-	 * @param alignment	Text alignment	
+	 * @param alignment	Text cell alignment	
 	 * @param isBold	True if text is bold
 	 **************************************************************************/
-	public MonitorTableCellRenderer(int alignment, boolean isBold) {
+	public MonitorCellRenderer(int alignment, boolean isBold) {
 		super();
 		this.alignment = alignment;
 		this.isBold = isBold;
 	}
 
 	/***************************************************************************
-	 * Gets the table cell renderer
+	 * Returns a component representing the cell.
 	 **************************************************************************/
     public Component getTableCellRendererComponent(
     		JTable table, Object value, boolean isSelected, boolean hasFocus,
@@ -76,7 +76,7 @@ public class MonitorTableCellRenderer extends JLabel
     
     //--------------------------------------------------------------------------
     //
-    //   Overriden for optimization purposes
+    //	Overriden methods for optimization purposes.
     //
     //==========================================================================
 

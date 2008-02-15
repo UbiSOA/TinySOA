@@ -26,7 +26,7 @@ import javax.swing.table.*;
 import net.tinyos.tinysoa.common.*;
 import net.tinyos.tinysoa.util.*;
 import net.tinyos.tinysoa.util.Calendar;
-import net.tinyos.tinysoa.util.table.MonitorCellRenderer;
+import net.tinyos.tinysoa.util.tables.MonitorCellRenderer;
 
 /*******************************************************************************
  * Class that implements the Message Processor module of the TinySOA Gateway
