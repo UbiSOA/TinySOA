@@ -32,13 +32,10 @@ import javax.swing.tree.*;
 import net.tinyos.tinysoa.common.*;
 import net.tinyos.tinysoa.common.Event;
 import net.tinyos.tinysoa.server.*;
-import net.tinyos.tinysoa.util.*;
 import net.tinyos.tinysoa.util.dialogs.*;
-import net.tinyos.tinysoa.util.graphs.NodeTopologyChart;
-import net.tinyos.tinysoa.util.graphs.Plotter;
-import net.tinyos.tinysoa.util.graphs.TopologyPlotter;
+import net.tinyos.tinysoa.util.graphs.*;
 import net.tinyos.tinysoa.util.tables.*;
-import net.tinyos.tinysoa.util.trees.NetTreeNode;
+import net.tinyos.tinysoa.util.trees.*;
 
 import org.apache.log4j.Logger;
 import org.codehaus.xfire.client.*;
