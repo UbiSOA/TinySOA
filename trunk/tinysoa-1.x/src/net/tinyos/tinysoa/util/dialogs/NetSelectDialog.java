@@ -24,9 +24,8 @@ import javax.swing.*;
 
 import net.tinyos.tinysoa.common.*;
 import net.tinyos.tinysoa.server.*;
-import net.tinyos.tinysoa.util.*;
-import net.tinyos.tinysoa.util.lists.NetworksListCellRenderer;
-import net.tinyos.tinysoa.visor.InterfaceEvents;
+import net.tinyos.tinysoa.util.lists.*;
+import net.tinyos.tinysoa.visor.*;
 
 /*******************************************************************************
  * Class that implement the dialog for network selection .
