@@ -229,7 +229,7 @@ public class MessageProcessor {
 					Statement st2 = db.createStatement();
 					client.sendCommand(rs.getInt("node_id"), rs.getInt("type"),
 							rs.getInt("value"));
-					st2.execute("UPDATE maintenance SET ready=1 WHERE id=" +
+					st2.execute("UPDATE maintenance SET done=1 WHERE id=" +
 							rs.getInt("id"));
 				}
 				

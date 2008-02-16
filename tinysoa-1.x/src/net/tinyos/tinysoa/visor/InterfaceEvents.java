@@ -582,7 +582,7 @@ public class InterfaceEvents
 						l = (Reading)readings.get(i);
 						int row = findRow(l.getNid());
 						int column = dataModel.findColumn(l.getParameter());
-						if (row >= 0) {
+						if (row >= 0 && column >= 0) {
 							if (empty[row][column].compareTo("") == 0) {
 								dataModel.setValueAt(
 										formatReading(l.getValue(),
@@ -763,7 +763,7 @@ public class InterfaceEvents
 						topologyGrapher.defEscala(0.0d, 35.0d);
 						topologyGrapher.defTypeScale(
 								TopologyPlotter.SCALE_HEAT);
-					} else if (par.compareTo("Light") == 0) {
+					} else if (par.compareTo("Lght") == 0) {
 						topologyGrapher.defEscala(300.0d, 900.0d);
 						topologyGrapher.defTypeScale(
 								TopologyPlotter.SCALE_LIGHT);
@@ -1028,6 +1028,12 @@ public class InterfaceEvents
 	 **************************************************************************/
 	private void createTable(Object[] nodes) {
 		Vector<Parameter> parameters = netServ.getSensorTypesList();
+		
+		for (int i = 0; i < parameters.size(); i++)
+			System.out.println("par " + parameters.get(i).getName());
+		System.out.println();
+		
+		
 		Object[] columnParameters = new Object[parameters.size() + 2];
 		columnParameters[0] = "ID";
 		columnParameters[1] = "Time";
@@ -1657,7 +1663,7 @@ public class InterfaceEvents
 			return nf2.format(Double.parseDouble(value)) + " g";
 		else if (parameter.compareTo("Volt") == 0)
 			return nf2.format(Double.parseDouble(value)) + " V";
-		else if (parameter.compareTo("Light") == 0)
+		else if (parameter.compareTo("Lght") == 0)
 			return nf1.format(Double.parseDouble(value)) + " Lux";
 		else return nf0.format(Double.parseDouble(value));
 	}
