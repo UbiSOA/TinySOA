@@ -29,7 +29,7 @@ import net.tinyos.tinysoa.common.Event;
 import net.tinyos.tinysoa.server.*;
 
 /*******************************************************************************
- * Dialog to add or change a task of maintenance.
+ * Dialog to add or change a maintenance task.
  * 
  * @author		Edgardo Avilés López
  * @version	0.2, 07/28/2006
@@ -64,7 +64,7 @@ public class MaintenanceDialog extends JDialog {
 		getContentPane().add(p2, BorderLayout.CENTER);
 		p2.setLayout(new GridBagLayout());
 	
-		// Actions Types Tabs -------------------------------------------------
+		// Actions Types Tabs --------------------------------------------------
 		
 		tp01 = new JTabbedPane();
 		p2.add(tp01, new GridBagConstraints(1, 1, 1, 1, 1.0, 1.0,
@@ -86,14 +86,14 @@ public class MaintenanceDialog extends JDialog {
 				new Insets(4, 8, 0, 4), 0, 0));
 		bg.add(rb01);
 		
-		rb02 = new JRadioButton("Shutdown");
+		rb02 = new JRadioButton("Turn off");
 		rb02.setOpaque(false);
 		p.add(rb02, new GridBagConstraints(2, 1, 1, 1, 1.0, 0.0,
 				GridBagConstraints.WEST, GridBagConstraints.NONE,
 				new Insets(4, 0, 0, 8), 0, 0));
 		bg.add(rb02);
 		
-		cb01 = new JComboBox(new Object[]{"Buzz", "Yellow Led",
+		cb01 = new JComboBox(new Object[]{"Buzzer", "Yellow Led",
 				"Blue Led", "Red Led", "Green Led"});
 		p.add(cb01, new GridBagConstraints(1, 2, 2, 1, 1.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
@@ -127,7 +127,7 @@ public class MaintenanceDialog extends JDialog {
 		tp01.add(p, "Rate");
 		tp01.setToolTipTextAt(1, "Sampling Rate");
 		
-		// Tab waiting -------------------------------------------------------
+		// Tab waiting ---------------------------------------------------------
 		
 		p = new JPanel();
 		p.setOpaque(false);
@@ -135,7 +135,7 @@ public class MaintenanceDialog extends JDialog {
 		
 		bg = new ButtonGroup();
 		
-		rb03 = new JRadioButton("Enter State waiting");
+		rb03 = new JRadioButton("Enter to sleep mode");
 		rb03.setOpaque(false);
 		rb03.setSelected(true);
 		p.add(rb03, new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0,
@@ -143,7 +143,7 @@ public class MaintenanceDialog extends JDialog {
 				new Insets(0, 8, 0, 8), 0, 0));
 		bg.add(rb03);
 		
-		rb04 = new JRadioButton("Out-of-state waiting");
+		rb04 = new JRadioButton("Wake up from sleep mode");
 		rb04.setOpaque(false);
 		p.add(rb04, new GridBagConstraints(1, 2, 1, 1, 1.0, 0.0,
 				GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
@@ -153,7 +153,7 @@ public class MaintenanceDialog extends JDialog {
 		tp01.add(p, "Wait");
 		tp01.setToolTipTextAt(2, "State waiting");
 		
-		// ComboBox of destiny node --------------------------------------------
+		// Target node ComboBox ------------------------------------------------
 		
 		p = new JPanel();
 		p.setBorder(BorderFactory.createCompoundBorder(
@@ -167,7 +167,7 @@ public class MaintenanceDialog extends JDialog {
 		cb02 = new JComboBox();
 		p.add(cb02, BorderLayout.CENTER);
 		
-		// Select time -------------------------------------------------
+		// Time to run at ------------------------------------------------------
 		
 		p = new JPanel();
 		p.setBorder(BorderFactory.createTitledBorder("Time Performance"));
@@ -193,7 +193,8 @@ public class MaintenanceDialog extends JDialog {
 				new Insets(0, 8, 0, 8), 0, 0));
 		bg.add(rb06);
 		
-		s02 = new JSpinner(new SpinnerDateModel(new Date(), null, null, Calendar.MONTH));
+		s02 = new JSpinner(new SpinnerDateModel(new Date(), null, null,
+				Calendar.MONTH));
 		s02.setEditor(new JSpinner.DateEditor(s02, "yyyy-MM-dd HH:mm:ss"));
 		p.add(s02, new GridBagConstraints(1, 3, 2, 1, 1.0, 1.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
@@ -227,7 +228,7 @@ public class MaintenanceDialog extends JDialog {
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				new Insets(0, 28, 8, 8), 0, 0));
 
-		// Buttons Accept and Cancel ------------------------------------------
+		// Buttons Accept and Cancel -------------------------------------------
 		
 		p = new JPanel();
 		p.setOpaque(false);
@@ -302,7 +303,7 @@ public class MaintenanceDialog extends JDialog {
 	}
 	
 	/***************************************************************************
-	 * Show dialogue
+	 * Show dialog.
 	 **************************************************************************/
 	private void Show() {
 		chooseControls();
@@ -314,7 +315,6 @@ public class MaintenanceDialog extends JDialog {
 	}
 	
 	public void showAdd() {
-		
 		if (cb01.getItemCount() == 0) {
 			progress.setVisible(true);
 			Vector<Node> nodes = networkService.getNodesList();
@@ -412,7 +412,8 @@ public class MaintenanceDialog extends JDialog {
 			try {
 				s02.setValue(format.parse(task.getExecutionDateTime()));
 			} catch (ParseException e) {
-				System.out.println("Problem parsing: " + task.getExecutionDateTime());
+				System.out.println("Problem parsing: " +
+						task.getExecutionDateTime());
 				s02.setValue(new Date());
 			}
 			if (task.getMinsToRepeat() > 0) {
@@ -440,7 +441,7 @@ public class MaintenanceDialog extends JDialog {
 	}
 	
 	/***************************************************************************
-	 * Class that implements the events of the dialogue.
+	 * Class that implements the events of the dialo.
 	 * 
 	 * @author		Edgardo Avilés López
 	 * @version	0.1, 07/27/2006
