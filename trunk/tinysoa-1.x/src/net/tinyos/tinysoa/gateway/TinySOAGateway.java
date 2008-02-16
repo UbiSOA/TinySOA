@@ -128,6 +128,7 @@ public class TinySOAGateway {
 					"jdbc:mysql://" + server + "/" + database + "?" +
 					"user=" + user + "&password=" + password);
 		} catch (Exception ex) {
+			System.err.println(ex.getMessage());
 			//ex.printStackTrace();
 			System.err.println("Impossible to connect to database.");
 			System.err.println(

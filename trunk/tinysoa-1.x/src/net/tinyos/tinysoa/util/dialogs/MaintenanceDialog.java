@@ -95,7 +95,7 @@ public class MaintenanceDialog extends JDialog {
 				new Insets(4, 0, 0, 8), 0, 0));
 		bg.add(rb02);
 		
-		cb01 = new JComboBox(new Object[]{"Horn", "Yellow Led",
+		cb01 = new JComboBox(new Object[]{"Buzz", "Yellow Led",
 				"Blue Led", "Red Led", "Green Led"});
 		p.add(cb01, new GridBagConstraints(1, 2, 2, 1, 1.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
@@ -509,8 +509,8 @@ public class MaintenanceDialog extends JDialog {
 							type = Constants.TYPE_WAKEUP;
 					}
 					
-					if (cb02.getSelectedItem().toString().substring(0, 4).
-							compareTo("Nodo") == 0)
+					if (cb02.getSelectedItem().toString().substring(0, 3).
+							compareTo("Nod") == 0)
 						destiny = Integer.parseInt(
 								cb02.getSelectedItem().toString().substring(5));
 					

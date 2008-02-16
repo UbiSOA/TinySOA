@@ -205,13 +205,14 @@ public final class Converter {
 	/***************************************************************************
 	 * Converts a sensor parameter type to a string with the form
 	 * "v<code>X</code>" where <code>X</code> is the parameter type specified by
-	 * <code>type</code>. If result is "v0", returns the string "?". If
-	 * <code>convert</code> is <code>false</code>, returns an hexadecimal
-	 * string.
+	 * <code>type</code>. If parameter type is <code>SENSOR_NULL</code>, returns
+	 * the string "?". If <code>convert</code> is <code>false</code>, returns an
+	 * hexadecimal string.
 	 * 
 	 * @param type		Sensor parameter type
 	 * @param convert	<code>False</code> to get an hexadecimal string
-	 * @return			A string with the sensor parameter name
+	 * @return			A string with the sensor parameter name or a
+	 * 					<code>null</code> value instead
 	 * @see				Constants
 	 **************************************************************************/
 	public static String intToSensParam(int type, boolean convert) {
@@ -223,7 +224,8 @@ public final class Converter {
 
 	/***************************************************************************
 	 * Converts a sensor parameter type to its equivalent string representation.
-	 * If there is no match, returns a <code>null</code> string.
+	 * if <code>type</code> is <code>SENSOR_NULL</code>, returns a
+	 * <code>null</code> string.
 	 * 
 	 * @param type	Sensor parameter type
 	 * @return		A string with the sensor parameter name
@@ -236,29 +238,27 @@ public final class Converter {
 	}
 
 	/***************************************************************************
-	 * Converts a sensor parameter name
+	 * Converts a sensor parameter type to its equivalent string representation.
+	 * If parameter type is <code>SENSOR_NULL</code>, returns a string with the
+	 * format "v<code>X</code>" where <code>X</code> is the container position
+	 * number specified by <code>pos</code>.
 	 * 
-	 * Returns a string with the type parameter sensing indicated by 
-	 * <code> sensor </ code> if the type is <code> SENSOR_NULO </ code> 
-	 * this returns a string "vX" where X is the position of slot <i> </ i> 
-	 * indicated by <code> pos </ code>.
-	 * 
-	 * @param sensor	Type of parameter (sensor)
-	 * @param pos		Position in the <i>slot</i>
-	 * @return			A string with the parameter of sensing
-	 * @see				Constants
+	 * @param type	Sensor parameter type
+	 * @param pos	Container position
+	 * @return		A string with the parameter name, or a label string
+	 * @see			Constants
 	 **************************************************************************/
-	public static String sensorLabel(int sensor, int pos) {
-		if (sensor == Constants.SENSOR_NULL) return "v" + pos;
-		else if (sensor == Constants.SENSOR_TEMP)	return "Temp";
-		else if (sensor == Constants.SENSOR_LIGHT) return "Light";
-		else if (sensor == Constants.SENSOR_MAGX) return "MagX";
-		else if (sensor == Constants.SENSOR_MAGY) return "MagY";
-		else if (sensor == Constants.SENSOR_ACEX) return "AceX";
-		else if (sensor == Constants.SENSOR_ACEY) return "AceY";
-		else if (sensor == Constants.SENSOR_MIC) return "Mic";
-		else if (sensor == Constants.SENSOR_VOLT) return "Volt";
-		else return sensor + "";
+	public static String sensorLabel(int type, int pos) {
+		if (type == Constants.SENSOR_NULL) return "v" + pos;
+		else if (type == Constants.SENSOR_TEMP)	return "Temp";
+		else if (type == Constants.SENSOR_LIGHT) return "Lght";
+		else if (type == Constants.SENSOR_MAGX) return "MagX";
+		else if (type == Constants.SENSOR_MAGY) return "MagY";
+		else if (type == Constants.SENSOR_ACEX) return "AceX";
+		else if (type == Constants.SENSOR_ACEY) return "AceY";
+		else if (type == Constants.SENSOR_MIC) return "Mic";
+		else if (type == Constants.SENSOR_VOLT) return "Volt";
+		else return type + "";
 	}
 	
 	/***************************************************************************
@@ -272,7 +272,7 @@ public final class Converter {
 	 **************************************************************************/
 	public static int sensorLabelToId(String sensor) {
 		if (sensor.compareTo("Temp") == 0) return Constants.SENSOR_TEMP;
-		else if (sensor.compareTo("Light") == 0) return Constants.SENSOR_LIGHT;
+		else if (sensor.compareTo("Lght") == 0) return Constants.SENSOR_LIGHT;
 		else if (sensor.compareTo("MagX") == 0) return Constants.SENSOR_MAGX;
 		else if (sensor.compareTo("MagY") == 0) return Constants.SENSOR_MAGY;
 		else if (sensor.compareTo("AceX") == 0) return Constants.SENSOR_ACEX;
@@ -283,26 +283,27 @@ public final class Converter {
 	}
 	
 	/***************************************************************************
-	 * Returns a string with the representation hex of number indicated
-	 * in <code>i</code>.
+	 * Returns a string with the hexadecimal representation of the integer
+	 * input value.
 	 * 
-	 * @param i	   Number to convert
-	 * @return	   A string with the representation hex
+	 * @param x	Integer input value
+	 * @return	A string with the hexadecimal representation of the input
 	 **************************************************************************/
-	public static String intToHex(int i) {
-		return intToHex(i, 0);
+	public static String intToHex(int x) {
+		return intToHex(x, 0);
 	}
 
 	/***************************************************************************
-	 * Return a string with the representation hex of number indicated
-	 * in <code>i</code> with the the desired length.
+	 * Returns a string with the hexadecimal representation of the integer
+	 * input value. The result is padded to the specified length.
 	 * 
-	 * @param i		Number to convert
-	 * @param length	Desired length for string result
-	 * @return			A string with the representation hex
+	 * @param x			Integer input value
+	 * @param length	Desired length for result string
+	 * @return			A string with the hexadecimal representation of the
+	 * 					input padded to the desired length
 	 **************************************************************************/
-	public static String intToHex(int i, int length) {
-		String h = Long.toHexString(i);
+	public static String intToHex(int x, int length) {
+		String h = Long.toHexString(x);
 		while (h.length() < length)
 			h = "0" + h;
 		return "0x" + h;

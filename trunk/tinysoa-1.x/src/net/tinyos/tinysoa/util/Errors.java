@@ -39,7 +39,6 @@ public final class Errors {
 			fh.setFormatter(new SimpleFormatter());
 			Logger logger = Logger.getLogger("error");
 			logger.addHandler(fh);
-			
 			logger.severe("Database error: " + ex.getMessage());
 		} catch (Exception e) { e.printStackTrace(); }
 		

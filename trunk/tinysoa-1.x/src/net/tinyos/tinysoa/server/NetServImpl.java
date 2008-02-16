@@ -757,7 +757,7 @@ public class NetServImpl implements NetServ
 				t.setType(rs.getInt("type"));
 				t.setValue(rs.getInt("value"));
 				t.setTargetNodeID(rs.getInt("node_id"));
-				t.setMinsToRepeat(rs.getInt("repeat") / 1000);
+				t.setMinsToRepeat(rs.getInt("repeat_time") / 1000);
 				t.setWaitEventID(rs.getInt("event_id"));
 				t.setExecutionDateTime(rs.getString("date_time"));
 				t.setLastExecuted(rs.getString("executed"));
@@ -807,7 +807,7 @@ public class NetServImpl implements NetServ
 				task.setType(rs.getInt("type"));
 				task.setValue(rs.getInt("value"));
 				task.setTargetNodeID(rs.getInt("node_id"));
-				task.setMinsToRepeat(rs.getInt("repeat") / 1000);
+				task.setMinsToRepeat(rs.getInt("repeat_time") / 1000);
 				task.setWaitEventID(rs.getInt("event_id"));
 				task.setExecutionDateTime(rs.getString("date_time"));
 				task.setLastExecuted(rs.getString("executed"));
@@ -862,7 +862,7 @@ public class NetServImpl implements NetServ
 		minsToRepeat = minsToRepeat * 1000;
 		
 		String query = "INSERT INTO maintenance(" +
-			"type, value, node_id, repeat, event_id, date_time, net_id) " +
+			"type, value, node_id, repeat_time, event_id, date_time, net_id) " +
 			"VALUES('" + type + "', '" + value + "', '" + targetNodeID +
 			"', '" + minsToRepeat + "', '" + waitEventID + "', '" +
 			executionDateTime + "', '" + netID + "')";
@@ -873,6 +873,7 @@ public class NetServImpl implements NetServ
 			st = db.createStatement();
 			st.executeUpdate(query);
 		} catch (SQLException ex) {
+			System.out.print("Query was: " + query);
 			Errors.errorBD(ex);
 		} finally {
 			if (st != null) {
@@ -919,7 +920,7 @@ public class NetServImpl implements NetServ
 		
 		String query = "UPDATE maintenance SET type='" + type + "', value='" +
 				value + "', node_id='" + targetNodeID + "', date_time='" +
-				executionDateTime + "', repeat='" + minsToRepeat +
+				executionDateTime + "', repeat_time='" + minsToRepeat +
 				"', event_id='" + waitEventID + "' WHERE id=" + id;
 		
 		Statement st = null;
