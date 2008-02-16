@@ -78,18 +78,17 @@ public class NetworksListCellRenderer implements ListCellRenderer {
 	}
 	
 	/***************************************************************************
-	 * Implements the design of the network list element
+	 * Implements the design of a network list element.
 	 * 
 	 * @param list		Parent list
 	 * @param value		Value of the list element
 	 * @param index		Element index
-	 * @param selected	True if its selected
-	 * @param hasFocus	True if has focus
-	 * @return				A panel with the desired design 
+	 * @param selected	<code>True</code> if item is selected
+	 * @param hasFocus	<code>True</code> if item has focus
+	 * @return			A panel with the target design 
 	 **************************************************************************/
 	public Component getListCellRendererComponent(JList list, Object value,
 			int index, boolean selected, boolean hasFocus) {
-		
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
 		panel.setOpaque(true);
