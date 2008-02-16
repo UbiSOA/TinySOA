@@ -334,7 +334,7 @@ public final class Converter {
 	 * @param x			Double value to round
 	 * @param precision	Precision of the result
 	 * @return			A string with the rounded input number
-	 *  **************************************************************************/
+	 **************************************************************************/
 	public static String roundStr(double x, int precision) {
 		if (precision == 1) return nf1d.format(x);
 		if (precision == 2) return nf2d.format(x);

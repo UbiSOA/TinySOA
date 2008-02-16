@@ -18,14 +18,16 @@
 package net.tinyos.tinysoa.util.dialogs;
 
 import javax.swing.*;
+
+import org.apache.log4j.Logger;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.sql.*;
 import java.util.*;
 
-import net.tinyos.tinysoa.gateway.MessageProcessor;
-import net.tinyos.tinysoa.util.Errors;
+import net.tinyos.tinysoa.gateway.*;
 
 /*******************************************************************************
  * Class that implements a dialog to ask for information such as the name and
@@ -50,6 +52,7 @@ public class PropertiesDialog extends JDialog {
 	private JPanel p01, p02;
 	private MessageProcessor processor;
 	private String propertiesFile;
+	private Logger logger;
 	
 	/***************************************************************************
 	 * Main class constructor.
@@ -59,17 +62,19 @@ public class PropertiesDialog extends JDialog {
 	 * @param p			Properties object to update
 	 * @param file		Properties file name
 	 * @param c			Database connector
+	 * @param logger	Logger object
 	 **************************************************************************/
 	@SuppressWarnings("unchecked")
 	public PropertiesDialog(
 			MessageProcessor processor, JFrame f, Properties p,
-			String file, Connection c) {
+			String file, Connection c, Logger logger) {
 		
 		super(f, "Initial Configuration", false);
 		this.p = p;
 		this.c = c;
 		this.processor = processor;
 		this.propertiesFile = file;
+		this.logger = logger;
 
 		f01 = new Font("Tahoma", Font.PLAIN, 11);
 
@@ -94,7 +99,9 @@ public class PropertiesDialog extends JDialog {
 			ResultSet rs = st.executeQuery(
 					"SELECT * FROM networks ORDER BY name ASC");
 			while (rs.next()) v.add(rs.getString("name"));
-		} catch (SQLException e) { Errors.errorBD(e); }
+		} catch (SQLException ex) {
+			logger.error(ex);
+		}
 		
 		cb01 = new JComboBox(v.toArray());
 		cb01.setEditable(true);
@@ -153,7 +160,9 @@ public class PropertiesDialog extends JDialog {
 					"SELECT * FROM networks ORDER BY name ASC LIMIT 0,1");
 			if (rs.next())
 				ta01.setText(rs.getString("description"));
-		} catch (SQLException e) { Errors.errorBD(e); }
+		} catch (SQLException ex) {
+			logger.error(ex);
+		}
 		
 		setModal(true);
 		setResizable(false);
@@ -209,7 +218,9 @@ public class PropertiesDialog extends JDialog {
 								new_obj + "'");
 						if (rs.next()) ta01.setText(
 								rs.getString("description"));
-					} catch (SQLException e) { Errors.errorBD(e); }
+					} catch (SQLException ex) {
+						logger.error(ex);
+					}
 				}
 			}
 		}
@@ -260,7 +271,9 @@ public class PropertiesDialog extends JDialog {
 							"SELECT * FROM networks WHERE name='" + name + "'");
 					if (rs.next()) id = rs.getInt("id");
 				}
-			} catch (SQLException e) { Errors.errorBD(e); }
+			} catch (SQLException ex) {
+				logger.error(ex);
+			}
 			
 			try {
 				p.setProperty("network.id", id + "");

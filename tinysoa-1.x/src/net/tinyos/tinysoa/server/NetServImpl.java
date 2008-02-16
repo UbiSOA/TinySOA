@@ -22,8 +22,9 @@ import java.util.*;
 
 import javax.jws.*;
 
+import org.apache.log4j.Logger;
+
 import net.tinyos.tinysoa.common.*;
-import net.tinyos.tinysoa.util.*;
 
 /*******************************************************************************
  * Class that implements the network Web service functionality.
@@ -36,16 +37,19 @@ public class NetServImpl implements NetServ
 {
 	private Connection db;
 	private int netID;
+	private Logger logger;
 	
 	/***************************************************************************
 	 * Class constructor.
 	 * 
-	 * @param db	Database connector object to use
-	 * @param netID	ID of the sensor network to represent
+	 * @param db		Database connector object to use
+	 * @param netID		ID of the sensor network to represent
+	 * @param logger	Logger object
 	 **************************************************************************/
-	public NetServImpl(Connection db, int netID) {
+	public NetServImpl(Connection db, int netID, Logger logger) {
 		this.db = db;
 		this.netID = netID;
+		this.logger = logger;
 	}
 	
 	/***************************************************************************
@@ -77,7 +81,7 @@ public class NetServImpl implements NetServ
 			rs = st.executeQuery("SELECT name FROM networks WHERE id=" + netID);
 			if (rs.next()) name = rs.getString("name");
 		} catch (SQLException ex) {
-			Errors.errorBD(ex);
+			logger.error(ex);
 		} finally {
 			if ((rs != null) && (st != null)) {
 				try {
@@ -107,7 +111,7 @@ public class NetServImpl implements NetServ
 					"SELECT description FROM networks WHERE id=" + netID);
 			if (rs.next()) description = rs.getString("description");
 		} catch (SQLException ex) {
-			Errors.errorBD(ex);
+			logger.error(ex);
 		} finally {
 			if ((rs != null) && (st != null)) {
 				try {
@@ -136,7 +140,7 @@ public class NetServImpl implements NetServ
 					"history WHERE net_id=" + netID);
 			if (rs.next()) dateTime = rs.getString("date_time");
 		} catch (SQLException ex) {
-			Errors.errorBD(ex);
+			logger.error(ex);
 		} finally {
 			if ((rs != null) && (st != null)) {
 				try {
@@ -165,7 +169,7 @@ public class NetServImpl implements NetServ
 					"history WHERE net_id=" + netID);
 			if (rs.next()) dateTime = rs.getString("date_time");
 		} catch (SQLException ex) {
-			Errors.errorBD(ex);
+			logger.error(ex);
 		} finally {
 			if ((rs != null) && (st != null)) {
 				try {
@@ -202,7 +206,7 @@ public class NetServImpl implements NetServ
 				nodes.add(n);
 			}
 		} catch (SQLException ex) {
-			Errors.errorBD(ex);
+			logger.error(ex);
 		} finally {
 			if ((rs != null) && (st != null)) {
 				try {
@@ -258,7 +262,7 @@ public class NetServImpl implements NetServ
 			}
 			
 		} catch (SQLException ex) {
-			Errors.errorBD(ex);
+			logger.error(ex);
 		} finally {
 			if ((rs != null) && (st != null)) {
 				try {
@@ -316,7 +320,7 @@ public class NetServImpl implements NetServ
 				}
 			}
 		} catch (SQLException ex) {
-			Errors.errorBD(ex);
+			logger.error(ex);
 		} finally {
 			if ((rs != null) && (st != null)) {
 				try {
@@ -365,7 +369,7 @@ public class NetServImpl implements NetServ
 			}
 			
 		} catch (SQLException ex) {
-			Errors.errorBD(ex);
+			logger.error(ex);
 		} finally {
 			if ((rs != null) && (st != null)) {
 				try {
@@ -426,7 +430,7 @@ public class NetServImpl implements NetServ
 			}
 			
 		} catch (SQLException ex) {
-			Errors.errorBD(ex);
+			logger.error(ex);
 		} finally {
 			if ((rs != null) && (st != null)) {
 				try {
@@ -479,7 +483,7 @@ public class NetServImpl implements NetServ
 			}
 			
 		} catch (SQLException ex) {
-			Errors.errorBD(ex);
+			logger.error(ex);
 		} finally {
 			if ((rs != null) && (st != null)) {
 				try {
@@ -526,7 +530,7 @@ public class NetServImpl implements NetServ
 			}
 			
 		} catch (SQLException ex) {
-			Errors.errorBD(ex);
+			logger.error(ex);
 		} finally {
 			if ((rs != null) && (st != null)) {
 				try {
@@ -608,7 +612,7 @@ public class NetServImpl implements NetServ
 					"', '" + criteria + "')");
 			
 		} catch (SQLException ex) {
-			Errors.errorBD(ex);
+			logger.error(ex);
 		} finally {
 			if (st != null) {
 				try {
@@ -690,7 +694,7 @@ public class NetServImpl implements NetServ
 					"', criteria='" + criteria + "' WHERE id=" + id);
 			
 		} catch (SQLException ex) {
-			Errors.errorBD(ex);
+			logger.error(ex);
 		} finally {
 			if (st != null) {
 				try {
@@ -714,7 +718,7 @@ public class NetServImpl implements NetServ
 			st = db.createStatement();
 			st.executeUpdate("DELETE FROM events WHERE id=" + id);
 		} catch (SQLException ex) {
-			Errors.errorBD(ex);
+			logger.error(ex);
 		} finally {
 			if (st != null) {
 				try {
@@ -766,7 +770,7 @@ public class NetServImpl implements NetServ
 			}
 			
 		} catch (SQLException ex) {
-			Errors.errorBD(ex);
+			logger.error(ex);
 		} finally {
 			if ((rs != null) && (st != null)) {
 				try {
@@ -815,7 +819,7 @@ public class NetServImpl implements NetServ
 			}
 			
 		} catch (SQLException ex) {
-			Errors.errorBD(ex);
+			logger.error(ex);
 		} finally {
 			if ((rs != null) && (st != null)) {
 				try {
@@ -874,7 +878,7 @@ public class NetServImpl implements NetServ
 			st.executeUpdate(query);
 		} catch (SQLException ex) {
 			System.out.print("Query was: " + query);
-			Errors.errorBD(ex);
+			logger.error(ex);
 		} finally {
 			if (st != null) {
 				try {
@@ -929,7 +933,7 @@ public class NetServImpl implements NetServ
 			st = db.createStatement();
 			st.executeUpdate(query);
 		} catch (SQLException ex) {
-			Errors.errorBD(ex);
+			logger.error(ex);
 		} finally {
 			if (st != null) {
 				try {
@@ -953,7 +957,7 @@ public class NetServImpl implements NetServ
 			st = db.createStatement();
 			st.executeUpdate("DELETE FROM maintenance WHERE id=" + id);
 		} catch (SQLException ex) {
-			Errors.errorBD(ex);
+			logger.error(ex);
 		} finally {
 			if (st != null) {
 				try {
