@@ -29,6 +29,7 @@ import net.tinyos.tinysoa.common.*;
 import net.tinyos.tinysoa.util.*;
 import net.tinyos.tinysoa.util.Calendar;
 import net.tinyos.tinysoa.util.tables.MonitorCellRenderer;
+import net.tinyos.tinysoa.util.tables.SensedData;
 
 /*******************************************************************************
  * Class that implements the Message Processor module of the TinySOA Gateway

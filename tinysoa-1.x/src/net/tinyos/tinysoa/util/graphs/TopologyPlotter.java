@@ -15,7 +15,7 @@
  * 
  ******************************************************************************/
 
-package net.tinyos.tinysoa.util;
+package net.tinyos.tinysoa.util.graphs;
 
 import java.awt.*;
 import java.awt.datatransfer.*;
