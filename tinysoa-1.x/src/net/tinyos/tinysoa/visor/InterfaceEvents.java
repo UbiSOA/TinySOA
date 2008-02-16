@@ -35,6 +35,7 @@ import net.tinyos.tinysoa.server.*;
 import net.tinyos.tinysoa.util.*;
 import net.tinyos.tinysoa.util.dialogs.*;
 import net.tinyos.tinysoa.util.tables.*;
+import net.tinyos.tinysoa.util.trees.NetTreeNode;
 
 import org.apache.log4j.Logger;
 import org.codehaus.xfire.client.*;

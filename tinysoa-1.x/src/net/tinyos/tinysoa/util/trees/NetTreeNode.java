@@ -15,7 +15,7 @@
  * 
  ******************************************************************************/
 
-package net.tinyos.tinysoa.util;
+package net.tinyos.tinysoa.util.trees;
 
 import java.util.*;
 import javax.swing.*;

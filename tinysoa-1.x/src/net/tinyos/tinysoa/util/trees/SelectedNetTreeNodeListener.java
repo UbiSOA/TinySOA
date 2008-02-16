@@ -15,7 +15,7 @@
  * 
  ******************************************************************************/
 
-package net.tinyos.tinysoa.util;
+package net.tinyos.tinysoa.util.trees;
 
 import java.util.*;
 import java.awt.event.*;
@@ -23,7 +23,7 @@ import javax.swing.*;
 import javax.swing.tree.*;
 
 /*******************************************************************************
- * Implements a tree node listener
+ * Implements a tree node listener.
  * 
  * @author		Edgardo Avilés López
  * @version	0.1, 07/25/2006
