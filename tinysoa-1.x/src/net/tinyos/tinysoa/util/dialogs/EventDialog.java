@@ -24,7 +24,7 @@ import javax.swing.*;
 import net.tinyos.tinysoa.server.*;
 
 /*******************************************************************************
- * Dialog for adding or modifying an event 
+ * Dialog for adding or modifying an event.
  * 
  * @author		Edgardo Avilés López
  * @version	0.2, 07/26/2006
@@ -45,11 +45,11 @@ public class EventDialog extends JDialog {
 	private JProgressBar progress;
 	
 	/***************************************************************************
-	 * Class constructor
+	 * Class constructor.
 	 * 
-	 * @param window			Window in which the dialog will be displayed
-	 * @param netServ			Network information service
-	 * @param progress			Progressbar
+	 * @param window	Window in which the dialog will be displayed
+	 * @param netServ	Network information service
+	 * @param progress	Progress bar object
 	 **************************************************************************/
 	public EventDialog(JFrame window, NetServ netServ,
 			JProgressBar progress) {
@@ -115,7 +115,7 @@ public class EventDialog extends JDialog {
 	}
 	
 	/***************************************************************************
-	 * Shows the dialog
+	 * Shows the dialog.
 	 **************************************************************************/
 	public void showDialog() {
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -138,7 +138,7 @@ public class EventDialog extends JDialog {
 	}
 	
 	/***************************************************************************
-	 * Implements the dialog events
+	 * Implements the dialog events.
 	 * 
 	 * @author		Edgardo Avilés López
 	 * @version	0.1, 07/26/2006
@@ -150,23 +150,23 @@ public class EventDialog extends JDialog {
 		JDialog f;
 		
 		/***********************************************************************
-		 * Class constructor
+		 * Class constructor.
 		 * 
-		 * @param f	Parent Dialog
+		 * @param f	Parent dialog
 		 **********************************************************************/
 		public DialogEventActions(JDialog f) {
 			this.f = f;			
 		}
 		
 		/***********************************************************************
-		 * Exits the system
+		 * Exits the system.
 		 **********************************************************************/
 		private void cancel() {
 			setVisible(false);
 		}
 		
 		/***********************************************************************
-		 * Controls the creation/selection event in the sensor network
+		 * Controls the creation/selection event in the sensor network.
 		 **********************************************************************/
 		private void accept() {
 			if (tf01.getText().trim().compareTo("") == 0) {
@@ -212,10 +212,10 @@ public class EventDialog extends JDialog {
 
 					if (!res) {
 						JOptionPane.showMessageDialog(
-								f, "There is an error in the specified criteria, " +
-								"please verify all parameter names and sintax are correct " +
-								"and try again.",
-								"Problem", JOptionPane.WARNING_MESSAGE);
+							f, "There is an error in the specified criteria, " +
+							"please verify all parameter names and sintax " +
+							"are correct and try again.",
+							"Problem", JOptionPane.WARNING_MESSAGE);
 						ta01.requestFocus();
 						b01.setEnabled(true);
 						progress.setVisible(false);
@@ -229,7 +229,7 @@ public class EventDialog extends JDialog {
 		}
 		
 		/***********************************************************************
-		 * Event controller function
+		 * Event controller function.
 		 * 
 		 * @param	Event producer action
 		 **********************************************************************/
