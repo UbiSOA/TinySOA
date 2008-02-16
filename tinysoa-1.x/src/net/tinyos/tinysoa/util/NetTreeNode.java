@@ -22,7 +22,8 @@ import javax.swing.*;
 import javax.swing.tree.*;
 
 /*******************************************************************************
- * Handles the information of a tree node, representing a node in the sensor network
+ * Handles the information of a tree node, representing a node in the sensor
+ * network.
  * 
  * @author		Edgardo Avilés López
  * @version	0.1, 07/25/2006
@@ -34,7 +35,7 @@ public class NetTreeNode extends DefaultMutableTreeNode {
 	protected Icon stateIcon;
 
 	/***************************************************************************
-	 * Basic constructor
+	 * Basic constructor.
 	 * 
 	 * @param object	Name of the node
 	 **************************************************************************/
@@ -43,10 +44,10 @@ public class NetTreeNode extends DefaultMutableTreeNode {
 	}
 	
 	/***************************************************************************
-	 * Regular constructor
+	 * Regular constructor.
 	 * 
 	 * @param object	Name of the node
-	 * @param icon	Node icon
+	 * @param icon		Node icon
 	 **************************************************************************/
 	public NetTreeNode(Object object, Icon icon) {
 		super(object);
@@ -55,9 +56,9 @@ public class NetTreeNode extends DefaultMutableTreeNode {
 	}
 	
 	/***************************************************************************
-	 * Sets selected state
+	 * Sets selected state.
 	 * 
-	 * @param isSelected	True if the node is selected
+	 * @param isSelected	<code>True</code> if the node is selected
 	 **************************************************************************/
 	@SuppressWarnings("unchecked")
 	public void setSelected(boolean isSelected) {
@@ -73,16 +74,16 @@ public class NetTreeNode extends DefaultMutableTreeNode {
 	}
 	
 	/***************************************************************************
-	 * Gets selected state
+	 * Gets selected state.
 	 * 
-	 * @return	True if the node is selected
+	 * @return	<code>True</code> if the node is selected
 	 **************************************************************************/
 	public boolean isSelected() {
 		return isSelected;
 	}
 	
 	/***************************************************************************
-	 * Sets the nodes icon
+	 * Sets the icon for the node.
 	 * 
 	 * @param icon	Node icon
 	 **************************************************************************/
@@ -91,7 +92,7 @@ public class NetTreeNode extends DefaultMutableTreeNode {
 	}
 
 	/***************************************************************************
-	 * Gets the node icon
+	 * Gets the node icon.
 	 * 
 	 * @return	Node icon
 	 **************************************************************************/

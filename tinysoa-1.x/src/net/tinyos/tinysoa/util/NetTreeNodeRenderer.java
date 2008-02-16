@@ -23,8 +23,8 @@ import javax.swing.plaf.*;
 import javax.swing.tree.*;
 
 /*******************************************************************************
- * Implements a tree cell renderer to provide functionality of a JCheckBox inside
- * the tree.
+ * Implements a tree cell renderer to provide functionality of a JCheckBox
+ * inside the tree.
  * 
  * @author		Edgardo Avilés López
  * @version	0.1, 07/25/2006
@@ -63,7 +63,6 @@ public class NetTreeNodeRenderer extends JPanel
 			label.setText(stringValue);
 			label.setSelected(isSelected);
 			label.setFocus(hasFocus);
-			
 			label.setIcon(((NetTreeNode)value).getIcon());
 		}
 
@@ -82,7 +81,7 @@ public class NetTreeNodeRenderer extends JPanel
 	}
 	
 	/***************************************************************************
-	 * Prepares position and dimention of cell components.
+	 * Prepares position and dimension of cell components.
 	 **************************************************************************/
 	public void doLayout() {
 		Dimension d_check = check.getPreferredSize();
@@ -182,7 +181,7 @@ public class NetTreeNodeRenderer extends JPanel
 		/***********************************************************************
 		 * Sets if the label is selected.
 		 * 
-		 * @param isSelected	True if selected
+		 * @param isSelected	<code>True</code> if selected
 		 **********************************************************************/
 		public void setSelected(boolean isSelected) {
 			this.isSelected = isSelected;
@@ -191,7 +190,7 @@ public class NetTreeNodeRenderer extends JPanel
 		/***********************************************************************
 		 * Sets the component focus.
 		 * 
-		 * @param hasFocus	True if the component has focus
+		 * @param hasFocus	<code>True</code> if the component has focus
 		 **********************************************************************/
 		public void setFocus(boolean hasFocus) {
 			this.hasFocus = hasFocus;
