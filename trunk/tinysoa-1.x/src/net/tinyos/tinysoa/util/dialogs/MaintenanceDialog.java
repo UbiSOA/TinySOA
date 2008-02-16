@@ -19,9 +19,7 @@ package net.tinyos.tinysoa.util.dialogs;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.text.*;
 import java.util.*;
 
 import javax.swing.*;
