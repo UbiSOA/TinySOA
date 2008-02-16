@@ -15,7 +15,7 @@
  * 
  ******************************************************************************/
 
-package net.tinyos.tinysoa.util;
+package net.tinyos.tinysoa.util.lists;
 
 import java.awt.*;
 import java.util.*;
@@ -25,32 +25,33 @@ import java.text.BreakIterator;
 import net.tinyos.tinysoa.common.*;
 
 /*******************************************************************************
- * Renderer for the network selection list
+ * Implements a list cell renderer that is used to display a menu of available
+ * providers such as available sensor networks.
  * 
  * @author		Edgardo Avilés López
- * @version	0.1
+ * @version	0.1	07/25/2006
  ******************************************************************************/
-public class MonitorListCellRenderer implements ListCellRenderer {
+public class NetworksListCellRenderer implements ListCellRenderer {
 	
 	private ImageIcon icon;
 	
 	/***************************************************************************
 	 * Class constructor
 	 * 
-	 * @param icon	Icono de una red
+	 * @param icon	Icon for a network
 	 **************************************************************************/
-	public MonitorListCellRenderer(ImageIcon icon) {
+	public NetworksListCellRenderer(ImageIcon icon) {
 		this.icon = icon;
 	}
 	
 	/***************************************************************************
-	 * Makes a multiline string inserting <pre><br></pre> where the line width
-	 * exceeds the indicated pixel longitude.
+	 * Procudes a multiline string inserting <pre><br></pre> where the line
+	 * width exceeds the required line pixel width.
 	 * 
 	 * @param text	String to adjust
 	 * @param font	Font to use
 	 * @param width	Desired width
-	 * @return			A multiline string
+	 * @return		A multiline string
 	 **************************************************************************/
 	private String wrapLine(String text, Font font, int width) {
 		BreakIterator iterator = BreakIterator.getWordInstance(

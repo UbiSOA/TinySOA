@@ -25,6 +25,7 @@ import javax.swing.*;
 import net.tinyos.tinysoa.common.*;
 import net.tinyos.tinysoa.server.*;
 import net.tinyos.tinysoa.util.*;
+import net.tinyos.tinysoa.util.lists.NetworksListCellRenderer;
 import net.tinyos.tinysoa.visor.InterfaceEvents;
 
 /*******************************************************************************
@@ -62,7 +63,7 @@ public class NetSelectDialog extends JDialog {
 		panel.add(label, BorderLayout.NORTH);
 		
 		netList = new JList();
-		netList.setCellRenderer(new MonitorListCellRenderer(icon));
+		netList.setCellRenderer(new NetworksListCellRenderer(icon));
 		JScrollPane scrollLista = new JScrollPane(netList);
 		scrollLista.setHorizontalScrollBarPolicy(
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
