@@ -65,7 +65,7 @@ public final class Converter {
 		Rthr = R1 * (ADC_FS - ADC) / ADC;
 		kelvin = 1 / (a + b * Math.log(Rthr) + c *
 		Math.pow(Math.log(Rthr), 3.0));
-		return rounding(kelvin - 273.15, precision) + " °C";
+		return roundStr(kelvin - 273.15, precision) + " °C";
 	}
 	
 	/***************************************************************************
@@ -85,7 +85,7 @@ public final class Converter {
 		Rthr = R1 * (ADC_FS - ADC) / ADC;
 		kelvin = 1 / (a + b * Math.log(Rthr) + c *
 		Math.pow(Math.log(Rthr), 3.0));
-		return Double.parseDouble(rounding(kelvin - 273.15, 3));
+		return Double.parseDouble(roundStr(kelvin - 273.15, 3));
 	}
 	
 	/***************************************************************************
@@ -96,7 +96,7 @@ public final class Converter {
 	 * @return		A string containing the voltage equivalent for the input
 	 **************************************************************************/
 	public static String adcToVolt(int ADC) {
-		return rounding(ADC / 1000.0, 2) + " v";
+		return roundStr(ADC / 1000.0, 2) + " v";
 	}
 	
 	/***************************************************************************
@@ -107,7 +107,7 @@ public final class Converter {
 	 * @return		A double containing the voltage equivalent for the input
 	 **************************************************************************/
 	public static double adcToVoltD(int ADC) {
-		return Double.parseDouble(rounding(ADC / 1000.0, 3));
+		return Double.parseDouble(roundStr(ADC / 1000.0, 3));
 	}
 	
 	/***************************************************************************
@@ -310,38 +310,39 @@ public final class Converter {
 	}
 	
 	/***************************************************************************
-	 * If <code> convert </ code> is false, it returns a string representation 
-	 * of hex numbers shown in <code> i </ code> with the desired length. 
-	 * If <code> convert </ code> is true that returns a string with the number 
-	 * indicated by <code> i </ code> without converted.s
+	 * Converts an integer number to its equivalent string representation. If
+	 * <code>toHex</code> is <code>true</code>, the result is a string with the
+	 * hexadecimal equivalent for the input and it will be padded to the length
+	 * specified by <code>hexLength</code>.
 	 * 
-	 * @param i			Number to convert
-	 * @param length	Desired length for the string result
-	 * @param convert	False if need the representation hex
-	 * 	 * @return		A string with the representation of number in
-	 * 					decimal or hex
+	 * @param x			Input integer number to convert
+	 * @param hexLength	Desired length if hexadecimal format
+	 * @param toHex		<code>True</code> to get an hexadecimal equivalent
+	 * @return			A string with the equivalent representation for the
+	 * 					integer input or a string with the equivalent
+	 * 					hexadecimal
 	 **************************************************************************/
-	public static String intToN(int i, int length, boolean convert) {
-		if (convert) return i + "";
-		else return Converter.intToHex(i, length);
+	public static String intToStr(int x, int hexLength, boolean toHex) {
+		if (toHex) return Converter.intToHex(x, hexLength);
+		else return x + "";
 	}
 
 	/***************************************************************************
-	 * Returns a string with the value <code>val</code> rounded
-	 * the number of decimals indicated.
+	 * Converts the input number to a string with the same number rounded to the
+	 * specified precision.
 	 * 
-	 * @param val		Value to rounding
-	 * @param places	Number of decimal to rounding
-	 * @return			A string with the value round
+	 * @param x			Double value to round
+	 * @param precision	Precision of the result
+	 * @return			A string with the rounded input number
 	 *  **************************************************************************/
-	public static String rounding(double val, int places) {
-		if (places == 1) return nf1d.format(val);
-		if (places == 2) return nf2d.format(val);
-		if (places == 3) return nf3d.format(val);
+	public static String roundStr(double x, int precision) {
+		if (precision == 1) return nf1d.format(x);
+		if (precision == 2) return nf2d.format(x);
+		if (precision == 3) return nf3d.format(x);
 	
-		String p = ""; for (int i = 0; i < places; i++) p += "0";
+		String p = ""; for (int i = 0; i < precision; i++) p += "0";
 		NumberFormat nf = new DecimalFormat("0." + p);
-		return nf.format(val);
+		return nf.format(x);
 	}
 
 }

@@ -283,7 +283,7 @@ public class MessageProcessor {
 				Converter.intToId(m.get_id(), convert),
 				Converter.intToId(m.get_parent(), convert),
 				Converter.intToType(m.get_type(), convert),
-				Converter.intToN(m.get_nseq(), 2, convert),
+				Converter.intToStr(m.get_nseq(), 2, convert),
 				Converter.intToSens(m.get_sensor(), convert),
 				new SensedData(
 						Integer.parseInt(types.getProperty(s + "v1")),
@@ -507,7 +507,7 @@ public class MessageProcessor {
 				Converter.intToId(m.get_id(), convert),
 				Converter.intToId(m.get_parent(), convert),
 				Converter.intToType(m.get_type(), convert),
-				Converter.intToN(m.get_nseq(), 2, convert),
+				Converter.intToStr(m.get_nseq(), 2, convert),
 				Converter.intToSens(m.get_sensor(), convert),
 				Converter.intToSensParam(m.get_l1(), convert),
 				Converter.intToSensParam(m.get_l2(), convert),
