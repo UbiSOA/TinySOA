@@ -30,6 +30,8 @@ import org.apache.log4j.PropertyConfigurator;
 import net.tinyos.tinysoa.util.*;
 import net.tinyos.tinysoa.util.tables.MonitorTable;
 import net.tinyos.tinysoa.util.tables.TableSorter;
+import net.tinyos.tinysoa.util.trees.NetTreeNodeRenderer;
+import net.tinyos.tinysoa.util.trees.SelectedNetTreeNodeListener;
 
 /*******************************************************************************
  * Demo app that uses those services offered by TinySOA Server
