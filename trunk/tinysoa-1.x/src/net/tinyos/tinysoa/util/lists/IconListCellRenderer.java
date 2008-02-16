@@ -15,18 +15,18 @@
  * 
  ******************************************************************************/
 
-package net.tinyos.tinysoa.util;
+package net.tinyos.tinysoa.util.lists;
 
 import java.awt.*;
 import javax.swing.*;
 
 /*******************************************************************************
- * Implements a list cell rendererer with an icon
+ * Implements a list cell renderer with icons.
  * 
  * @author		Edgardo Avilés López
  * @version	0.1, 07/25/2006
  ******************************************************************************/
-public class MonitorIconListCellRenderer extends JLabel implements ListCellRenderer {
+public class IconListCellRenderer extends JLabel implements ListCellRenderer {
 	private static final long serialVersionUID = -431382948314918856L;
 
 	private ImageIcon[] icons;
@@ -34,9 +34,9 @@ public class MonitorIconListCellRenderer extends JLabel implements ListCellRende
 	/***************************************************************************
 	 * Class constructor
 	 * 
-	 * @param icons	Iconos de los elementos de la lista
+	 * @param icons	Icons to the list items
 	 **************************************************************************/
-	public MonitorIconListCellRenderer(ImageIcon[] icons) {
+	public IconListCellRenderer(ImageIcon[] icons) {
 		this.icons = icons;
 	}
 	

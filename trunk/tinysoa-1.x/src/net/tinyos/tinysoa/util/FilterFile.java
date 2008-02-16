@@ -53,6 +53,7 @@ import javax.swing.filechooser.*;
  *
  * @version 1.9, 04/23/1999
  * @version 1.91, 04/24/2006
+ * @version 1.92, 09/12/2006
  * @author Jeff Dinkins
  * @author Edgardo Avilés López
  ******************************************************************************/
@@ -141,7 +142,8 @@ public class FilterFile extends FileFilter {
      *
      * @see #getExtension
      */
-    public boolean accept(File f) {
+    @Override
+	public boolean accept(File f) {
 	if(f != null) {
 	    if(f.isDirectory()) {
 		return true;
@@ -152,23 +154,6 @@ public class FilterFile extends FileFilter {
 	    };
 	}
 	return false;
-    }
-
-    /**
-     * Return the extension portion of the file's name .
-     *
-     * @see #getExtension
-     * @see FileFilter#accept
-     */
-     public String getExtension(File f) {
-	if(f != null) {
-	    String filename = f.getName();
-	    int i = filename.lastIndexOf('.');
-	    if(i>0 && i<filename.length()-1) {
-		return filename.substring(i+1).toLowerCase();
-	    };
-	}
-	return null;
     }
 
     /**
@@ -192,14 +177,14 @@ public class FilterFile extends FileFilter {
 	fullDescription = null;
     }
 
-
     /**
      * Returns the human readable description of this filter. For
      * example: "JPEG and GIF Image Files (*.jpg, *.gif)"
      *
      * @see FileFilter#getDescription
      */
-    @SuppressWarnings("unchecked")
+    @Override
+	@SuppressWarnings("unchecked")
 	public String getDescription() {
 	if(fullDescription == null) {
 	    if(description == null || isExtensionListInDescription()) {
@@ -218,6 +203,35 @@ public class FilterFile extends FileFilter {
 	    }
 	}
 	return fullDescription;
+    }
+
+
+    /**
+     * Return the extension portion of the file's name .
+     *
+     * @see #getExtension
+     * @see FileFilter#accept
+     */
+     public String getExtension(File f) {
+	if(f != null) {
+	    String filename = f.getName();
+	    int i = filename.lastIndexOf('.');
+	    if(i>0 && i<filename.length()-1) {
+		return filename.substring(i+1).toLowerCase();
+	    };
+	}
+	return null;
+    }
+
+    /**
+     * Returns whether the extension list (.jpg, .gif, etc) should
+     * show up in the human readable description.
+     *
+     * Only relevent if a description was provided in the constructor
+     * or using setDescription();
+     */
+    public boolean isExtensionListInDescription() {
+	return useExtensionsInDescription;
     }
 
     /**
@@ -239,17 +253,6 @@ public class FilterFile extends FileFilter {
     public void setExtensionListInDescription(boolean b) {
 	useExtensionsInDescription = b;
 	fullDescription = null;
-    }
-
-    /**
-     * Returns whether the extension list (.jpg, .gif, etc) should
-     * show up in the human readable description.
-     *
-     * Only relevent if a description was provided in the constructor
-     * or using setDescription();
-     */
-    public boolean isExtensionListInDescription() {
-	return useExtensionsInDescription;
     }
 }
 
