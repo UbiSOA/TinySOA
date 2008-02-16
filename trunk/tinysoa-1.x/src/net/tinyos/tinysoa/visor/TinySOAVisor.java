@@ -27,11 +27,9 @@ import javax.swing.tree.*;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
-import net.tinyos.tinysoa.util.*;
-import net.tinyos.tinysoa.util.tables.MonitorTable;
-import net.tinyos.tinysoa.util.tables.TableSorter;
-import net.tinyos.tinysoa.util.trees.NetTreeNodeRenderer;
-import net.tinyos.tinysoa.util.trees.SelectedNetTreeNodeListener;
+import net.tinyos.tinysoa.util.graphs.*;
+import net.tinyos.tinysoa.util.tables.*;
+import net.tinyos.tinysoa.util.trees.*;
 
 /*******************************************************************************
  * Demo app that uses those services offered by TinySOA Server

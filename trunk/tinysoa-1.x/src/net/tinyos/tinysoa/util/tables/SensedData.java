@@ -15,11 +15,12 @@
  * 
  ******************************************************************************/
 
-package net.tinyos.tinysoa.util;
+package net.tinyos.tinysoa.util.tables;
 
 import java.util.*;
 
 import net.tinyos.tinysoa.common.Constants;
+import net.tinyos.tinysoa.util.Converter;
 
 /*******************************************************************************
  * Stores readings results in a table

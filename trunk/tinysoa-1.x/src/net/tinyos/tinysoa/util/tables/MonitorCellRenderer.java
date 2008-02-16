@@ -21,7 +21,6 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.*;
 
-import net.tinyos.tinysoa.util.SensedData;
 
 /*******************************************************************************
  * Implements a personalized table cell <i>cell renderer</i>
