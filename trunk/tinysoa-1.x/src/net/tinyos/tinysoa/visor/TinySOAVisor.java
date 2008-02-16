@@ -24,6 +24,9 @@ import javax.swing.*;
 import javax.swing.table.*;
 import javax.swing.tree.*;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+
 import net.tinyos.tinysoa.util.*;
 import net.tinyos.tinysoa.util.tables.MonitorTable;
 import net.tinyos.tinysoa.util.tables.TableSorter;
@@ -44,6 +47,8 @@ public class TinySOAVisor {
 	private static InterfaceEvents interfaceEvents;
 	private static JTree tree;
 	private static JPopupMenu popMenuEvents, popMenuMaintenance;
+	
+	private static Logger logger = Logger.getLogger(TinySOAVisor.class);
 
 	/***************************************************************************
 	 * Creates the application menu
@@ -602,7 +607,7 @@ public class TinySOAVisor {
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		interfaceEvents = new InterfaceEvents(CONFIG_FILE, window,
-				icons[2], icons[15], icons[14], icons[16]);
+				icons[2], icons[15], icons[14], icons[16], logger);
 		createMenu();
 		createToolbar();
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
@@ -625,6 +630,7 @@ public class TinySOAVisor {
 	 * @param args	Input arguments
 	 **************************************************************************/	
 	public static void main(String[] args) {
+		PropertyConfigurator.configure("log4j.properties");
 		UIManager.getDefaults().put("ScrollPane.background", new Color(0xe1e6ec));
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {

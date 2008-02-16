@@ -19,9 +19,8 @@ package net.tinyos.tinysoa.gateway;
 
 import net.tinyos.message.*;
 import net.tinyos.tinysoa.common.*;
-import net.tinyos.tinysoa.util.*;
-import net.tinyos.tinysoa.util.dialogs.PropertiesDialog;
-import net.tinyos.tinysoa.util.tables.MonitorTable;
+import net.tinyos.tinysoa.util.dialogs.*;
+import net.tinyos.tinysoa.util.tables.*;
 
 import javax.swing.border.*;
 import javax.swing.table.*;
@@ -111,7 +110,7 @@ public class TinySOAGateway {
 						"SerialForwarder&hellip;</html>");
 
 		mote = new MoteIF();
-		processor = new MessageProcessor(configuration, t01, tm01, l01);
+		processor = new MessageProcessor(configuration, t01, tm01, l01, logger);
 		client = new InternalServicesClient(mote, processor);
 		mote.registerListener(new TinySOAMsg(), client);
 		processor.setClient(client);
@@ -146,7 +145,7 @@ public class TinySOAGateway {
 			processor.setReady(false);
 			PropertiesDialog dp = new PropertiesDialog(
 					processor, window, configuration,
-					CONFIG_FILE, db);
+					CONFIG_FILE, db, logger);
 			dp.center();
 			dp.setVisible(true);
 		} else {
@@ -162,12 +161,12 @@ public class TinySOAGateway {
 					processor.setReady(false);
 					PropertiesDialog dp = new PropertiesDialog(
 							processor, window, configuration,
-							CONFIG_FILE, db);
+							CONFIG_FILE, db, logger);
 					dp.center();
 					dp.setVisible(true);
 				}
 			} catch (SQLException ex) {
-				Errors.errorBD(ex);
+				logger.error(ex);
 			} finally {
 				if ((rs != null) && (st != null)) {
 					try {
@@ -274,8 +273,8 @@ public class TinySOAGateway {
 	 **************************************************************************/
 	private static void setStatus(String s, boolean justGUI) {
 		l01.setText(s);
-		if (!justGUI) logger.info(
-				s.replaceAll("&hellip;", "...").replaceAll("\\<.*?\\>",""));
+		if (!justGUI) logger.info(s.replaceAll("&hellip;", "...").
+				replaceAll("\\<.*?\\>",""));
 	}
 	
 	/***************************************************************************

@@ -24,7 +24,6 @@ import java.util.*;
 
 import javax.swing.*;
 
-import net.tinyos.tinysoa.util.*;
 import net.tinyos.tinysoa.util.dialogs.*;
 
 import org.apache.log4j.*;
@@ -163,7 +162,7 @@ public class TinySOAServer {
 		// Loading information service.
 		Service service = factory.create(InfoServImpl.class, "InfoServ",
 				"http://numenor.cicese.mx/TinySOA", null);
-		service.setInvoker(new BeanInvoker(new InfoServImpl(db, port)));
+		service.setInvoker(new BeanInvoker(new InfoServImpl(db, port, logger)));
 		xfire.getServiceRegistry().register(service);
 		
 		Statement st = null;
@@ -182,7 +181,7 @@ public class TinySOAServer {
 						"NetServ" + rid, "http://numenor.cicese.mx/TinySOA",
 						null);
 				netService.setInvoker(new BeanInvoker(
-						new NetServImpl(db, rid)));
+						new NetServImpl(db, rid, logger)));
 				xfire.getServiceRegistry().register(netService);
 			}
 			
@@ -222,8 +221,8 @@ public class TinySOAServer {
 	public static void stop() {
 		try {
 			server.stop();
-		} catch (Exception e) {
-			Errors.error(e, "Error stopping the server.");
+		} catch (Exception ex) {
+			logger.error("Error stopping the server." + ex);
 		}
 	}
 	
@@ -244,7 +243,7 @@ public class TinySOAServer {
 			start();
 			System.out.println("Ready and waiting requests...");
 		} catch(Exception ex) {
-			Errors.error(ex, "Error at starting the system.");
+			logger.error("Error starting the server." + ex);
 		}
 	}	
 	

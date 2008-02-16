@@ -22,8 +22,9 @@ import java.util.*;
 import java.net.*;
 import javax.jws.*;
 
+import org.apache.log4j.Logger;
+
 import net.tinyos.tinysoa.common.*;
-import net.tinyos.tinysoa.util.*;
 
 /*******************************************************************************
  * Class that implements the information service functionality.
@@ -36,16 +37,19 @@ public class InfoServImpl implements InfoServ {
 	
 	private Connection db;
 	private String port;
+	private Logger logger;
 	
 	/***************************************************************************
 	 * Class constructor.
 	 * 
-	 * @param db	Database connector object to use
-	 * @param port	Port from which the services are provided
+	 * @param db		Database connector object to use
+	 * @param port		Port from which the services are provided
+	 * @param logger	Logger object
 	 **************************************************************************/
-	public InfoServImpl(Connection db, String port) {
+	public InfoServImpl(Connection db, String port, Logger logger) {
 		this.db = db;
 		this.port = port;
+		this.logger = logger;
 	}
 	
 	/***************************************************************************
@@ -78,7 +82,7 @@ public class InfoServImpl implements InfoServ {
 			}
 			
 		} catch (SQLException ex) {
-			Errors.errorBD(ex);
+			logger.error(ex);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

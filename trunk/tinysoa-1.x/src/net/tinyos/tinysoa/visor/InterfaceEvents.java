@@ -33,14 +33,10 @@ import net.tinyos.tinysoa.common.*;
 import net.tinyos.tinysoa.common.Event;
 import net.tinyos.tinysoa.server.*;
 import net.tinyos.tinysoa.util.*;
-import net.tinyos.tinysoa.util.dialogs.EventDialog;
-import net.tinyos.tinysoa.util.dialogs.MaintenanceDialog;
-import net.tinyos.tinysoa.util.dialogs.NetSelectDialog;
-import net.tinyos.tinysoa.util.tables.CellTableTooltip;
-import net.tinyos.tinysoa.util.tables.MonitorCellRenderer;
-import net.tinyos.tinysoa.util.tables.MonitorTable;
-import net.tinyos.tinysoa.util.tables.TableSorter;
+import net.tinyos.tinysoa.util.dialogs.*;
+import net.tinyos.tinysoa.util.tables.*;
 
+import org.apache.log4j.Logger;
 import org.codehaus.xfire.client.*;
 import org.codehaus.xfire.service.*;
 import org.codehaus.xfire.service.binding.*;
@@ -90,6 +86,7 @@ public class InterfaceEvents
 	private JFrame mainWindow;
 	private EventDialog eventDialog;
 	private MaintenanceDialog eventMaintenance;
+	private Logger logger;
 	
 	/***************************************************************************
 	 * Class constructor
@@ -100,16 +97,19 @@ public class InterfaceEvents
 	 * @param normalStateIcon		Normal state icon
 	 * @param specialStateIcon		Special state icon
 	 * @param problemStateIcon		Problem state icon
+	 * @param logger				Logger object
 	 **************************************************************************/
 	public InterfaceEvents(String configurationArchive, JFrame window,
 			ImageIcon netIcon, ImageIcon normalStateIcon,
-			ImageIcon specialStateIcon, ImageIcon problemStateIcon) {
+			ImageIcon specialStateIcon, ImageIcon problemStateIcon,
+			Logger logger) {
 		this.configurationArchive = configurationArchive;
 		this.mainWindow = window;
 		this.netIcon = netIcon;
 		this.normalStateIcon = normalStateIcon;
 		this.specialStateIcon = specialStateIcon;
 		this.problemStateIcon = problemStateIcon;
+		this.logger = logger;
 		netSelectionDialog = new NetSelectDialog(window, netIcon, this);
 		loadConfiguration();
 		
@@ -613,7 +613,9 @@ public class InterfaceEvents
 					
 				}
 			});
-		} catch (Exception e) { Errors.error(e, "refreshDataTable"); }
+		} catch (Exception ex) {
+			logger.error(ex);
+		}
 	}
 
 	/***************************************************************************
@@ -717,7 +719,9 @@ public class InterfaceEvents
 			});
 			
 			grapher.repaint();
-		} catch (Exception e) { Errors.error(e, "refreshGrapher"); }
+		} catch (Exception ex) {
+			logger.error(ex);
+		}
 	}
 
 	/***************************************************************************
@@ -796,7 +800,9 @@ public class InterfaceEvents
 					topologyGrapher.repaint();
 				}
 			});
-		} catch (Exception e) { Errors.error(e, "refreshTopology"); }
+		} catch (Exception ex) {
+			logger.error(ex);
+		}
 	}
 	
 	/***************************************************************************
@@ -838,7 +844,9 @@ public class InterfaceEvents
 					}
 				}
 			});
-		} catch (Exception e) { Errors.error(e, "refreshEventTable"); }
+		} catch (Exception ex) {
+			logger.error(ex);
+		}
 	}
 	
 	/***************************************************************************
@@ -925,7 +933,9 @@ public class InterfaceEvents
 					}
 				}
 			});
-		} catch (Exception e) { Errors.error(e, "refreshmaintenanceTable"); }
+		} catch (Exception ex) {
+			logger.error(ex);
+		}
 	}
 
 	/***************************************************************************
@@ -947,7 +957,9 @@ public class InterfaceEvents
 							"</b></center></html>");
 				}
 			});
-		} catch (Exception e) { Errors.error(e, "refreshTime"); }
+		} catch (Exception ex) {
+			logger.error(ex);
+		}
 	}
 
 	/***************************************************************************
@@ -964,13 +976,13 @@ public class InterfaceEvents
 			minTime = start.getTime();
 			maxTime = fin.getTime();
 			slider.setValue(10000);
-		} catch (Exception e) { Errors.error(e, "defineTimes"); }
+		} catch (Exception ex) {
+			logger.error(ex);
+		}
 	}
 	
 	//--------------------------------------------------------------------------
 	//	Functions to prepare and configure the GUI components
-	//
-	//
 	//==========================================================================
 
 	/***************************************************************************
@@ -1109,7 +1121,9 @@ public class InterfaceEvents
 					progressBar.setVisible(false);
 				}
 			});
-		} catch (Exception e) { Errors.error(e, "unblickRefresh"); }
+		} catch (Exception ex) {
+			logger.error(ex);
+		}
 	}
 
 	/***************************************************************************
@@ -1122,7 +1136,9 @@ public class InterfaceEvents
 					progressBar.setVisible(true);
 				}
 			});
-		} catch (Exception e) { Errors.error(e, "blockRefresh"); }
+		} catch (Exception ex) {
+			logger.error(ex);
+		}
 	}
 
 	/***************************************************************************

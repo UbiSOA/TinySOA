@@ -23,6 +23,8 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.table.*;
 
+import org.apache.log4j.Logger;
+
 import net.tinyos.tinysoa.common.*;
 import net.tinyos.tinysoa.util.*;
 import net.tinyos.tinysoa.util.Calendar;
@@ -50,6 +52,7 @@ public class MessageProcessor {
 	private InternalServicesClient client;
 	private int sensorBoard, nodeID, netID;
 	private Connection db;
+	private Logger logger;
 	
 	private TinySOAMsg m;
 	
@@ -60,15 +63,16 @@ public class MessageProcessor {
 	 * @param table			Table to show the receive messages
 	 * @param tableModel	Table model of the specified table
 	 * @param status		Status label to show updates
+	 * @param logger		Logger object
 	 **************************************************************************/
 	public MessageProcessor(
 			Properties properties, JTable table,
-			DefaultTableModel tableModel, JLabel status) {
-		
+			DefaultTableModel tableModel, JLabel status, Logger logger) {
 		this.table		= table;
 		this.tableModel	= tableModel;
 		this.properties	= properties;
 		this.status		= status;
+		this.logger		= logger;
 		
 		initializeInterface();
 	}
@@ -235,7 +239,7 @@ public class MessageProcessor {
 				
 			}
 		} catch (SQLException ex) {
-			Errors.errorBD(ex);
+			logger.error(ex);
 		} finally {
 			if ((rs != null) && (st != null)) {
 				try {
@@ -337,7 +341,7 @@ public class MessageProcessor {
 						"INSERT INTO parameters VALUES('0', '" + netID +
 						"', '" + par + "')");
 			} catch (SQLException ex) {
-				Errors.errorBD(ex);
+				logger.error(ex);
 			} finally {
 				if ((rs != null) && (st != null)) {
 					try {
@@ -374,7 +378,7 @@ public class MessageProcessor {
 					"', '" + nodeID + "', NOW(), '" + par +
 					"', '" + val + "')");
 		} catch (SQLException ex) {
-			Errors.errorBD(ex);
+			logger.error(ex);
 		} finally {
 			if (st != null) {
 				try {
@@ -410,7 +414,7 @@ public class MessageProcessor {
 					"', '" + act + "')");
 			
 		} catch (SQLException ex) {
-			Errors.errorBD(ex);
+			logger.error(ex);
 		} finally {
 			if ((rs != null) && (st != null)) {
 				try {
