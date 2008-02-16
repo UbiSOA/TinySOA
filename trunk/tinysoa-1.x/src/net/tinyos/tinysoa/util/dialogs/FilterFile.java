@@ -1,4 +1,4 @@
-package net.tinyos.tinysoa.util;
+package net.tinyos.tinysoa.util.dialogs;
 
 /*
  * @(#)ExampleFileFilter.java	1.9 99/04/23
