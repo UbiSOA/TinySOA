@@ -31,7 +31,7 @@ import net.tinyos.tinysoa.common.Event;
 import net.tinyos.tinysoa.server.*;
 
 /*******************************************************************************
- * Dialogue to add or change a task of maintenance.
+ * Dialog to add or change a task of maintenance.
  * 
  * @author		Edgardo Avilés López
  * @version	0.2, 07/28/2006
