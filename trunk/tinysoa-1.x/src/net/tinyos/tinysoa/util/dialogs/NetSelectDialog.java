@@ -28,7 +28,7 @@ import net.tinyos.tinysoa.util.lists.*;
 import net.tinyos.tinysoa.visor.*;
 
 /*******************************************************************************
- * Class that implement the dialog for network selection .
+ * Class that implements a dialog for sensor network selection.
  * 
  * @author		Edgardo Avilés López
  * @version	0.1, 07/25/2006
@@ -42,13 +42,13 @@ public class NetSelectDialog extends JDialog {
 	/***************************************************************************
 	 * Constructor class.
 	 * 
-	 * @param window	Window father of dialogue
-	 * @param icon	    Icon of a network
-	 * @param event	    Controller of events to call when selecting
+	 * @param parent	Parent window
+	 * @param icon	    Icon for a network
+	 * @param event	    Event controller
 	 **************************************************************************/
-	public NetSelectDialog(JFrame window, ImageIcon icon,
+	public NetSelectDialog(JFrame parent, ImageIcon icon,
 			InterfaceEvents event) {
-		super(window, "Select network", false);
+		super(parent, "Select network", false);
 		this.interfaceEvents = event;
 		
 		JPanel panel = new JPanel();
@@ -80,8 +80,8 @@ public class NetSelectDialog extends JDialog {
 				if (ev.getActionCommand().compareTo("Accept") == 0) {
 					if (netList.getSelectedValue() == null) {
 						JOptionPane.showMessageDialog(
-								null, "You must select a network.",
-								"Select a network", JOptionPane.WARNING_MESSAGE);
+							null, "You must select a network.",
+							"Select a network", JOptionPane.WARNING_MESSAGE);
 						return;
 					}
 					setVisible(false);
@@ -114,7 +114,7 @@ public class NetSelectDialog extends JDialog {
 	/***************************************************************************
 	 * Get the list of networks available on the server.
 	 * 
-	 * @param service	Service of information to use
+	 * @param service	Information service to use
 	 **************************************************************************/
 	private void getAvailableNetworks(InfoServ service) {
 		Vector<Network> networks = service.getNetworksList();
@@ -122,17 +122,17 @@ public class NetSelectDialog extends JDialog {
 	}
 	
 	/***************************************************************************
-	 * Sample dialogue selection network.
+	 * Shows the network selection dialog.
 	 * 
 	 * @param service		Information service to use
-	 * @param progressBar	Progress Bar show
+	 * @param progressBar	Progress bar to update
 	 **************************************************************************/
 	public void show(InfoServ service, JProgressBar progressBar) {
 		if (service == null) {
 			JOptionPane.showMessageDialog(
-					null, "You are not connected to a services provider yet.\nPlease " +
-							"connect to a service provider and try again.",
-					"Connection problem", JOptionPane.INFORMATION_MESSAGE);
+				null, "You are not connected to a services provider yet.\n " +
+				"Please connect to a service provider and try again.",
+				"Connection problem", JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
 		getAvailableNetworks(service);
