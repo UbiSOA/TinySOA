@@ -81,7 +81,7 @@ public class InterfaceEvents
 	private Date time;
 	private JTabbedPane panelTabs;
 	private Plotter grapher;
-	private TopologyPlotter topologyGrapher;
+	private ColorMap topologyGrapher;
 	private JComboBox comboParsGraph, comboParsTopology;
 	private static Point[] posTopNodes;
 	private JFrame mainWindow;
@@ -300,7 +300,7 @@ public class InterfaceEvents
 	 * 
 	 * @param topologyGrapher	Topology Plotter to use
 	 **************************************************************************/
-	public void setGraphTopology(TopologyPlotter graphTopology) {
+	public void setGraphTopology(ColorMap graphTopology) {
 		this.topologyGrapher = graphTopology;
 	}
 	
@@ -767,19 +767,19 @@ public class InterfaceEvents
 					if (par.compareTo("Temp") == 0) {
 						topologyGrapher.defEscala(0.0d, 35.0d);
 						topologyGrapher.defTypeScale(
-								TopologyPlotter.SCALE_HEAT);
+								ColorMap.SCALE_HEAT);
 					} else if (par.compareTo("Lght") == 0) {
 						topologyGrapher.defEscala(300.0d, 900.0d);
 						topologyGrapher.defTypeScale(
-								TopologyPlotter.SCALE_LIGHT);
+								ColorMap.SCALE_LIGHT);
 					} else if (par.compareTo("Volt") == 0) {
 						topologyGrapher.defEscala(1.5d, 3.0d);
 						topologyGrapher.defTypeScale(
-								TopologyPlotter.SCALE_ENERGY);
+								ColorMap.SCALE_ENERGY);
 					} else {
 						topologyGrapher.defEscala(300.0d, 1024.0d);
 						topologyGrapher.defTypeScale(
-								TopologyPlotter.SCALE_HEAT);
+								ColorMap.SCALE_HEAT);
 					}
 					
 					
@@ -788,8 +788,8 @@ public class InterfaceEvents
 						if (par.compareTo(l.getParameter()) == 0)
 							if (!topologyGrapher.existNode(l.getNid()))
 								if (nodeSel[l.getNid()]) {
-									NodeTopologyChart ngt =
-										new NodeTopologyChart(l.getNid(),
+									ColorMapNode ngt =
+										new ColorMapNode(l.getNid(),
 												Double.parseDouble(
 														l.getValue()),
 												posTopNodes[l.getNid()].x,

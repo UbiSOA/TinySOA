@@ -29,23 +29,23 @@ import javax.imageio.*;
 import javax.swing.*;
 
 /*******************************************************************************
- * Class utility for generating graphical topology with information sensing.
+ * Class utility for drawing graphical color maps with sensing information.
  * 
  * @author		Edgardo Avilés López
  * @version	0.5, 02/25/2006
  ******************************************************************************/
-public class TopologyPlotter extends JPanel
+public class ColorMap extends JPanel
 	implements DragGestureListener, DragSourceListener, DropTargetListener {
 	private static final long serialVersionUID = 9143159172653372529L;
 	
-	private double valueMin = -10.0d;	// Value minimum
-	private double valueMax = 40.0d;	// Valor maximum
-	private double valuePro = 0.0d;	// Value average
+	private double valueMin = -10.0d;	// Minimum value
+	private double valueMax = 40.0d;	// Maximum value
+	private double valueAvg = 0.0d;		// Average value
 	
-	private int tamPix	= 10;		// Pixel size of the graph
-	private int radio	= 1000;		// Radio coverage of the value of a node
-	private int movNod	= -1;		// Index of node in drag
-	private int diaNod = 20;		// Diameter of icon of node
+	private int tamPix	= 10;			// Pixel size of the graph
+	private int radio	= 1000;			// Radio coverage of the value of a node
+	private int movNod	= -1;			// Index of node in drag
+	private int diaNod = 20;			// Diameter of icon of node
 	
 	private BufferedImage buffer, backgr = null;		// Buffer of image
 	private int movX, movY;		// Position of node in drag
@@ -58,15 +58,15 @@ public class TopologyPlotter extends JPanel
 	
 	public static int SCALE_HEAT = 0, SCALE_LIGHT = 1, SCALE_ENERGY = 2;
 	
-	private Vector<NodeTopologyChart> node;
+	private Vector<ColorMapNode> node;
 	
 	/***************************************************************************
 	 * Constructor main of the class.
 	 **************************************************************************/
-	public TopologyPlotter() {
+	public ColorMap() {
 		super();
 		setBackground(Color.WHITE);
-		node = new Vector<NodeTopologyChart>();		
+		node = new Vector<ColorMapNode>();		
 		sourceDrag = new DragSource();
 		sourceDrag.createDefaultDragGestureRecognizer(
 				this, DnDConstants.ACTION_COPY_OR_MOVE, this);
@@ -249,17 +249,17 @@ public class TopologyPlotter extends JPanel
 		g2d.setComposite(AlphaComposite.getInstance(
 				AlphaComposite.SRC_OVER, 0.75f));
 		
-		NodeTopologyChart nodo;
+		ColorMapNode nodo;
 		
-		valuePro = 0.0d;
+		valueAvg = 0.0d;
 		for (int k = 0; k < node.size(); k++)
 			if (node.get(k) != null) {
 				value = node.get(k).getValue();
 				if (value < valueMen) valueMen = value;
 				if (value > valueMay) valueMay = value;
-				valuePro += value;
+				valueAvg += value;
 			}
-		valuePro /= node.size();
+		valueAvg /= node.size();
 		
 		for (int i = 0; i < getWidth(); i = i + tamPix)
 			for (int j = 0; j < getHeight(); j = j + tamPix) {
@@ -292,7 +292,7 @@ public class TopologyPlotter extends JPanel
 								nodo.getPosition().y);
 						factor = (distMen / dist) / sumFact;
 						value = nodo.getValue();
-						value = interpolate(value, valuePro, 1, 0,
+						value = interpolate(value, valueAvg, 1, 0,
 								Math.cos(interpolate(
 										0, Math.PI / 2, 0, radio, dist)));
 						value = value * factor;
@@ -317,7 +317,7 @@ public class TopologyPlotter extends JPanel
 		
 		for (int i = 0; i < node.size(); i++)
 			if (node.get(i) != null) {
-				NodeTopologyChart nodo = node.get(i);
+				ColorMapNode nodo = node.get(i);
 				
 				x = nodo.getPosition().x;
 				y = nodo.getPosition().y;
@@ -529,9 +529,9 @@ public class TopologyPlotter extends JPanel
 	 * Add a node in the chart
 	 * 
 	 * @param nodo	Node to add
-	 * @see			NodeTopologyChart
+	 * @see			ColorMapNode
 	 **************************************************************************/
-	public void addNode(NodeTopologyChart nodo) {
+	public void addNode(ColorMapNode nodo) {
 		node.add(nodo);
 	}
 
@@ -540,9 +540,9 @@ public class TopologyPlotter extends JPanel
 	 * 
 	 * @param id			ID del nodo a reemplazar	 	
 	 * @param newValue	    Node with which to replace
-	 * @see					NodeTopologyChart
+	 * @see					ColorMapNode
 	 **************************************************************************/
-	public void changeNode(int id, NodeTopologyChart newValue) {
+	public void changeNode(int id, ColorMapNode newValue) {
 		for (int i = 0; i < node.size(); i++)
 			if (node.get(i).getId() == id) {
 				node.set(id, newValue);
@@ -623,7 +623,7 @@ public class TopologyPlotter extends JPanel
 		if (movNod > -1) {
 			if ((nx >= 0) && (nx <= getWidth()) && (ny >= 0) &&
 					(ny <= getHeight())) {
-				NodeTopologyChart n = node.get(movNod);
+				ColorMapNode n = node.get(movNod);
 				n.setPosition(nx, ny);
 				node.set(movNod, n);
 				posTopologyNodes[n.getId()] = new Point(nx, ny);
