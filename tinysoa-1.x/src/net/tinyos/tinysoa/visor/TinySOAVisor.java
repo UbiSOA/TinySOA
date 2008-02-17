@@ -412,7 +412,7 @@ public class TinySOAVisor {
 		panel2.setBackground(Color.WHITE);
 		//panel2.setBorder(new JTextField().getBorder());
 		panel2.setLayout(new BorderLayout());
-		TopologyPlotter grapher = new TopologyPlotter();
+		ColorMap grapher = new ColorMap();
 		panel2.add(grapher, BorderLayout.CENTER);
 		interfaceEvents.setGraphTopology(grapher);
 		

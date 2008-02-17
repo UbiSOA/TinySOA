@@ -26,7 +26,7 @@ import java.text.*;
  * @author		Edgardo Avilés López
  * @version	0.1, 07/25/2006
  ******************************************************************************/
-public class NodeTopologyChart {
+public class ColorMapNode {
 	
 	private Point p;
 	private double v;
@@ -37,7 +37,7 @@ public class NodeTopologyChart {
 	 * 
 	 * @param id	Node ID
 	 **************************************************************************/
-	public NodeTopologyChart(int id) {
+	public ColorMapNode(int id) {
 		this.id = id;
 		this.v = 0.0d;
 		this.p = new Point(0, 0);
@@ -49,7 +49,7 @@ public class NodeTopologyChart {
 	 * @param id	Node ID
 	 * @param v		Node value
 	 **************************************************************************/
-	public NodeTopologyChart(int id, double v) {
+	public ColorMapNode(int id, double v) {
 		this.id = id;
 		this.v = v;
 		this.p = new Point(0, 0);
@@ -63,7 +63,7 @@ public class NodeTopologyChart {
 	 * @param x		Node X position in the chart
 	 * @param y		Node Y position in the chart
 	 **************************************************************************/
-	public NodeTopologyChart(int id, double v, int x, int y) {
+	public ColorMapNode(int id, double v, int x, int y) {
 		this.id = id;
 		this.v = v;
 		this.p = new Point(x, y);
