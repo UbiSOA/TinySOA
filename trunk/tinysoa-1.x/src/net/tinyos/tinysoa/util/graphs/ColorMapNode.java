@@ -21,7 +21,7 @@ import java.awt.*;
 import java.text.*;
 
 /*******************************************************************************
- * Handles and stores the information of a node in the topology chart.
+ * Handles and stores the information of a node in the color map.
  * 
  * @author		Edgardo Avilés López
  * @version	0.1, 07/25/2006
@@ -60,8 +60,8 @@ public class ColorMapNode {
 	 * 
 	 * @param id	Node ID
 	 * @param v		Node value
-	 * @param x		Node X position in the chart
-	 * @param y		Node Y position in the chart
+	 * @param x		Node X position in the map
+	 * @param y		Node Y position in the map
 	 **************************************************************************/
 	public ColorMapNode(int id, double v, int x, int y) {
 		this.id = id;
@@ -70,7 +70,7 @@ public class ColorMapNode {
 	}
 	
 	/***************************************************************************
-	 * Sets node position in the chart.
+	 * Sets node position in the map.
 	 * 
 	 * @param x	Node X axis position
 	 * @param y	Node Y axis position
@@ -81,9 +81,9 @@ public class ColorMapNode {
 	}
 	
 	/***************************************************************************
-	 * Sets node position in the chart.
+	 * Sets node position in the map.
 	 * 
-	 * @param p	Node coordinates in the chart
+	 * @param p	Node coordinates in the map
 	 **************************************************************************/
 	public void setPosition(Point p) {
 		this.p.x = p.x;
@@ -91,9 +91,9 @@ public class ColorMapNode {
 	}
 	
 	/***************************************************************************
-	 * Gets node position in the chart.
+	 * Gets node position in the map.
 	 * 
-	 * @return	Node coordinates in the chart
+	 * @return	Node coordinates in the map
 	 **************************************************************************/
 	public Point getPosition() {
 		return p;
