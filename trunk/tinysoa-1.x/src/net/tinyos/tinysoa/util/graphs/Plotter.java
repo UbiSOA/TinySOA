@@ -30,7 +30,7 @@ import javax.swing.*;
 import net.tinyos.tinysoa.common.*;
 
 /*******************************************************************************
- * Class utility to plot information.
+ * Utility class to plot sensing information.
  * 
  * @author		Edgardo Avilés López
  * @version	0.5, 02/25/2006
@@ -40,8 +40,8 @@ public class Plotter extends JPanel {
 
 	@SuppressWarnings("unchecked")
 	private Vector<Vector> data;
-	private double margLeft = 52, margHigher = 20, margRight = 20, margLower = 62,
-		width, high, sepHor = 12, sepVer = 20;
+	private double marginLeft = 52, marginUpper = 20, marginRight = 20,
+		marginBottom = 62, width, high, gapHorz = 12, gapVert = 20;
 	private double x, y;
 	private Color colorLineBackgr = new Color(0xcccccc),
 		colorLine = new Color(0x000000);
@@ -50,20 +50,20 @@ public class Plotter extends JPanel {
 	private long dif = 1000 * 30;
 	private int ALIGNMENT_LEFT = 0, ALIGNMENT_CENTER = 1,
 		ALIGNMENT_RIGHT = 2;
-	private Font sourceAxisVer = new Font("Arial", Font.PLAIN, 10),
-		sourceAxisHor = new Font("Arial", Font.BOLD, 9),
-		sourceLegend = new Font("Arial", Font.PLAIN, 11);
+	private Font fontAxisVert = new Font("Arial", Font.PLAIN, 10),
+		fontAxisHorz = new Font("Arial", Font.BOLD, 9),
+		fontLegend = new Font("Arial", Font.PLAIN, 11);
 	private Color[] colors = new Color[]{ new Color(0x000000),
 			new Color(0x9bbdde), new Color(0xffbc46), new Color(0xa2c488),
 			new Color(0xd6b9db), new Color(0xcdc785), new Color(0xdea19b),
 			new Color(0xb9dbcf), new Color(0xffdc46), new Color(0x9b88c4),
 			new Color(0x85cd9b), new Color(0xd8d7c8), new Color(0x97968c) };
 	private JProgressBar progress = null;
-	private String fileUrl, fileType;
+	private String filePath, fileType;
 	private BufferedImage buffer;
 	
 	/***************************************************************************
-	 * Contructor main of plotter.
+	 * Main constructor of plotter.
 	 **************************************************************************/
 	public Plotter() {
 		this.setOpaque(true);
@@ -71,9 +71,9 @@ public class Plotter extends JPanel {
 	}
 	
 	/***************************************************************************
-	 * Define the vector data to plotter.
+	 * Defines the vector containing the plot data.
 	 * 
-	 * @param data	Vector data to plotter
+	 * @param data	Vector data to plot
 	 **************************************************************************/
 	@SuppressWarnings("unchecked")
 	public void defData(Vector<Vector> data) {
@@ -102,19 +102,20 @@ public class Plotter extends JPanel {
 	}
 
 	/***************************************************************************
-	 * Define the final time of graphic.
+	 * Defines the final time of plotting.
 	 * 
-	 * @param time	Final time
+	 * @param time	Final time to plot
 	 **************************************************************************/
 	public void defTime(long time) {
 		defTime(time, dif);
 	}
 
 	/***************************************************************************
-	 * Define the final time of graphic y and difference with the initial time.
+	 * Defines the final time of plotting and the difference to rest and take as
+	 * initial time.
 	 * 
-	 * @param time	Final time
-	 * @param dif	Unlike Desired with the initial time
+	 * @param time	Final time to plot
+	 * @param dif	Difference to rest and take as initial time
 	 **************************************************************************/
 	public void defTime(long time, long dif) {
 		this.current = new Date(time);
@@ -123,9 +124,9 @@ public class Plotter extends JPanel {
 	}
 
 	/***************************************************************************
-	 * Define the difference between initial time and final.
+	 * Defines the difference between initial and final time.
 	 * 
-	 * @param dif	Unlike desired between the range of time graphic
+	 * @param dif	Desired difference between plotting times
 	 **************************************************************************/
 	public void defDif(long dif) {
 		this.dif = dif;
@@ -133,34 +134,34 @@ public class Plotter extends JPanel {
 	}
 
 	/***************************************************************************
-	 * Get the difference between the initial time and final.
+	 * Gets the difference between the initial and final times.
 	 * 
-	 * @return	Difference between the range of time
+	 * @return	Difference between the range of times
 	 **************************************************************************/
 	public long obtDif() {
 		return dif;
 	}
 
 	/***************************************************************************
-	 * Define the status bar used for view the status
-	 * current of image saving .
+	 * Defines the status bar object to be used when showing the status on
+	 * exporting the plot as an image.
 	 * 
-	 * @param progress	Status bar to use
+	 * @param progress	Status bar object to use on exporting
 	 **************************************************************************/
 	public void defProgress(JProgressBar progress) {
 		this.progress = progress;
 	}
 
 	/***************************************************************************
-	 * Generates and save a image of current status of plotter.
+	 * Generates and saves and image for the current status of the plotter.
 	 * 
-	 * @param file	URL file to generates and save
-	 * @param type		Type of image desired (jpg, gif, png ó bmp)
+	 * @param file	File path to the target image
+	 * @param type	Desired image type of target file (jpg, gif, png, or bmp)
 	 **************************************************************************/
-	public void guardarImagen(String file, String type) {
+	public void exportAsImage(String file, String type) {
 		if (data == null) return;
 			
-		this.fileUrl = file;
+		this.filePath = file;
 		this.fileType = type;
 			
 		new Thread() {
@@ -189,11 +190,11 @@ public class Plotter extends JPanel {
 				g2db.dispose();
 	
 				try {
-					File arch = new File(fileUrl);
+					File arch = new File(filePath);
 					ImageIO.write(buffer, fileType, arch);
 				} catch (IOException e) {
 					JOptionPane.showMessageDialog(null,
-							"Error saving the image" + fileUrl,
+							"Error saving the image" + filePath,
 							"Error saving", JOptionPane.ERROR_MESSAGE);
 					e.printStackTrace();
 				}
@@ -207,9 +208,9 @@ public class Plotter extends JPanel {
 	}
 
 	/***************************************************************************
-	 * Draw the graphic with the information and current status.
+	 * Draws the plot with the information and current status.
 	 * 
-	 * @param g	Object of chart to use
+	 * @param g	Graphic object to draw into
 	 **************************************************************************/
 	public void paint(Graphics g) {
 		Graphics2D g2d = (Graphics2D)g;
@@ -235,12 +236,12 @@ public class Plotter extends JPanel {
 	}
 
 	/***************************************************************************
-	 * Draw the graphic background.
+	 * Draws the background.
 	 * 
-	 * @param g2d	Chart to use
+	 * @param g2d	Graphic object to draw into
 	 **************************************************************************/
 	private void drawBackgr(Graphics2D g2d) {
-		// Draw the vertical dotted lines minors -----------------------
+		// Drawing the vertical dotted minor lines -----------------------------
 		
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_OFF);
@@ -249,78 +250,79 @@ public class Plotter extends JPanel {
 		g2d.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
 				BasicStroke.JOIN_BEVEL, 0.0f, new float[]{6.0f, 4.0f}, 0.0f));
 		
-		x = margLeft;
-		for (int i = 0; i < sepHor; i++) {
-			x += (width - margLeft - margRight) / sepHor;
-			drawLine(g2d, x, margHigher, x, high - margLower);
+		x = marginLeft;
+		for (int i = 0; i < gapHorz; i++) {
+			x += (width - marginLeft - marginRight) / gapHorz;
+			drawLine(g2d, x, marginUpper, x, high - marginBottom);
 		}
 		
-		// Draw the rectangle external ---------------------------------------
+		// Drawing the external rectangle --------------------------------------
 		
 		g2d.setStroke(new BasicStroke(1.0f));
-		drawRectangle(g2d, margLeft, margHigher, width - margLeft - margRight,
-				high - margHigher - margLower);
+		drawRectangle(g2d, marginLeft, marginUpper,
+				width - marginLeft - marginRight,
+				high - marginUpper - marginBottom);
 		
-		// Draw the horizontal lines minors ------------------------------
+		// Drawing the horizontal minor lines ----------------------------------
 		
-		y = margHigher;
-		for (int i = 0; i < sepVer; i++) {
-			y += (high - margHigher - margLower) / sepVer;
-			drawLine(g2d, margLeft, y, width - margRight, y);
-		}		
+		y = marginUpper;
+		for (int i = 0; i < gapVert; i++) {
+			y += (high - marginUpper - marginBottom) / gapVert;
+			drawLine(g2d, marginLeft, y, width - marginRight, y);
+		}
 	}
 	
 	/***************************************************************************
-	 * Draw the axis of the lines
+	 * Draws the axis lines.
 	 * 
-	 * @param g2d	Chart to use
+	 * @param g2d	Graphic object to draw into
 	 **************************************************************************/
 	private void drawAxis(Graphics2D g2d) {
-		// Draw the axis vertical ----------------------------------------------
+		// Drawing the vertical axis -------------------------------------------
 		
 		g2d.setColor(colorLine);
 		g2d.setStroke(new BasicStroke(2.0f));
 		
-		drawLine(g2d, margLeft, margHigher, margLeft, high - margLower);
+		drawLine(g2d, marginLeft, marginUpper, marginLeft, high - marginBottom);
 		
-		//Draw separations smaller vertical axis --------------------
+		// Drawing vertical axis minor gaps ------------------------------------
 		
-		y = margHigher;
-		for (int i = 0; i < sepVer; i++) {
-			y += (high - margHigher - margLower) / sepVer;
-			if ((i + 1) % (sepVer / 4) != 0)
-				drawLine(g2d, margLeft, y, margLeft - 6, y);
+		y = marginUpper;
+		for (int i = 0; i < gapVert; i++) {
+			y += (high - marginUpper - marginBottom) / gapVert;
+			if ((i + 1) % (gapVert / 4) != 0)
+				drawLine(g2d, marginLeft, y, marginLeft - 6, y);
 		}
 		
-		// Draw separations greater the vertical axis --------------------
+		// Drawing vertical axis major gaps ------------------------------------
 		
-		y = margHigher;
+		y = marginUpper;
 		for (int i = 0; i <= 4; i++) {
-			drawLine(g2d, margLeft, y, margLeft - 12, y);
-			y += (high - margHigher - margLower) / 4;
+			drawLine(g2d, marginLeft, y, marginLeft - 12, y);
+			y += (high - marginUpper - marginBottom) / 4;
 		}
 		
-		// Draw the horizontal axis --------------------------------------------
+		// Drawing horizontal axis ---------------------------------------------
 		
-		drawLine(g2d, margLeft, high - margLower, width - margRight,
-				high - margLower);
+		drawLine(g2d, marginLeft, high - marginBottom, width - marginRight,
+				high - marginBottom);
 		
-		// Draw separations greater the horizontal axis ------------------
+		// Drawing horizontal axis major gaps ----------------------------------
 		
-		x = margLeft;
-		for (int i = 0; i <= sepHor; i++) {
-			drawLine(g2d, x, high - margLower, x, high - margLower + 4);
-			x += (width - margLeft - margRight) / 4;
+		x = marginLeft;
+		for (int i = 0; i <= gapHorz; i++) {
+			drawLine(g2d, x, high - marginBottom, x, high - marginBottom + 4);
+			x += (width - marginLeft - marginRight) / 4;
 		}
 	}
 	
 	/***************************************************************************
-	 * Draw the axis labels.
+	 * Draws the axis labels.
 	 * 
-	 * @param g2d	Chart to use
+	 * @param g2d	Graphic object to draw into
 	 **************************************************************************/
 	private void drawLabelsAxis(Graphics2D g2d) {
-		// Draw the labels of vertical axis -------------------------------
+		// Drawing the labels for vertical axis --------------------------------
 		
 		if (current == null) return;
 		
@@ -331,17 +333,17 @@ public class Plotter extends JPanel {
 		if (difMaxMin > 2) nf = new DecimalFormat("0");
 		else nf = new DecimalFormat("0.0");
 		
-		y = margHigher;
+		y = marginUpper;
 		for (int i = 0; i <= 4; i++) {
-			drawText(g2d, sourceAxisVer,
+			drawText(g2d, fontAxisVert,
 					nf.format(min * (i / 4.0d) + max * (1.0d - i / 4.0d)),
-					margLeft - 16, y, this.ALIGNMENT_RIGHT);
-			y += (high - margHigher - margLower) / 4;
+					marginLeft - 16, y, this.ALIGNMENT_RIGHT);
+			y += (high - marginUpper - marginBottom) / 4;
 		}
 		
-		// Draw the labels in horizontal axis -----------------------------
+		// Drawing the labels for horizontal axis ------------------------------
 		
-		x = margLeft;
+		x = marginLeft;
 		for (int i = 0; i <= 4; i++) {
 			Date t = new Date((long)(current.getTime() * (i / 4.0d) +
 					previous.getTime() * (1.0d - i / 4.0d)));
@@ -351,17 +353,18 @@ public class Plotter extends JPanel {
 			int al = this.ALIGNMENT_CENTER;
 			if (i == 0) al = this.ALIGNMENT_LEFT;
 			if (i == 4) al = this.ALIGNMENT_RIGHT;
-			drawText(g2d, sourceAxisHor, c, x, high - margLower + 12, al);
-			drawText(g2d, new Font(sourceAxisHor.getFamily(), Font.PLAIN,
-					sourceAxisHor.getSize()), c2, x, high - margLower + 22, al);
-			x += (width - margLeft - margRight) / 4;
+			drawText(g2d, fontAxisHorz, c, x, high - marginBottom + 12, al);
+			drawText(g2d, new Font(fontAxisHorz.getFamily(), Font.PLAIN,
+					fontAxisHorz.getSize()), c2, x,
+					high - marginBottom + 22, al);
+			x += (width - marginLeft - marginRight) / 4;
 		}
 	}
 
 	/***************************************************************************
-	 *Draw the data of chart.
+	 * Draws the plot data lines.
 	 * 
-	 * @param g2d	Chart to use
+	 * @param g2d	Graphic object to draw into
 	 **************************************************************************/
 	@SuppressWarnings("unchecked")
 	private void drawData(Graphics2D g2d) {
@@ -370,9 +373,10 @@ public class Plotter extends JPanel {
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		
-		g2d.setClip((int)Math.round(margLeft) + 1, (int)Math.round(margHigher),
-				(int)Math.round(width - margRight),
-				(int)Math.round(high - margLower) - 1);
+		g2d.setClip((int)Math.round(marginLeft) + 1,
+				(int)Math.round(marginUpper),
+				(int)Math.round(width - marginRight),
+				(int)Math.round(high - marginBottom) - 1);
 
 		Enumeration e = data.elements();
 		while (e.hasMoreElements()) {
@@ -427,13 +431,14 @@ public class Plotter extends JPanel {
 	}
 	
 	/***************************************************************************
-	 * Draw a line with coordinates specified.
+	 * Draws a line from &lt;<i>x<sub>1</sub></i>,<i>y<sub>1</sub></i>&gt; to
+	 * &lt;<i>x<sub>2</sub></i>, <i>y<sub>2</sub></i>&gt;.
 	 * 
-	 * @param g2d	Chart to use
-	 * @param x1	Value X of initial point
-	 * @param y1	Value Y of initial point
-	 * @param x2	Value X of final point
-	 * @param y2	Value Y of final point
+	 * @param g2d	Graphic object to draw into
+	 * @param x1	Initial X axis position
+	 * @param y1	Initial Y axis position
+	 * @param x2	Final X axis position
+	 * @param y2	Final Y axis position
 	 **************************************************************************/
 	private void drawLine(Graphics2D g2d, double x1, double y1,
 			double x2, double y2) {
@@ -442,34 +447,35 @@ public class Plotter extends JPanel {
 	}
 	
 	/***************************************************************************
-	 * Draw a rectangle with width and high certain at coordinates indicated.
+	 * Draws a rectangle starting at &lt;<i>x</i>,<i>y</i>&gt; with the given
+	 * width and height.
 	 * 
-	 * @param g2d	Chart to use
-	 * @param x		Value X of position
-	 * @param y		Value Y of position
-	 * @param width	Desired width
-	 * @param high	Desired high
+	 * @param g2d		Graphic object to draw into
+	 * @param x			X axis position
+	 * @param y			Y axis position
+	 * @param width		Desired width
+	 * @param height	Desired height
 	 **************************************************************************/
 	private void drawRectangle(Graphics2D g2d, double x, double y,
-			double width, double high) {
+			double width, double height) {
 		g2d.drawRect((int)Math.round(x), (int)Math.round(y),
-				(int)Math.round(width), (int)Math.round(high));		
+				(int)Math.round(width), (int)Math.round(height));		
 	}
 	
 	/***************************************************************************
-	 * Draw a string of text in a position indicated with a type of letter and
-	 * alignment specific.
+	 * Draws a text string in the specified position with the given font and
+	 * alignment.
 	 * 
-	 * @param g2d			Chart to use
-	 * @param source		Type of letter to use
-	 * @param text		 	Text a chart
-	 * @param x			    Value X of the position
-	 * @param y			    Value Y of the position
-	 * @param alignment	    Alignment of text
+	 * @param g2d		Graphic object to draw into
+	 * @param font		Font to use
+	 * @param text		Text to draw
+	 * @param x			X axis position
+	 * @param y			Y axis position
+	 * @param alignment	Desired text alignment
 	 **************************************************************************/
-	private void drawText(Graphics2D g2d, Font source, String text,
+	private void drawText(Graphics2D g2d, Font font, String text,
 			double x, double y, int alignment) {
-		TextLayout tl = new TextLayout(text, source,
+		TextLayout tl = new TextLayout(text, font,
 				g2d.getFontRenderContext());
 		if (alignment == ALIGNMENT_LEFT)
 			tl.draw(g2d, (float)(x),
@@ -512,16 +518,16 @@ public class Plotter extends JPanel {
 	}
 	
 	/***************************************************************************
-	 * Clarifies the specified color in a 25%.
+	 * Highlights the input color by 15%.
 	 * 
-	 * @param color	    Color to clarify
-	 * @return			The color clarified in a 25%
+	 * @param color	Color to highlight
+	 * @return		The color highlighted by 15%
 	 **************************************************************************/
 	private Color clarifyColor(Color color) {
-		int red, green, blue;
-		red = (int)Math.round(color.getRed() + color.getRed() * 0.15);
-		green = (int)Math.round(color.getGreen() + color.getGreen() * 0.15);
-		blue = (int)Math.round(color.getBlue() + color.getBlue() * 0.15);
+		int red, green, blue; double amount = 0.15;
+		red = (int)Math.round(color.getRed() + color.getRed() * amount);
+		green = (int)Math.round(color.getGreen() + color.getGreen() * amount);
+		blue = (int)Math.round(color.getBlue() + color.getBlue() * amount);
 		if (red > 255) red = 255;
 		if (green > 255) green = 255;
 		if (blue > 255) blue = 255;
@@ -529,11 +535,11 @@ public class Plotter extends JPanel {
 	}
 	
 	/***************************************************************************
-	 * Draw a point in the vertex position.
+	 * Draws a 3D spot in the given coordinate.
 	 * 
-	 * @param g2d	Chart to use
-	 * @param x	    Value X of position
-	 * @param y	    Value Y of position
+	 * @param g2d	Graphic object to draw into
+	 * @param x	    X axis position
+	 * @param y	    Y axis position
 	 **************************************************************************/
 	private void drawPoint(Graphics2D g2d, double x, double y) {
 		Color c1 = g2d.getColor();
@@ -559,9 +565,9 @@ public class Plotter extends JPanel {
 	}
 	
 	/***************************************************************************
-	 * Draw a legend with the nodes that make up the chart.
+	 * Draws a nodes legend featuring all the nodes that appear in the plot.
 	 * 
-	 * @param g2d	Chart to use
+	 * @param g2d	Graphic object to draw into
 	 **************************************************************************/
 	@SuppressWarnings("unchecked")
 	private void drawLegend(Graphics2D g2d) {
@@ -572,17 +578,17 @@ public class Plotter extends JPanel {
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
 				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		
-		double widthLegend = 0;
+		double legendWidth = 0;
 		
 		Enumeration e = data.elements();
 		while (e.hasMoreElements()) {
 			Vector node = (Vector)e.nextElement();
-			if (node.size() > 0) widthLegend += 14 + 42;
+			if (node.size() > 0) legendWidth += 14 + 42;
 		}
 		
 		e = data.elements();
-		double x = (width - widthLegend) / 2.0d;
-		double y = high - margLower + 43;
+		double x = (width - legendWidth) / 2.0d;
+		double y = high - marginBottom + 43;
 		while (e.hasMoreElements()) {
 			Vector node = (Vector)e.nextElement();
 			if (node.size() > 0) {
@@ -591,25 +597,24 @@ public class Plotter extends JPanel {
 				drawPoint(g2d, x + 6, y);
 				x += 9 + 5;
 				g2d.setColor(Color.DARK_GRAY);
-				drawText(g2d, sourceLegend, "Node " + nid, x, y,
+				drawText(g2d, fontLegend, "Node " + nid, x, y,
 						this.ALIGNMENT_LEFT);
-				x += widthText(g2d, sourceLegend, "Node " + nid) + 10;
+				x += widthText(g2d, fontLegend, "Node " + nid) + 10;
 			}
 		}
 	}
 	
 	/***************************************************************************
-	 * Taking <i> y0 </ i> = <i> f </ i> (x0 <i> </ i>) and 
-	 * <i> y1 </ i> = <i> f </ i> (<i> x1 </ i>) that returns the value 
-	 * at the interpolation <i> x </ i> with the line created by the coordinates 
-	 * (<i> x0 </ i> <i> y0 </ i>) and (x1 <i> </ i> <i> y1 </ i>).
+	 * Given <i>y0</i>=<i>f</i>(<i>x0</i>) and <i>y1</i>=<i>f</i>(<i>x1</i>),
+	 * returns the corresponding value to the interpolation of <i>x</i> with the
+	 * line &lt;<i>x0</i>,<i>y0</i>&gt; and &lt;<i>x1</i>,<i>y1</i>&gt;.
 	 * 
 	 * @param y0	Initial result
 	 * @param y1	Final result
 	 * @param x0	Initial value
 	 * @param x1	Final value
 	 * @param x	    Value to interpolate
-	 * @return		Interpolate result
+	 * @return		Interpolation result
 	 **************************************************************************/
 	private double interpolate(double y0, double y1, double x0,
 			double x1, double x) {

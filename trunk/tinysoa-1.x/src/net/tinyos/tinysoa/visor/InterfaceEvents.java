@@ -1358,7 +1358,7 @@ public class InterfaceEvents
 					substring(7, 10).toLowerCase();
 			if (a.substring(a.length() - 4, a.length() -3).compareTo(".") != 0)
 				a += "." + f;
-			grapher.guardarImagen(a, f);
+			grapher.exportAsImage(a, f);
 		}
 		
 	}

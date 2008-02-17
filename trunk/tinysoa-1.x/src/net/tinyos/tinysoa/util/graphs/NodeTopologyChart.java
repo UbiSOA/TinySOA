@@ -21,7 +21,7 @@ import java.awt.*;
 import java.text.*;
 
 /*******************************************************************************
- * Handles node information in the topology chart
+ * Handles and stores the information of a node in the topology chart.
  * 
  * @author		Edgardo Avilés López
  * @version	0.1, 07/25/2006
@@ -33,9 +33,9 @@ public class NodeTopologyChart {
 	private int id;
 	
 	/***************************************************************************
-	 * Basic class constructor
+	 * Basic class constructor.
 	 * 
-	 * @param id	ID del nodo
+	 * @param id	Node ID
 	 **************************************************************************/
 	public NodeTopologyChart(int id) {
 		this.id = id;
@@ -44,10 +44,10 @@ public class NodeTopologyChart {
 	}
 	
 	/***************************************************************************
-	 * Regular class constructor
+	 * Regular class constructor.
 	 * 
 	 * @param id	Node ID
-	 * @param v	Node value
+	 * @param v		Node value
 	 **************************************************************************/
 	public NodeTopologyChart(int id, double v) {
 		this.id = id;
@@ -56,12 +56,12 @@ public class NodeTopologyChart {
 	}
 	
 	/***************************************************************************
-	 * Detailed class constructor
+	 * Detailed class constructor.
 	 * 
 	 * @param id	Node ID
-	 * @param v	Node value
-	 * @param x	Value of X in node position
-	 * @param y	Value of y in node position
+	 * @param v		Node value
+	 * @param x		Node X position in the chart
+	 * @param y		Node Y position in the chart
 	 **************************************************************************/
 	public NodeTopologyChart(int id, double v, int x, int y) {
 		this.id = id;
@@ -70,10 +70,10 @@ public class NodeTopologyChart {
 	}
 	
 	/***************************************************************************
-	 * Sets node position in the chart
+	 * Sets node position in the chart.
 	 * 
-	 * @param x	Value of X in node position
-	 * @param y	Value of y in node position
+	 * @param x	Node X axis position
+	 * @param y	Node Y axis position
 	 **************************************************************************/
 	public void setPosition(int x, int y) {
 		p.x = x;
@@ -81,9 +81,9 @@ public class NodeTopologyChart {
 	}
 	
 	/***************************************************************************
-	 * Sets node position
+	 * Sets node position in the chart.
 	 * 
-	 * @param p	Point representing the node position in the chart
+	 * @param p	Node coordinates in the chart
 	 **************************************************************************/
 	public void setPosition(Point p) {
 		this.p.x = p.x;
@@ -91,16 +91,16 @@ public class NodeTopologyChart {
 	}
 	
 	/***************************************************************************
-	 * Gets node position in the chart
+	 * Gets node position in the chart.
 	 * 
-	 * @return	Node position
+	 * @return	Node coordinates in the chart
 	 **************************************************************************/
 	public Point getPosition() {
 		return p;
 	}
 
 	/***************************************************************************
-	 * Sets the node ID
+	 * Sets the node ID.
 	 * 
 	 * @param id	Node ID
 	 **************************************************************************/
@@ -109,7 +109,7 @@ public class NodeTopologyChart {
 	}
 	
 	/***************************************************************************
-	 * Gets the node ID
+	 * Gets the node ID.
 	 * 
 	 * @return	Node ID
 	 **************************************************************************/
@@ -118,7 +118,7 @@ public class NodeTopologyChart {
 	}
 	
 	/***************************************************************************
-	 * Sets the node value
+	 * Sets the node value.
 	 * 
 	 * @param v	Node value
 	 **************************************************************************/
@@ -127,7 +127,7 @@ public class NodeTopologyChart {
 	}
 	
 	/***************************************************************************
-	 * Gets the node value
+	 * Gets the node value.
 	 * 
 	 * @return Node value
 	 **************************************************************************/
@@ -136,7 +136,7 @@ public class NodeTopologyChart {
 	}
 	
 	/***************************************************************************
-	 * Returns a string representation of the node values
+	 * Returns a string representation of the node data.
 	 **************************************************************************/
 	public String toString() {
 		NumberFormat f = new DecimalFormat("0.00");
