@@ -36,7 +36,7 @@ public class NetworksListCellRenderer implements ListCellRenderer {
 	private ImageIcon icon;
 	
 	/***************************************************************************
-	 * Class constructor
+	 * Class constructor.
 	 * 
 	 * @param icon	Icon for a network
 	 **************************************************************************/
@@ -45,8 +45,8 @@ public class NetworksListCellRenderer implements ListCellRenderer {
 	}
 	
 	/***************************************************************************
-	 * Procudes a multiline string inserting <pre><br></pre> where the line
-	 * width exceeds the required line pixel width.
+	 * Produces a multiline string inserting &lt;pre&gt;&lt;br&gt;&lt;/pre&gt;
+	 * where the line exceeds the desired pixel width by line.
 	 * 
 	 * @param text	String to adjust
 	 * @param font	Font to use
