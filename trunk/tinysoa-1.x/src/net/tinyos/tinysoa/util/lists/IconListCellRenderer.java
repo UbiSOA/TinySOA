@@ -32,7 +32,7 @@ public class IconListCellRenderer extends JLabel implements ListCellRenderer {
 	private ImageIcon[] icons;
 	
 	/***************************************************************************
-	 * Class constructor
+	 * Class constructor.
 	 * 
 	 * @param icons	Icons to the list items
 	 **************************************************************************/
@@ -41,7 +41,7 @@ public class IconListCellRenderer extends JLabel implements ListCellRenderer {
 	}
 	
 	/***************************************************************************
-	 * Prepares the list element
+	 * Prepares the list element.
 	 **************************************************************************/
 	public Component getListCellRendererComponent(JList list, Object value,
 			int index, boolean isSelected, boolean cellHasFocus) {
