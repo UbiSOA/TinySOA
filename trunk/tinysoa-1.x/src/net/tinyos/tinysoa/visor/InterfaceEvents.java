@@ -765,20 +765,20 @@ public class InterfaceEvents
 							getSelectedItem().toString();
 					
 					if (par.compareTo("Temp") == 0) {
-						topologyGrapher.defEscala(0.0d, 35.0d);
-						topologyGrapher.defTypeScale(
+						topologyGrapher.setDataScale(0.0d, 35.0d);
+						topologyGrapher.setScaleType(
 								ColorMap.SCALE_HEAT);
 					} else if (par.compareTo("Lght") == 0) {
-						topologyGrapher.defEscala(300.0d, 900.0d);
-						topologyGrapher.defTypeScale(
+						topologyGrapher.setDataScale(300.0d, 900.0d);
+						topologyGrapher.setScaleType(
 								ColorMap.SCALE_LIGHT);
 					} else if (par.compareTo("Volt") == 0) {
-						topologyGrapher.defEscala(1.5d, 3.0d);
-						topologyGrapher.defTypeScale(
+						topologyGrapher.setDataScale(1.5d, 3.0d);
+						topologyGrapher.setScaleType(
 								ColorMap.SCALE_ENERGY);
 					} else {
-						topologyGrapher.defEscala(300.0d, 1024.0d);
-						topologyGrapher.defTypeScale(
+						topologyGrapher.setDataScale(300.0d, 1024.0d);
+						topologyGrapher.setScaleType(
 								ColorMap.SCALE_HEAT);
 					}
 					
@@ -786,7 +786,7 @@ public class InterfaceEvents
 					while (e.hasMoreElements()) {
 						Reading l = (Reading)e.nextElement();
 						if (par.compareTo(l.getParameter()) == 0)
-							if (!topologyGrapher.existNode(l.getNid()))
+							if (!topologyGrapher.nodeExists(l.getNid()))
 								if (nodeSel[l.getNid()]) {
 									ColorMapNode ngt =
 										new ColorMapNode(l.getNid(),
@@ -1103,7 +1103,7 @@ public class InterfaceEvents
 			posTopNodes[((Node)nodes[i]).getId()] = new Point(x, y);
 		}
 		
-		topologyGrapher.defPosNodes(posTopNodes);
+		topologyGrapher.setNodesPosition(posTopNodes);
 	}
 
 	//--------------------------------------------------------------------------
@@ -1391,7 +1391,7 @@ public class InterfaceEvents
 							createImage(archive);
 					if (image != null) {
 						BufferedImage bImage = toBufferedImage(image);
-						topologyGrapher.defBackgr(bImage);
+						topologyGrapher.setBackground(bImage);
 						topologyGrapher.repaint();
 					}
 				}
@@ -1426,7 +1426,7 @@ public class InterfaceEvents
 					substring(7, 10).toLowerCase();
 			if (a.substring(a.length() - 4, a.length() -3).compareTo(".") != 0)
 				a += "." + f;
-			topologyGrapher.saveImage(a, f);
+			topologyGrapher.exportAsImage(a, f);
 		}
 		
 	}

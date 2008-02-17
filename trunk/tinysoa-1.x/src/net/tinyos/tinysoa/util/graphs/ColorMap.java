@@ -42,92 +42,92 @@ public class ColorMap extends JPanel
 	private double valueMax = 40.0d;	// Maximum value
 	private double valueAvg = 0.0d;		// Average value
 	
-	private int tamPix	= 10;			// Pixel size of the graph
-	private int radio	= 1000;			// Radio coverage of the value of a node
-	private int movNod	= -1;			// Index of node in drag
-	private int diaNod = 20;			// Diameter of icon of node
+	private int pixRat	= 10;		// Pixelation effect ratio
+	private int ratio	= 1000;		// Radio coverage for the value of a node
+	private int drgdNod	= -1;		// Index of node being dragged
+	private int diaNod = 20;		// Diameter of an node icon
 	
-	private BufferedImage buffer, backgr = null;		// Buffer of image
-	private int movX, movY;		// Position of node in drag
-	private DragSource sourceDrag;	// Source of drag
-	private DropTarget destinyDrag;	// Destiny of drag
-	private int typeScale = SCALE_HEAT;
-	private Point[] posTopologyNodes;
+	private BufferedImage buffer, backgr = null;	// Image buffers
+	private int movX, movY;			// Coordinate of node being dragged
+	private DragSource dragSrc;		// Drag source object
+	private DropTarget dragTrg;		// Drag target object
+	private int scaleType = SCALE_HEAT;
+	private Point[] nodesPos;
 	private JProgressBar progress = null;
 	private String fileUrl, fileType;
 	
 	public static int SCALE_HEAT = 0, SCALE_LIGHT = 1, SCALE_ENERGY = 2;
 	
-	private Vector<ColorMapNode> node;
+	private Vector<ColorMapNode> nodes;
 	
 	/***************************************************************************
-	 * Constructor main of the class.
+	 * Main constructor.
 	 **************************************************************************/
 	public ColorMap() {
 		super();
 		setBackground(Color.WHITE);
-		node = new Vector<ColorMapNode>();		
-		sourceDrag = new DragSource();
-		sourceDrag.createDefaultDragGestureRecognizer(
+		nodes = new Vector<ColorMapNode>();		
+		dragSrc = new DragSource();
+		dragSrc.createDefaultDragGestureRecognizer(
 				this, DnDConstants.ACTION_COPY_OR_MOVE, this);
-		destinyDrag = new DropTarget(this, this);
+		dragTrg = new DropTarget(this, this);
 	}
 
 	/***************************************************************************
-	 * Define the value minimum and maximum of the scale.
+	 * Defines the minimum and maximum values for the data scale.
 	 * 
-	 * @param valueMin	Value minimum of scale
-	 * @param valueMax	Value maximum of scale
+	 * @param valueMin	Minimum value
+	 * @param valueMax	Maximum value
 	 **************************************************************************/
-	public void defEscala(double valueMin, double valueMax) {
+	public void setDataScale(double valueMin, double valueMax) {
 		this.valueMin = valueMin;
 		this.valueMax = valueMax;
 	}
 
 	/***************************************************************************
-	 * Returns the minimum value of scale.
+	 * Returns the minimum value of the scale.
 	 * 
-	 * @return	Minimun value of scale
+	 * @return	Minimum value of the scale
 	 **************************************************************************/
-	public double obtMinimum() {
+	public double getMinimum() {
 		return valueMin;
 	}
 	
 	/***************************************************************************
-	 * Returns the maximum value of scale.
+	 * Returns the maximum value of the scale.
 	 * 
-	 * @return	Maximum value of scale
+	 * @return	Maximum value of the scale
 	 **************************************************************************/
-	public double obtMaximum() {
+	public double getMaximum() {
 		return valueMax;
 	}
 	
 	/***************************************************************************
-	 * Define type of scale to use.
+	 * Defines the type of color scale to use in drawing the map.
 	 * 
-	 * @param typeScale	Type of scale
+	 * @param scaleType	Type of colos scale to use
 	 **************************************************************************/
-	public void defTypeScale(int typeScale) {
-		this.typeScale = typeScale;
+	public void setScaleType(int typeScale) {
+		this.scaleType = typeScale;
 	}
 
 	/***************************************************************************
-	 * Define the settlement points which specifies the coordinates 
-	 * of each of the nodes in the graph.
+	 * Defines the vector of points where the coordinates for each of the data
+	 * nodes are specified.
 	 * 
-	 * @param posTopologyNodes	Position of nodes in the chart
+	 * @param nodesPos	Position of nodes in the map
 	 **************************************************************************/
-	public void defPosNodes(Point[] posTopologyNodes) {
-		this.posTopologyNodes = posTopologyNodes;
+	public void setNodesPosition(Point[] nodesPos) {
+		this.nodesPos = nodesPos;
 	}
 	
 	/***************************************************************************
-	 * Set the background image to be used in the graph. The image is resized 
-	 * to the size of the graph.
+	 * Defines the background image to be drawn under the color map. The image
+	 * will be resized to fit in the width and height of the map.
 	 * 
-	 * @param backgr	Image of background
+	 * @param backgr	Background image
 	 **************************************************************************/
-	public void defBackgr(BufferedImage backgr) {
+	public void setBackground(BufferedImage backgr) {
 		AffineTransform tx = new AffineTransform();
 		double s;
 		if (getWidth() >= getHeight())
@@ -141,29 +141,29 @@ public class ColorMap extends JPanel
 	}
 	
 	/***************************************************************************
-	 * Define the progress bar to use.
+	 * Defines the progress bar object to be updated on drawing.
 	 * 
-	 * @param progress	Progress bar
+	 * @param progress	Progress bar object
 	 **************************************************************************/
-	public void defProgress(JProgressBar progress) {
+	public void setProgress(JProgressBar progress) {
 		this.progress = progress;
 	}
 
 	/***************************************************************************
-	 * Method main of draw of component.
+	 * Main drawing method.
 	 * 
-	 * @param g	 Chart to use
+	 * @param g	 Graphic object to draw into
 	 **************************************************************************/
 	public void paint(Graphics g) {
 		Graphics2D g2 = (Graphics2D)g;
 	
-		if (node.size() == 0) {
+		if (nodes.size() == 0) {
 			g2.setColor(Color.WHITE);
 			g2.fillRect(0, 0, getWidth(), getHeight());
 			return;
 		}
 		
-		if (movNod == -1) {
+		if (drgdNod == -1) {
 			buffer = g2.getDeviceConfiguration().createCompatibleImage(
 					getWidth(), getHeight(), Transparency.TRANSLUCENT);
 			drawImage();
@@ -173,16 +173,16 @@ public class ColorMap extends JPanel
 	}
 
 	/***************************************************************************
-	 * Draw the image of the topology in the buffer.
+	 * Draws the color map image in the buffer.
 	 **************************************************************************/
 	private void drawImage() {
 		Graphics2D g2d = buffer.createGraphics();
 		g2d.setComposite(AlphaComposite.Src);
 		
 		drawBackground(g2d);
-		if (node != null) {
-			drawImgBackground(g2d);
-			drawGradiente(g2d);
+		if (nodes != null) {
+			drawImgageBackground(g2d);
+			drawColorGradient(g2d);
 			drawNodes(g2d);
 		}
 		
@@ -190,10 +190,10 @@ public class ColorMap extends JPanel
 	}
 	
 	/***************************************************************************
-	 * If this is dragging a node graph a shadow node in question with their 
-	 * current position.
+	 * If there is a node being dragged, draws a shadow to show the current
+	 * position of the node.
 	 * 
-	 * @param g2d	Chart to use
+	 * @param g2d	Graphic object to draw into
 	 **************************************************************************/
 	private void drawDrag(Graphics2D g2d) {
 		int x, y, id;
@@ -203,18 +203,18 @@ public class ColorMap extends JPanel
 		
 		x = movX;
 		y = movY;
-		id = node.get(movNod).getId();
-		v = node.get(movNod).getValue();
+		id = nodes.get(drgdNod).getId();
+		v = nodes.get(drgdNod).getValue();
 		
 		drawNode(g2d, id, x, y, v, 0.35f);
 	}
 	
 	/***************************************************************************
-	 * Draw the background image in the center of the graph.
+	 * Draws the background image in the center of the color map.
 	 * 
-	 * @param g2d	Chart to use
+	 * @param g2d	Graphic object to draw into
 	 **************************************************************************/
-	private void drawImgBackground(Graphics2D g2d) {
+	private void drawImgageBackground(Graphics2D g2d) {
 		if (backgr == null) return;
 		int x = (getWidth() - backgr.getWidth()) / 2;
 		int y = (getHeight() - backgr.getHeight()) / 2;
@@ -222,9 +222,9 @@ public class ColorMap extends JPanel
 	}
 	
 	/***************************************************************************
-	 * Draw the bottom of the image.
+	 * Draws the background elements of the color map.
 	 * 
-	 * @param g2d	Chart to use
+	 * @param g2d	Graphic object to draw into
 	 **************************************************************************/
 	private void drawBackground(Graphics2D g2d) {
 		g2d.setColor(Color.WHITE);
@@ -236,9 +236,8 @@ public class ColorMap extends JPanel
 	 * 
 	 * @param g2d	Chart to use
 	 **************************************************************************/
-	private void drawGradiente(Graphics2D g2d) {
-		
-		double color = 0.0d, distMax, distMen, dist, factor, value,
+	private void drawColorGradient(Graphics2D g2d) {
+		double color = 0.0d, distMax, distMin, dist, factor, value,
 				valueMen = valueMax, valueMay = valueMin, sumFact;
 		
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -249,97 +248,95 @@ public class ColorMap extends JPanel
 		g2d.setComposite(AlphaComposite.getInstance(
 				AlphaComposite.SRC_OVER, 0.75f));
 		
-		ColorMapNode nodo;
+		ColorMapNode node;
 		
 		valueAvg = 0.0d;
-		for (int k = 0; k < node.size(); k++)
-			if (node.get(k) != null) {
-				value = node.get(k).getValue();
+		for (int k = 0; k < nodes.size(); k++)
+			if (nodes.get(k) != null) {
+				value = nodes.get(k).getValue();
 				if (value < valueMen) valueMen = value;
 				if (value > valueMay) valueMay = value;
 				valueAvg += value;
 			}
-		valueAvg /= node.size();
+		valueAvg /= nodes.size();
 		
-		for (int i = 0; i < getWidth(); i = i + tamPix)
-			for (int j = 0; j < getHeight(); j = j + tamPix) {
+		for (int i = 0; i < getWidth(); i = i + pixRat)
+			for (int j = 0; j < getHeight(); j = j + pixRat) {
 
-				distMen = 10000.0d;
+				distMin = 10000.0d;
 				distMax = 0.0d;
-				for (int k = 0; k < node.size(); k++)
-					if (node.get(k) != null) {
-						nodo = node.get(k);
-						dist = distance(i, j, nodo.getPosition().x,
-								nodo.getPosition().y);
-						if (dist < distMen) distMen = dist;
+				for (int k = 0; k < nodes.size(); k++)
+					if (nodes.get(k) != null) {
+						node = nodes.get(k);
+						dist = distance(i, j, node.getPosition().x,
+								node.getPosition().y);
+						if (dist < distMin) distMin = dist;
 						if (dist > distMax) distMax = dist;
 					}
 				
 				sumFact = 0.0d;
-				for (int k = 0; k < node.size(); k++)
-					if (node.get(k) != null) {
-						nodo = node.get(k);
-						dist = distance(i, j, nodo.getPosition().x,
-								nodo.getPosition().y);
-						sumFact += distMen / dist;
+				for (int k = 0; k < nodes.size(); k++)
+					if (nodes.get(k) != null) {
+						node = nodes.get(k);
+						dist = distance(i, j, node.getPosition().x,
+								node.getPosition().y);
+						sumFact += distMin / dist;
 					}
 					
 				color = 0.0d;
-				for (int k = 0; k < node.size(); k++)
-					if (node.get(k) != null) {
-						nodo = node.get(k);
-						dist = distance(i, j , nodo.getPosition().x,
-								nodo.getPosition().y);
-						factor = (distMen / dist) / sumFact;
-						value = nodo.getValue();
+				for (int k = 0; k < nodes.size(); k++)
+					if (nodes.get(k) != null) {
+						node = nodes.get(k);
+						dist = distance(i, j , node.getPosition().x,
+								node.getPosition().y);
+						factor = (distMin / dist) / sumFact;
+						value = node.getValue();
 						value = interpolate(value, valueAvg, 1, 0,
 								Math.cos(interpolate(
-										0, Math.PI / 2, 0, radio, dist)));
+										0, Math.PI / 2, 0, ratio, dist)));
 						value = value * factor;
 						color += value;
 				}
 				
 				color = interpolate(0.0d, 1.0d, valueMin, valueMax, color);
 				g2d.setColor(scaleColor(color));
-				g2d.fillRect(i, j, tamPix, tamPix);			
+				g2d.fillRect(i, j, pixRat, pixRat);			
 			}
 	}
 	
 	/***************************************************************************
-	 * Draw the nodes in the chart.
+	 * Draw the nodes in the color map.
 	 * 
-	 * @param g2d	Chart to use
+	 * @param g2d	Graphic object to draw into
 	 **************************************************************************/
 	private void drawNodes(Graphics2D g2d) {
-		
 		int x, y, id;
 		double v;
 		
-		for (int i = 0; i < node.size(); i++)
-			if (node.get(i) != null) {
-				ColorMapNode nodo = node.get(i);
+		for (int i = 0; i < nodes.size(); i++)
+			if (nodes.get(i) != null) {
+				ColorMapNode node = nodes.get(i);
 				
-				x = nodo.getPosition().x;
-				y = nodo.getPosition().y;
-				id = nodo.getId();
-				v = nodo.getValue();
+				x = node.getPosition().x;
+				y = node.getPosition().y;
+				id = node.getId();
+				v = node.getValue();
 				drawNode(g2d, id, x, y, v, 1.0f);
 			}
 	}
 	
 	/***************************************************************************
-	 * Draw a node with the positions and data.
+	 * Draws a node in the given coordinate and with the given reading value.
 	 * 
-	 * @param g2d		Chart to use
-	 * @param id		ID node
-	 * @param x		Value X of position
-	 * @param y		Value Y of position
-	 * @param v		Value of reading
-	 * @param opacity	Opacity of node draw
+	 * @param g2d		Graphic object to draw into
+	 * @param id		Node ID
+	 * @param x			X axis position
+	 * @param y			Y axis position
+	 * @param v			Value of reading
+	 * @param opacity	Opacity of node drawing
 	 **************************************************************************/
 	private void drawNode(Graphics2D g2d, int id, int x, int y,
 			double v, float opacidad) {
-
 		NumberFormat f = new DecimalFormat("0.0");
 		String vs = f.format(v);
 		
@@ -380,29 +377,29 @@ public class ColorMap extends JPanel
 	}
 	
 	/***************************************************************************
-	 * It calculates the distance between the two coordinates given.
+	 * Calculates the distance between the two given points.
 	 * 
-	 * @param x0	Value X of initial point
-	 * @param y0	Value Y of initial point
-	 * @param x1	Value X of final point
-	 * @param y1	Value Y of final point
-	 * @return		A double with the distance between the points
+	 * @param x1	First X axis position
+	 * @param y1	First Y axis position
+	 * @param x2	Last X axis position
+	 * @param y2	Last Y axis position
+	 * @return		A double with the distance between the two points
 	 **************************************************************************/
-	private double distance(int x0, int y0, int x1, int y1) {
-		return Math.sqrt(Math.pow(Math.abs(x1 - x0), 2) +
-				Math.pow(Math.abs(y1 - y0), 2));
+	private double distance(int x1, int y1, int x2, int y2) {
+		return Math.sqrt(Math.pow(Math.abs(x2 - x1), 2) +
+				Math.pow(Math.abs(y2 - y1), 2));
 	}
 
 	/***************************************************************************
-	 * Taking <i> y0 </ i> = <i> f </ i> (x0 <i> </ i>) and <i> y1 </ i> = <i> f </ i> (<i> x1 </ i>) 
-	 * that returns the value at the interpolation <i> x </ i> with the line created by the coordinates 
-	 * (<i> x0 </ i> <i> y0 </ i>) and (x1 <i> </ i> <i> y1 </ i>).
+	 * Given <i>y0</i>=<i>f</i>(<i>x0</i>) and <i>y1</i>=<i>f</i>(<i>x1</i>),
+	 * returns the corresponding value to the interpolation of <i>x</i> with the
+	 * line &lt;<i>x0</i>,<i>y0</i>&gt; and &lt;<i>x1</i>,<i>y1</i>&gt;.
 	 * 
 	 * @param y0	Initial result
 	 * @param y1	Final result
 	 * @param x0	Initial value
 	 * @param x1	Final value
-	 * @param x	    Value to interpolation
+	 * @param x	    Value to interpolate
 	 * @return		Interpolation result
 	 **************************************************************************/
 	private double interpolate(double y0, double y1, double x0,
@@ -413,55 +410,54 @@ public class ColorMap extends JPanel
 	}
 
 	/***************************************************************************
-	 * Being <code> i </ code> a value between 0.0 <code> </ code> and <code> 1.0 </ code> 
-	 * This returns the color corresponding to the scale used.
+	 * Given <code>x</code> a number between <code>0.0</code> and
+	 * <code>1.0</code>, returns the equivalent color to the used color scale.
 	 * 
-	 * @param i	    Value to search in the scale
-	 * @return		A color corresponding to the value in the scale
+	 * @param x	Number to calculate in the scale
+	 * @return	A color equivalent to the value in the used color scale
 	 **************************************************************************/
-	private Color scaleColor(double i) {	
+	private Color scaleColor(double x) {	
 		float f = 0.0f;		
-		try {
+		try {			
+			if (scaleType == SCALE_HEAT) {
 			
-			if (typeScale == SCALE_HEAT) {
-			
-				if (i < 0.0) return new Color(0.0f, 0.0f, 0.0f);
-				if (i > 1.0) return new Color(1.0f, 0.0f, 0.0f);
-				if (i <= 0.2) {
-					f = (float)(i / 0.2d);
+				if (x < 0.0) return new Color(0.0f, 0.0f, 0.0f);
+				if (x > 1.0) return new Color(1.0f, 0.0f, 0.0f);
+				if (x <= 0.2) {
+					f = (float)(x / 0.2d);
 					return new Color(0.0f, 0.0f, f);
-				} else if (i <= 0.4) {
-					f = (float)((i - 0.2d) / 0.2d);
+				} else if (x <= 0.4) {
+					f = (float)((x - 0.2d) / 0.2d);
 					return new Color(0.0f, f, 1.0f);
-				} else if (i <= 0.6) {
-					f = (float)((i - 0.4d) / 0.2d); 
+				} else if (x <= 0.6) {
+					f = (float)((x - 0.4d) / 0.2d); 
 					return new Color(0.0f, 1.0f, 1.0f - f);
-				} else if (i <= 0.8) {
-					f = (float)((i - 0.6d) / 0.2d); 
+				} else if (x <= 0.8) {
+					f = (float)((x - 0.6d) / 0.2d); 
 					return new Color(f, 1.0f, 0.0f);
 				} else {
-					f = (float)((i - 0.8d) / 0.2d); 
+					f = (float)((x - 0.8d) / 0.2d); 
 					return new Color(1.0f, 1.0f - f, 0.0f);
 				}
 			
-			} else if (typeScale == SCALE_ENERGY) {
+			} else if (scaleType == SCALE_ENERGY) {
 				
-				if (i < 0.0) return new Color(1.0f, 0.0f, 0.0f);
-				if (i > 1.0) return new Color(0.0f, 1.0f, 0.0f);
-				if (i <= 0.5d) {
-					f = (float)(i / 0.5d);
+				if (x < 0.0) return new Color(1.0f, 0.0f, 0.0f);
+				if (x > 1.0) return new Color(0.0f, 1.0f, 0.0f);
+				if (x <= 0.5d) {
+					f = (float)(x / 0.5d);
 					return new Color(1.0f, f, 0.0f);
 				} else {
-					f = (float)((i - 0.5d) / 0.5d);
+					f = (float)((x - 0.5d) / 0.5d);
 					return new Color(1.0f - f, 1.0f, 0.0f);
 				}
 				
 				
-			} else if (typeScale == SCALE_LIGHT) {
+			} else if (scaleType == SCALE_LIGHT) {
 				
-				if (i < 0.0) return new Color(0.0f, 0.0f, 0.0f);
-				if (i > 1.0) return new Color(1.0f, 1.0f, 1.0f);
-				f = (float)i;
+				if (x < 0.0) return new Color(0.0f, 0.0f, 0.0f);
+				if (x > 1.0) return new Color(1.0f, 1.0f, 1.0f);
+				f = (float)x;
 				return new Color(f, f, f);
 				
 			} else return new Color(0.0f, 0.0f, 0.0f);
@@ -472,13 +468,13 @@ public class ColorMap extends JPanel
 	}
 
 	/***************************************************************************
-	 * It generates and saves a picture of the current status of plotter.
+	 * Generates and stores an image of the current status of the color map.
 	 * 
-	 * @param file	URL file to generate and save
-	 * @param type	Type desired image (jpg, gif, png ó bmp)
+	 * @param file	File path to store the exported image
+	 * @param type	Desired image type (jpg, gif, png, or bmp)
 	 **************************************************************************/
-	public void saveImage(String file, String type) {
-		if (node == null) return;
+	public void exportAsImage(String file, String type) {
+		if (nodes == null) return;
 			
 		this.fileUrl = file;
 		this.fileType = type;
@@ -501,8 +497,8 @@ public class ColorMap extends JPanel
 				g2db.setComposite(AlphaComposite.Src);
 				
 				drawBackground(g2db);
-				drawImgBackground(g2db);
-				drawGradiente(g2db);
+				drawImgageBackground(g2db);
+				drawColorGradient(g2db);
 				drawNodes(g2db);
 				
 				g2db.dispose();
@@ -526,67 +522,67 @@ public class ColorMap extends JPanel
 	}
 
 	/***************************************************************************
-	 * Add a node in the chart
+	 * Adds a new node to the color map.
 	 * 
-	 * @param nodo	Node to add
+	 * @param node	Node to add
 	 * @see			ColorMapNode
 	 **************************************************************************/
-	public void addNode(ColorMapNode nodo) {
-		node.add(nodo);
+	public void addNode(ColorMapNode node) {
+		nodes.add(node);
 	}
 
 	/***************************************************************************
-	 * 	Amendment to the node with the specified ID.
+	 * Replaces the given node ID with the new node object.
 	 * 
-	 * @param id			ID del nodo a reemplazar	 	
-	 * @param newValue	    Node with which to replace
-	 * @see					ColorMapNode
+	 * @param id		Node ID to replace
+	 * @param newValue	New node object
+	 * @see				ColorMapNode
 	 **************************************************************************/
 	public void changeNode(int id, ColorMapNode newValue) {
-		for (int i = 0; i < node.size(); i++)
-			if (node.get(i).getId() == id) {
-				node.set(id, newValue);
+		for (int i = 0; i < nodes.size(); i++)
+			if (nodes.get(i).getId() == id) {
+				nodes.set(id, newValue);
 				return;
 			}	
 	}
 
 	/***************************************************************************
-	 * Find the ID node in the current nodes.
+	 * Checks if the given node ID exists in the color map.
 	 * 
-	 * @param id	Node ID searching
-	 * @return		True if the node exists in figure
+	 * @param id	Node ID to look
+	 * @return		<code>True</code> if the node exists in the color map
 	 **************************************************************************/
-	public boolean existNode(int id) {
-		for (int i = 0; i < node.size(); i++)
-			if (node.get(i).getId() == id)
+	public boolean nodeExists(int id) {
+		for (int i = 0; i < nodes.size(); i++)
+			if (nodes.get(i).getId() == id)
 				return true;
 		return false;
 	}
 
 	/***************************************************************************
-	 * It removes the node with the specified ID.
+	 * Removes the node with the given ID.
 	 * 
-	 * @param id	ID del nodo a eliminar
+	 * @param id	Node ID to delete
 	 **************************************************************************/
 	public void deleteNode(int id) {
-		for (int i = 0; i < node.size(); i++)
-			if (node.get(i).getId() == id) {
-				node.remove(i);
+		for (int i = 0; i < nodes.size(); i++)
+			if (nodes.get(i).getId() == id) {
+				nodes.remove(i);
 				return;
 			}
 	}
 
 	/***************************************************************************
-	 * Removes all nodes in the graph.
+	 * Removes all the nodes in the color map.
 	 **************************************************************************/
 	public void deleteAllNodes() {
-		node.removeAllElements();
+		nodes.removeAllElements();
 	}
 
 	/***************************************************************************
-	 * Proceedings to recognize and initialize the drag.
+	 * Method to handle the process to initialize the dragging of a node.
 	 * 
-	 * @param evt	Event of drag
+	 * @param evt	Dragging event
 	 **************************************************************************/
 	public void dragGestureRecognized(DragGestureEvent evt) {
 		int x = evt.getDragOrigin().x;
@@ -595,48 +591,49 @@ public class ColorMap extends JPanel
 		
 		if (!isEnabled()) return;
 		
-		movNod = -1;
+		drgdNod = -1;
 		
-		for (int k = 0; k < node.size(); k++)
-			if (node.get(k) != null) {
-				d = distance(x, y, node.get(k).getPosition().x,
-						node.get(k).getPosition().y);
-				if (d < diaNod / 2.0d) movNod = k;
+		for (int k = 0; k < nodes.size(); k++)
+			if (nodes.get(k) != null) {
+				d = distance(x, y, nodes.get(k).getPosition().x,
+						nodes.get(k).getPosition().y);
+				if (d < diaNod / 2.0d) drgdNod = k;
 			}
 		
-		if (movNod > -1) {
-			Transferable t = new StringSelection(destinyDrag.toString());
-			sourceDrag.startDrag(evt, DragSource.DefaultMoveDrop, t, this);
+		if (drgdNod > -1) {
+			Transferable t = new StringSelection(dragTrg.toString());
+			dragSrc.startDrag(evt, DragSource.DefaultMoveDrop, t, this);
 		}
 	}
 
 	/***************************************************************************
-	 * Procedures to complete the drag and define the new position of the node, 
-	 * before that the position is validated.
+	 * Method that handles the completion of the dragging of a node. When the
+	 * dragged node is released, the new position is validated and then stored
+	 * in the dragged node values.
 	 * 
-	 * @param evt	Event of drag
+	 * @param evt	Dragging event
 	 **************************************************************************/
 	public void dragDropEnd(DragSourceDropEvent evt) {
 		int nx = evt.getLocation().x - getLocationOnScreen().x;
 		int ny = evt.getLocation().y - getLocationOnScreen().y;
 		
-		if (movNod > -1) {
+		if (drgdNod > -1) {
 			if ((nx >= 0) && (nx <= getWidth()) && (ny >= 0) &&
 					(ny <= getHeight())) {
-				ColorMapNode n = node.get(movNod);
+				ColorMapNode n = nodes.get(drgdNod);
 				n.setPosition(nx, ny);
-				node.set(movNod, n);
-				posTopologyNodes[n.getId()] = new Point(nx, ny);
+				nodes.set(drgdNod, n);
+				nodesPos[n.getId()] = new Point(nx, ny);
 			}
 			repaint();
-			movNod = -1;
+			drgdNod = -1;
 		}
 	}
 
 	/***************************************************************************
-	 * Identifies the current position of the drag and redraws the screen.
+	 * Identifies the current dragging coordinate and redraws the color map.
 	 * 
-	 * @param evt	Event of drag
+	 * @param evt	Dragging event
 	 **************************************************************************/
 	public void dragOver(DropTargetDragEvent evt) {
 		movX = evt.getLocation().x;
@@ -645,18 +642,16 @@ public class ColorMap extends JPanel
 	}
 
 	//--------------------------------------------------------------------------
-	//
-	// Procedures interfaces unused.
-	//
+	// Unused dragging interface methods.
 	//==========================================================================
 	
-	public void dragEnter(DragSourceDragEvent evt)				{}
-	public void dragOver(DragSourceDragEvent evt)				{}
-	public void dragExit(DragSourceEvent evt)					{}
-	public void dropActionChanged(DragSourceDragEvent evt)		{}
+	public void dragEnter(DragSourceDragEvent evt)			{}
+	public void dragOver(DragSourceDragEvent evt)			{}
+	public void dragExit(DragSourceEvent evt)				{}
+	public void dropActionChanged(DragSourceDragEvent evt)	{}
 	public void dragEnter(DropTargetDragEvent evt) 			{}
 	public void dropActionChanged(DropTargetDragEvent arg0)	{}
 	public void dragExit(DropTargetEvent arg0) 				{}
-	public void drop(DropTargetDropEvent arg0)					{}
+	public void drop(DropTargetDropEvent arg0)				{}
 	
 }
