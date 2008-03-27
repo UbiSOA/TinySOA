@@ -127,6 +127,22 @@ public interface NetServ {
 			String sensorType, int limit);
 	
 	/***************************************************************************
+	 * Returns a listing of all the available readings in the given date and
+	 * time range. Returns all the readings if <code>limit</code> is <code>0
+	 * </code> or the number of readings given by <code>limit</code>. A sensor
+	 * type can be also specified, leave blank to get all sensor types. Results 
+	 * are ordered by date.
+	 * 
+	 * @param startDateTime	The range start date and time of the readings
+	 * @param endDateTime	The range end date and time of the readings
+	 * @param sensorType	Readings sensor type, leave blank to all	
+	 * @return				A vector of readings
+	 * @see					Reading
+	 **************************************************************************/
+	public Vector<Reading> getAllReadings(String startDateTime, String endDateTime,
+			String sensorType);
+	
+	/***************************************************************************
 	 * Returns a listing for all the registered events. Returns all the events
 	 * if <code>limit</code> is <code>0</code> or the number of events given by
 	 * <code>limit</code>.

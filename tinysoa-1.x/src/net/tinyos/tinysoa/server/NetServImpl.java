@@ -411,12 +411,75 @@ public class NetServImpl implements NetServ
 			st = db.createStatement();
 			
 			String query = "SELECT * FROM history WHERE net_id=" + netID;
-			if (sensorType.compareTo("") != 0)
+			if (sensorType.compareTo("") != 0) {
 				query += " AND parameter='" + sensorType + "'";
+			}
 			query += " AND date_time >= '" + startDateTime +
 				"' AND date_time <= '" + endDateTime +
 				"' ORDER BY node_id ASC, date_time DESC";
-			if (limit > 0) query += " LIMIT 0," + limit;
+			if (limit > 0) { 
+				query += " LIMIT 0," + limit;
+			}
+			
+			rs = st.executeQuery(query);
+			
+			while (rs.next()) {
+				Reading p = new Reading();
+				p.setNid(rs.getInt("node_id"));
+				p.setParameter(rs.getString("parameter"));
+				p.setDateTime(rs.getString("date_time"));
+				p.setValue(rs.getString("value"));
+				readings.add(p);
+			}
+			
+		} catch (SQLException ex) {
+			logger.error(ex);
+		} finally {
+			if ((rs != null) && (st != null)) {
+				try {
+					rs.close();
+					st.close();
+				} catch (Exception e) {}
+			}
+		}		
+		
+		return readings;
+	}
+	
+	/***************************************************************************
+	 * Returns a listing of all the available readings in the given date and
+	 * time range. Returns all the readings if <code>limit</code> is <code>0
+	 * </code> or the number of readings given by <code>limit</code>. A sensor
+	 * type can be also specified, leave blank to get all sensor types. Results 
+	 * are ordered by date.
+	 * 
+	 * @param startDateTime	The range start date and time of the readings
+	 * @param endDateTime	The range end date and time of the readings
+	 * @param sensorType	Readings sensor type, leave blank to all	
+	 * @return				A vector of readings
+	 * @see					Reading
+	 **************************************************************************/
+	@WebMethod(operationName="getAllReadings", action="urn:getReadings")
+	@WebResult(name="getReadingsResult")
+	public Vector<Reading> getAllReadings(
+			@WebParam(name="startDateTime") String startDateTime,
+			@WebParam(name="endDateTime") String endDateTime,
+			@WebParam(name="sensorType") String sensorType) {
+		Vector<Reading> readings = new Vector<Reading>();
+		
+		Statement st = null;
+		ResultSet rs = null;
+		
+		try {
+			st = db.createStatement();
+			
+			String query = "SELECT * FROM history WHERE net_id=" + netID;
+			if (sensorType.compareTo("") != 0) {
+				query += " AND parameter='" + sensorType + "'";
+			}
+			query += " AND date_time >= '" + startDateTime +
+				"' AND date_time <= '" + endDateTime +
+				"' ORDER BY date_time ASC";			
 			
 			rs = st.executeQuery(query);
 			
