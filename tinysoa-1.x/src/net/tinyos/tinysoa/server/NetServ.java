@@ -140,7 +140,7 @@ public interface NetServ {
 	 * @see					Reading
 	 **************************************************************************/
 	public Vector<Reading> getAllReadings(String startDateTime, String endDateTime,
-			String sensorType);
+			String sensorType);	
 	
 	/***************************************************************************
 	 * Returns a listing for all the registered events. Returns all the events

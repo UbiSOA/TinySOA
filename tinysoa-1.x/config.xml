@@ -7,7 +7,7 @@
 <entry key="mysql.password">tsoa_pwd</entry>
 <entry key="mysql.server">localhost</entry>
 <entry key="visor.servidor">http://localhost:8080</entry>
-<entry key="network.description">This is just a test.</entry>
-<entry key="network.name">Test</entry>
+<entry key="network.description">Red de prueba</entry>
+<entry key="network.name">testnet</entry>
 <entry key="network.id">9</entry>
 </properties>

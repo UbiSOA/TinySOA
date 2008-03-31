@@ -504,8 +504,8 @@ public class NetServImpl implements NetServ
 		}		
 		
 		return readings;
-	}
-	
+	}	
+		
 	/***************************************************************************
 	 * Returns a listing for all the registered events. Returns all the events
 	 * if <code>limit</code> is <code>0</code> or the number of events given by
