@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-<entry key="mysql.user">tsoa_user</entry>
+<entry key="mysql.user">avilesl</entry>
 <entry key="server.port">8080</entry>
 <entry key="mysql.database">tinysoadb</entry>
-<entry key="mysql.password">tsoa_pwd</entry>
-<entry key="mysql.server">localhost</entry>
+<entry key="mysql.password">quijote</entry>
+<entry key="mysql.server">serv-labca.cicese.mx</entry>
 <entry key="visor.servidor">http://localhost:8080</entry>
 <entry key="network.description">Red de prueba</entry>
 <entry key="network.name">testnet</entry>

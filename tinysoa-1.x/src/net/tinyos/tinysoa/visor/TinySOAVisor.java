@@ -603,7 +603,7 @@ public class TinySOAVisor {
 	private static void createWindow() {
 		//try {	UIManager.setLookAndFeel(	"com.sun.java.swing.plaf.windows." + "WindowsLookAndFeel");	} catch (Exception e) {}
 		
-		window = new JFrame("TinySOA Monitor 1.0");
+		window = new JFrame("UbiSOA Monitor 1.0");
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		interfaceEvents = new InterfaceEvents(CONFIG_FILE, window,
