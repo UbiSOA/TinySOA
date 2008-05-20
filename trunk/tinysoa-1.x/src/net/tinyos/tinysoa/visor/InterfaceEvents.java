@@ -119,7 +119,7 @@ public class InterfaceEvents
 				int newValue = slider.getValue() - 50;
 				if (newValue < 0) newValue = 0;
 				slider.setValue(newValue);
-				System.out.println("act rewindTimer");
+				//System.out.println("act rewindTimer");
 				refresh();
 			}});
 		forwardTimer = new Timer(250, new ActionListener() {
@@ -127,7 +127,7 @@ public class InterfaceEvents
 				int newValue = slider.getValue() + 50;
 				if (newValue > 10000) newValue = 10000;
 				slider.setValue(newValue);
-				System.out.println("act forwardTimer");
+				//System.out.println("act forwardTimer");
 				refresh();
 			}});
 		playTimer = new Timer(1000, new ActionListener() {
@@ -135,7 +135,7 @@ public class InterfaceEvents
 				int newValue = slider.getValue() + 25;
 				if (newValue > 10000) newValue = 10000;
 				slider.setValue(newValue);
-				System.out.println("act playTimer");
+				//System.out.println("act playTimer");
 				refresh();
 				if (newValue == 10000)
 					playPause();
@@ -499,7 +499,7 @@ public class InterfaceEvents
 					activateControls();
 					progressBar.setVisible(false);
 					refreshBusy = false;
-					System.out.println("act createNetworkService");
+					//System.out.println("act createNetworkService");
 					refresh();
 				} catch (Exception e) {
 					progressBar.setVisible(false);
@@ -529,7 +529,7 @@ public class InterfaceEvents
 			public void run() {
 				if (netServ == null) return;
 				if (refreshBusy) {
-					System.out.println("refreshing denied");
+					//System.out.println("refreshing denied");
 					return;
 				}
 				refreshBusy = true;
@@ -550,7 +550,7 @@ public class InterfaceEvents
 
 	private void refreshEverything() {
 		defineTimes();
-		System.out.println("act refreshEverything");
+		//System.out.println("act refreshEverything");
 		refresh();
 	}
 
@@ -647,7 +647,7 @@ public class InterfaceEvents
 		}
 	
 		if (modified) {
-			System.out.println("act refreshDataTableNodes");
+			//System.out.println("act refreshDataTableNodes");
 			refresh();					
 		}
 	}
@@ -972,7 +972,7 @@ public class InterfaceEvents
 			Date start = (Date)format.parse(
 					netServ.getMinDateTime());
 			Object res = netServ.getMaxDateTime();
-			System.out.println(res);
+			//System.out.println(res);
 			Date fin = (Date)format.parse(res.toString());
 			minTime = start.getTime();
 			maxTime = fin.getTime();
@@ -1042,10 +1042,10 @@ public class InterfaceEvents
 	private void createTable(Object[] nodes) {
 		Vector<Parameter> parameters = netServ.getSensorTypesList();
 		
-		for (int i = 0; i < parameters.size(); i++)
+/*		for (int i = 0; i < parameters.size(); i++)
 			System.out.println("par " + parameters.get(i).getName());
 		System.out.println();
-		
+*/		
 		
 		Object[] columnParameters = new Object[parameters.size() + 2];
 		columnParameters[0] = "ID";
@@ -1302,7 +1302,7 @@ public class InterfaceEvents
 		Properties p = new Properties();
 		try {
 			p.loadFromXML(new FileInputStream(configurationArchive));
-			serverUrl = p.getProperty("visor.servidor");
+			serverUrl = p.getProperty("visor.server");
 		} catch (Exception e) {
 			serverUrl = "http://localhost:8080";
 			saveConfiguration();
@@ -1321,7 +1321,7 @@ public class InterfaceEvents
 		Properties p = new Properties();
 		try {
 			p.loadFromXML(new FileInputStream(configurationArchive));
-			p.setProperty("visor.servidor", serverUrl);
+			p.setProperty("visor.server", serverUrl);
 			p.storeToXML(new FileOutputStream(configurationArchive), null);
 		} catch (Exception e) {}
 	}
@@ -1709,11 +1709,11 @@ public class InterfaceEvents
 			netSelectionDialog.show(infoServ, progressBar);
 		} else if (cmd.compareTo("Go to start") == 0) {
 			slider.setValue(0);
-			System.out.println("act Go to start");
+			//System.out.println("act Go to start");
 			refresh();
 		} else if (cmd.compareTo("Go to end") == 0) {
 			slider.setValue(10000);
-			System.out.println("act Go to end");
+			//System.out.println("act Go to end");
 			refresh();
 		} else if (cmd.compareTo("Refresh") == 0) {
 			prepareLiveRefresh();
@@ -1726,12 +1726,12 @@ public class InterfaceEvents
 		} else if (cmd.compareTo("Zoom out") == 0) {
 			grapher.defDif(Math.round(grapher.obtDif() +
 					grapher.obtDif() * 0.2d));
-			System.out.println("act Zoom out");
+			//System.out.println("act Zoom out");
 			refresh();
 		} else if (cmd.compareTo("Zoom in") == 0) {
 			grapher.defDif(Math.round(grapher.obtDif() -
 					grapher.obtDif() * 0.2d));
-			System.out.println("act Zoom in");
+			//System.out.println("act Zoom in");
 			refresh();
 		} else  if (cmd.compareTo("Export graph...") == 0) {
 			exportGraph();
@@ -1739,7 +1739,7 @@ public class InterfaceEvents
 			cmd = ((JComboBox)evt.getSource()).getToolTipText();
 			if (cmd.compareTo("Parameter to graph") == 0)
 				if (((JComboBox)evt.getSource()).isEnabled()) {
-				System.out.println("act Parameter to graph");
+				//System.out.println("act Parameter to graph");
 				refresh();
 			}
 		} else if (cmd.compareTo("Import background image...") == 0) {
@@ -1772,11 +1772,11 @@ public class InterfaceEvents
 		if (evt.getSource() instanceof JSlider) {		
 			JSlider slider = (JSlider)evt.getSource();
 			if (!slider.getValueIsAdjusting()) {
-				System.out.println("act stateChanged");
+				//System.out.println("act stateChanged");
 				refresh();
 			}
 		} else if (evt.getSource() instanceof JTabbedPane) {
-			System.out.println("act JTabbedPane");
+			//System.out.println("act JTabbedPane");
 			refresh();
 		} else System.out.println(evt.getSource());
 	}
