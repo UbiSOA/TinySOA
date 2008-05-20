@@ -1027,7 +1027,7 @@ public class InterfaceEvents
 		((DefaultTreeModel)tree.getModel()).setRoot(top);	
 		NetTreeNode c = null;
 		for (int i = 0; i < nodes.length; i++) {
-			c = new NetTreeNode("Nodo " + ((Node)nodes[i]).getId(),
+			c = new NetTreeNode("Node " + ((Node)nodes[i]).getId(),
 					normalStateIcon);
 			top.add(c);
 		}
