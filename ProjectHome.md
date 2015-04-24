@@ -1,0 +1,1 @@
+TinySOA is a framework that easies the use of a Wireless Sensor Network in a conventional application development by using a service-oriented approach. It provides tools to make possible to get and send data to a Wireless Sensor Network by the means of simple and easy to use web services.
